@@ -7,28 +7,26 @@
     border: 1px solid #966;
   }
 </style>
-
 <section class="content-header">
-  <h1 style="color: #333333; font-family: 'Times New Roman', Times, serif;">
-    ACTUALIZAR DATOS DEL CLIENTE
-  </h1>
   <ol class="breadcrumb">
-    <li><a href="{{URL::action('ClienteController@index')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
+    <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
     <li><a href="{{URL::action('ClienteController@index')}}"> Cliente</a></li>
-    <li class="active">Actualizar</li>
+    <li class="active">Editar</li>
   </ol>
 </section>
+
 <br>
+<br>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS</h4>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">AFIMID, S.A DE C.V</h4>
+  
+<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 25px 0px;"><b>EDITAR CLIENTE</b></h4>
 
 {!!Form::model($cliente,['method'=>'PATCH','route'=>['cliente.update',$cliente->idcliente]])!!}
 {{Form::token()}}
 
-  <div class="col-md-12"> 
-    <div class="panel panel-success">
-      <div class="panel-body">
-          <h4 style="color: #333333; font-family: 'Times New Roman', Times, serif;"><b> Datos del Cliente</b></h4>
-          <hr>
-
+<div class="container">
+  <div class="col-lg-12 col-md-12 col-sm-12">
           <div class="row">
             <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
               @if(count($errors) > 0)
@@ -132,12 +130,12 @@
             </div>
 
             <div class="form-group col-md-4">
-              <label for="edad">Edad</label>
+              <label for="edad">Fecha de Nacimiento</label>
               <div class="input-group">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar" aria-hidden="true"></i>
                 </div>
-                {!! Form::number('edad', $cliente->edad, ['class' => 'form-control' , 'required' => 'required', 'placeholder'=>' Edad . . .', 'autofocus'=>'on']) !!}
+                {!! Form::date('fechanacimiento', $cliente->fechanacimiento, ['class' => 'form-control' , 'required' => 'required', 'autofocus'=>'on']) !!}
               </div>
             </div>
 
@@ -163,6 +161,25 @@
                 {!! Form::textarea('direccionCliente', $cliente->direccion, ['class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca la dirección del cliente . . .', 'autofocus'=>'on', 'rows'=>'1']) !!}
               </div>
             </div>
+
+            <div class="form-group col-md-2">
+              <label for="categoria">Categorias</label>
+              <select name="idcategoria" class="form-control">
+                @foreach ($categorias as $gr)
+                  @if ($gr->idcategoria == $categoria->idcategoria)
+                  <option value="{{$gr->idcategoria}}" selected>{{$gr->letra}}</option>
+                  @else
+                  <option value="{{$gr->idcategoria}}">{{$gr->letra}}</option>
+                  @endif
+                @endforeach
+              </select>
+            </div>
+
+            <div class="form-group col-md-1 col-lg-1 col-sm-1">
+              <a href="" data-target="#modal-help" data-toggle="modal"><i class="fa fa-info-circle"> AYUDA</i></a>
+              @include('cliente.modal2')
+            </div>
+
           </div>
 
           <div class="row"> 
@@ -195,25 +212,24 @@
                 {!! Form::text('telefonofijo', $cliente->telefonofijo, ['class' => 'form-control' ,'placeholder'=>'Tel. Fijo . . .', 'autofocus'=>'on', 'data-inputmask'=>'"mask": "9999-9999"',  'data-mask'=>'on']) !!}
               </div>
             </div>
-          </div>
-
-          <div class="row">
-            <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12" id="guardar">
-              <div class="form-group">
-              <input name="_token" value="{{csrf_token()}}" type="hidden"></input>
-                  <a href="{{URL::action('ClienteController@index')}}" class="btn btn-danger btn-lg col-md-offset-2"> Cancelar</a>
-                  <button class="btn btn-primary btn-lg col-md-offset-6" type="submit"> Actualizar</button>
-                </div>
-            </div>
-          </div>
-      </div>
-    </div>
+          </div>         
   </div>
+</div>
 
+<div class="row">
+  <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12" id="guardar">
+    <div class="form-group">
+    <input name="_token" value="{{csrf_token()}}" type="hidden"></input>
+        <a href="{{URL::action('ClienteController@index')}}" class="btn btn-danger btn-lg col-md-offset-2"> Cancelar</a>
+        <button class="btn btn-primary btn-lg col-md-offset-6" type="submit"> Actualizar</button>
+      </div>
+  </div>
+</div>
 {!!Form::close()!!}
+
 <div class="row">
   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-      <h3 style="text-align:center; font-family:  Times New Roman, sans-serif; color: #1C2331; float: right;"><b>{{$fecha_actual}}</b></h3>
+      <h4 style="text-align:center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #1C2331; float: right;">{{$fecha_actual}}</h4>
   </div>
 </div>
 

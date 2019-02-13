@@ -28,7 +28,7 @@ class NegocioController extends Controller
 
     	$negocios = DB::table('negocio')
     	->where('idcliente','=', $idcliente)
-    	->orderBy('idcliente','desc')
+    	->orderBy('idnegocio','des')
     	->paginate(15);
 
     	//Obtenemos la fecha de hoy en español usando carbon y array
@@ -65,7 +65,7 @@ class NegocioController extends Controller
                 $negocio->estado = 'ACTIVO';
                 $negocio->save();
 
-                Session::flash('create', ' '.$negocio->actividadeconomica.' ');
+                Session::flash('create', ' '.$negocio->nombre.' ');
 
            DB::commit();
 
@@ -108,7 +108,7 @@ class NegocioController extends Controller
                 $negocio->direccionnegocio = $request->get('direccionNegocio');
                 $negocio->update();
 
-                Session::flash('update', ' '.$negocio->actividadeconomica.' ');
+                Session::flash('update', ' '.$negocio->nombre.' ');
                 
            DB::commit();
 

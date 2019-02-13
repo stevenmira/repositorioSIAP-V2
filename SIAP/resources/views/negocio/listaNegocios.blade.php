@@ -1,63 +1,65 @@
 @extends('layouts.inicio')
 @section('contenido')
+<style type="text/css">
+  p.a {font: oblique; font-size: 20px; text-shadow: 0 0 0.2em #cfd8dc;}
+</style>
 
 <section class="content-header">
-  <h1 style="color: #333333; font-family: 'Times New Roman', Times, serif;">
-    LISTA DE NEGOCIOS
-  </h1>
   <ol class="breadcrumb">
     <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
-    <li><a href="{{URL::action('ClienteController@index')}}"> Clientes</a></li>
-    <li class="active">Negocio</li>
+    <li><a href="{{URL::action('ClienteController@index')}}"> Cliente </a></li>
+    <li class="active"> Negocio </li>
   </ol>
 </section>
 
-@if (Session::has('create'))
-  <br>
-	<div class="alert  fade in" style="background:  #ccff90;">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<h4>Los datos del negocio <b>{{ Session::get('create')}}</b> han sido guardados correctamente.</h4>
-	</div>
-@endif
+<br>
+<br>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS</h4>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">AFIMID, S.A DE C.V</h4>
+
+<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 25px 0px;"><b>GESTIÓN DE NEGOCIOS</b></h4>
+
+<div class="container" style="text-align:center; font-family:'Trebuchet MS', Helvetica, sans-serif; color: #1C2331;">
+  @if (Session::has('create'))
+  	<div class="alert  fade in" style="background:  #ccff90;">
+  	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+  	<p>El negocio -- {{ Session::get('create')}} -- se ha guardado correctamente</p>
+  	</div>
+  @endif
 
 
-@if (Session::has('update'))
-  <br>
-	<div class="alert  fade in" style="background:  #bbdefb;">
-	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-	<h4> Los datos del negocio  <b>{{ Session::get('update')}}</b>  han sido actualizados correctamente.</h4>
-	</div>
-@endif
+  @if (Session::has('update'))
+  	<div class="alert  fade in" style="background:  #bbdefb;">
+  	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+  	<p> El negocio  -- {{ Session::get('update')}} --  se ha actualizado correctamente</p>
+  	</div>
+  @endif
 
-@if (Session::has('activo'))
-  <br>
+  @if (Session::has('activo'))
+    <div class="alert  fade in" style="background:  #f0f4c3;">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <p> El negocio  -- {{ Session::get('activo')}} --  se ha dado de baja correctamente</p>
+    </div>
+  @endif
+
+  @if (Session::has('inactivo'))
   <div class="alert  fade in" style="background:  #f0f4c3;">
-  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-  <h4> El negocio  <b>{{ Session::get('activo')}}</b>  fué dado de baja exitosamente.</h4>
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <p> El Negocio  -- {{ Session::get('inactivo')}} --  se ha dado de alta correctamente </p>
   </div>
-@endif
+  @endif
 
-@if (Session::has('inactivo'))
-<div class="alert  fade in" style="background:  #f0f4c3;">
-  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-  <h4> El Negocio  <b>{{ Session::get('inactivo')}}</b>  ha sido modificado al estado <b> ACTIVO </b>  nuevamente. </h4>
+  @if (Session::has('error'))
+    <div class="alert  fade in" style="background:  #ff9e80;">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <p>   {{ Session::get('error')}} </p>
+    </div>
+  @endif
 </div>
-@endif
 
-@if (Session::has('error'))
-  <br>
-  <div class="alert  fade in" style="background:  #ff9e80;">
-  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-  <h4>   <b>{{ Session::get('error')}}</b>  </h4>
-  </div>
-@endif
-
-<section class="content-header">
 <div class="row">
-	<h2 style=" font-family:  Times New Roman, sans-serif; color:#3F729B; padding: 0px 10px;">
-    <b><i>{{ $cliente->nombre}} {{$cliente->apellido}}</i></b></h2>
+  <p class="a"> <span><i class="fa fa-user" style="padding: 0px 0px 0px 25px;"> Juan Antonio Perez Gomez</i></span> </p>
 </div>
-</section>
 
 <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -66,7 +68,7 @@
                     <thead>
                         <tr class="success">
                           <th colspan="12">
-                              <h3 style="text-align: center; font-family:  Times New Roman, sans-serif; color: #1C2331;"><b>LISTADO DE NEGOCIOS</b><a class="btn btn-success pull-right verde" data-title="Agregar Nuevo Negocio" href="{{ url('negocios/nuevo', ['id' => $cliente->idcliente ]) }}"><i class="fa fa-fw -square -circle fa-plus-square"></i></a></h3>
+                              <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">LISTADO DE NEGOCIOS<a class="btn btn-success pull-right verde" data-title="Agregar Nuevo Negocio" href="{{ url('negocios/nuevo', ['id' => $cliente->idcliente ]) }}"><i class="fa fa-fw -square -circle fa-plus-square"></i></a></h4>
                           </th>
                       </tr>
                         <tr class="info">
@@ -107,11 +109,10 @@
   <a href="{{URL::action('ClienteController@index')}}" class="btn btn-danger btn-lg col-md-offset-2"><i class="fa fa-chevron-left" aria-hidden="true"></i> Atrás</a>
 </div>
 
-<div class="row">
   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-      <h3 style="text-align:center; font-family:  Times New Roman, sans-serif; color: #1C2331; float: right;"><b>{{$fecha_actual}}</b></h3>
+      <h4 style="text-align:center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #1C2331; float: right;">
+      {{$fecha_actual}}</h4>
   </div>
-</div>
 
 
 @endsection

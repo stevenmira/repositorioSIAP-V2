@@ -25,11 +25,12 @@ class ClienteEditFormRequest extends Request
     {
         return [
             'idcartera'=>'required',
+            'idcategoria'=>'required',
             'nombre'=>'required|max:30',
             'apellido'=>'required|max:30',
             'dui'=>'required|min:10|max:10',
             'nit'=>'required|min:17|max:17',
-            'edad'=>'required|min:1|max:2',
+            'fechanacimiento'=>'required',
             'direccionCliente'=>'required|max:255',
             'telefonocel'=>'min:9|max:9',
             'telefonofijo'=>'min:9|max:9',
@@ -48,6 +49,8 @@ class ClienteEditFormRequest extends Request
             //Cliente
             'idcartera.required' =>'El campo -- Selecciona la Cartera -- es obligatorio.',
 
+            'idcategoria.required' =>'El campo -- Selecciona la Categoria -- es obligatorio.',
+
             'nombre.max' =>'El campo  -- Nombres del cliente -- debe contener 30 caracteres como máximo.',
             'nombre.required' =>'El campo -- Nombres del cliente -- es obligatorio.',
 
@@ -62,9 +65,7 @@ class ClienteEditFormRequest extends Request
             'nit.max' =>'El campo -- NIT -- debe tener exactamente 14 dígitos, no más.',
             'nit.required' =>'El campo -- NIT -- es obligatorio.',
 
-            'edad.min' =>'El campo -- Edad -- debe contener 1 caracteres como mínimo.',
-            'edad.max' =>'El campo -- Edad -- debe contener 2 caracteres como máximo.',
-            'edad.required' =>'El campo -- Edad -- es obligatorio.',
+            'fechanacimiento.required' =>'El campo -- Fecha de Nacimiento -- es obligatorio.',
 
             'direccionCliente.max' =>'El campo -- Dirección del cliente -- debe contener 255 caracteres como máximo.',
             'direccionCliente.required' =>'El campo -- Dirección del cliente -- es obligatorio.',
