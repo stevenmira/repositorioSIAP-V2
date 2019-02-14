@@ -150,6 +150,10 @@ Route::resource('cuenta','CuentaController');
 Route::get('cuenta/desembolso/{idcuenta}', ['as' => 'idcuenta', 'uses' => 'CuentaController@desembolso']);
 Route::resource('credito','TipoCreditoController');
 Route::resource('credito/nuevo','TipoCreditoController@create');
+
+//Gestionar Personal
+Route::resource('empleados','EmpleadoController');
+Route::get('personal','EmpleadoController@indexPersonal');
 	
 });
 
