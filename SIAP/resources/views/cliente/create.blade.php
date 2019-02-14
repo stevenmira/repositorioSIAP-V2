@@ -9,25 +9,25 @@
 </style>
 
 <section class="content-header">
-  <h1 style="color: #333333; font-family: 'Times New Roman', Times, serif;">
-    NUEVO CLIENTE
-  </h1>
   <ol class="breadcrumb">
-    <li><a href="{{URL::action('ClienteController@index')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
+    <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
     <li><a href="{{URL::action('ClienteController@index')}}"> Cliente</a></li>
     <li class="active">Nuevo</li>
   </ol>
 </section>
+
 <br>
+<br>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS</h4>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">AFIMID, S.A DE C.V</h4>
+  
+<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 25px 0px;"><b>NUEVO CLIENTE</b></h4>
 
 {!!Form::open(array('url'=>'cliente','method'=>'POST','autocomplete'=>'off'))!!}
             {{Form::token()}}
 
-  <div class="col-md-12"> 
-    <div class="panel panel-success">
-      <div class="panel-body">
-          <h4 style="color: #333333; font-family: 'Times New Roman', Times, serif;"><b> Datos del Cliente</b></h4>
-          <hr>
+<div class="container">
+  <div class="col-lg-12 col-md-12 col-sm-12">
 
           <div class="row">
             <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -120,12 +120,12 @@
             </div>
 
             <div class="form-group col-md-4">
-              <label for="edad">Edad</label>
+              <label for="edad">Fecha de Nacimiento</label>
               <div class="input-group">
                 <div class="input-group-addon">
                   <i class="fa fa-calendar" aria-hidden="true"></i>
                 </div>
-                {!! Form::number('edad', null, ['class' => 'form-control' , 'required' => 'required', 'placeholder'=>' Edad . . .', 'autofocus'=>'on']) !!}
+                {!! Form::date('fechanacimiento', null, ['class' => 'form-control' , 'required' => 'required', 'autofocus'=>'on']) !!}
               </div>
             </div>
 
@@ -149,6 +149,16 @@
                 </div>
                 {!! Form::textarea('direccionCliente', null, ['class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca la dirección del cliente . . .', 'autofocus'=>'on', 'rows'=>'1']) !!}
               </div>
+            </div>
+
+            <div class="form-group col-md-3 col-lg-3 col-sm-3">
+              <label for="cartera">Categoria</label>
+              {{ Form::select('idcategoria', $categorias->pluck('letra','idcategoria'), null, ['class'=>'form-control', 'placeholder'=>'-- Selecciona la Categoria --']) }}
+            </div>
+
+            <div class="form-group col-md-1 col-lg-1 col-sm-1">
+              <a href="" data-target="#modal-help" data-toggle="modal"><i class="fa fa-info-circle"> AYUDA</i></a>
+              @include('cliente.modal2')
             </div>
           </div>
 
@@ -182,29 +192,25 @@
               </div>
             </div>
           </div>
-
-          
-
-
-          <div class="row">
-            <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12" id="guardar">
-              <div class="form-group">
-              <input name="_token" value="{{csrf_token()}}" type="hidden"></input>
-                  <a href="{{URL::action('ClienteController@index')}}" class="btn btn-danger btn-lg col-md-offset-2"><i class="fa fa-times" aria-hidden="true"></i>   Cancelar</a>
-                  <button class="btn btn-primary btn-lg col-md-offset-6" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i>  Guardar</button>
-                </div>
-            </div>
-          </div>
-      </div>
-    </div>
-  </div>
-
-{!!Form::close()!!}
-<div class="row">
-  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-      <h3 style="text-align:center; font-family:  Times New Roman, sans-serif; color: #1C2331; float: right;"><b>{{$fecha_actual}}</b></h3>
   </div>
 </div>
+
+<div class="row">
+  <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12" id="guardar">
+    <div class="form-group">
+    <input name="_token" value="{{csrf_token()}}" type="hidden"></input>
+        <a href="{{URL::action('ClienteController@index')}}" class="btn btn-danger btn-lg col-md-offset-2"><i class="fa fa-times" aria-hidden="true"></i>   Cancelar</a>
+        <button class="btn btn-primary btn-lg col-md-offset-6" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i>  Guardar</button>
+      </div>
+  </div>
+</div>
+
+{!!Form::close()!!}
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <h4 style="text-align:center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #1C2331; float: right;">{{$fecha_actual}}</h4>
+</div>
+
 
 
 @push('scripts')

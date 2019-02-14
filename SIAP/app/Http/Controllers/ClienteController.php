@@ -12,6 +12,7 @@ use siap\Negocio;
 use siap\Cartera;
 use siap\Cliente;
 use siap\Fecha;
+use siap\Categoria;
 
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -37,8 +38,9 @@ class ClienteController extends Controller
             $consulta = DB::table('cliente')->where('cliente.estado','=','ACTIVO')->orderby('cliente.apellido','asc')->get();
 
     		$clientes = DB::table('cliente as cliente')
-            ->select('cliente.idcliente', 'cliente.nombre', 'cliente.apellido',  'cliente.dui', 'cliente.estado', 'ca.nombre as nombreCartera')
+            ->select('cliente.idcliente', 'cliente.nombre', 'cliente.apellido',  'cliente.dui', 'cliente.estado', 'ca.nombre as nombreCartera', 'categoria.letra')
             ->join('cartera as ca','cliente.idcartera','=','ca.idcartera')
+            ->join('categoria as categoria','cliente.idcategoria','=','categoria.idcategoria')
             ->orwhere('cliente.dui','LIKE','%'.$query.'%')
             ->where('cliente.estado','=','ACTIVO')
     		->orderBy('cliente.apellido','asc')
@@ -52,13 +54,13 @@ class ClienteController extends Controller
     
     public function create()
     {
-        //Obtenemos la fecha de hoy en español usando carbon y array
+        $usuarioactual=\Auth::user();
         $fecha_actual = Fecha::spanish();
 
-        $usuarioactual=\Auth::user();
         $carteras = Cartera::where('estado','=','ACTIVO')->orderBy('cartera.nombre','asc');
+        $categorias = Categoria::orderBy('letra','asc');
 
-    	return view('cliente.create',["carteras"=>$carteras, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);
+    	return view('cliente.create',["carteras"=>$carteras, "categorias"=>$categorias, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);
     }
 
     public function store( ClienteFormRequest $request)		//Para almacenar
@@ -71,6 +73,7 @@ class ClienteController extends Controller
                 $cliente = new Cliente;
 
                 $cliente->idcartera = $request->get('idcartera');
+                $cliente->idcategoria = $request->get('idcategoria');
                 $cliente->codigo = '0';                                     //quemado
                 $cliente->nombre = $request->get('nombre');
                 $cliente->apellido = $request->get('apellido');
@@ -78,7 +81,7 @@ class ClienteController extends Controller
                 $cliente->dui = $request->get('dui');
                 $cliente->lugarexpedicion = $request->get('lugarexpedicion');
                 $cliente->fechaexpedicion = $request->get('fechaexpedicion');
-                $cliente->edad = $request->get('edad');
+                $cliente->fechanacimiento = $request->get('fechanacimiento');
                 $cliente->telefonocel = $request->get('telefonocel');
                 $cliente->telefonofijo = $request->get('telefonofijo');
                 $cliente->direccion = $request->get('direccionCliente');
@@ -112,6 +115,13 @@ class ClienteController extends Controller
         $fecha_actual = Fecha::spanish();
 
         $cliente = Cliente::findOrFail($id);
+
+        //Calculo de la edad
+        $edad = Fecha::calcularEdad($cliente->fechanacimiento);
+
+        //Parceo de fecha
+        $cliente->fechanacimiento = \Carbon\Carbon::parse($cliente->fechanacimiento)->format('d-m-Y');       
+
         $cartera = Cartera::findOrFail($cliente->idcartera);
 
         $negocios = DB::table('negocio')
@@ -119,7 +129,7 @@ class ClienteController extends Controller
         ->orderBy('idnegocio','asc')
         ->get();
 
-        return view('cliente.show',["cliente"=>$cliente, "negocios"=>$negocios, "cartera"=>$cartera, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);   
+        return view('cliente.show',["cliente"=>$cliente, "edad"=>$edad, "negocios"=>$negocios, "cartera"=>$cartera, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);   
     }
 
     public function edit($id)
@@ -132,11 +142,13 @@ class ClienteController extends Controller
         //Búscamos el cliente junto con sus relaciones
         $cliente = Cliente::findOrFail($id);
         $cartera = Cartera::findOrFail($cliente->idcartera);
+        $categoria = Categoria::findOrFail($cliente->idcategoria);
 
-        //Consultamos todas las carteras
+        //Consultamos todas las carteras y categorias
         $carteras = Cartera::where('estado','=','ACTIVO')->orderBy('cartera.nombre','asc')->get();
+        $categorias = Categoria::orderBy('letra','asc')->get();
 
-         return view('cliente.edit',["cliente"=>$cliente, "cartera"=>$cartera, "carteras"=>$carteras, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);   
+         return view('cliente.edit',["cliente"=>$cliente, "cartera"=>$cartera, "categoria"=>$categoria, "carteras"=>$carteras, "categorias"=>$categorias, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);   
         
     }
 
@@ -173,6 +185,8 @@ class ClienteController extends Controller
                 //Actualizamos datos de la cartera seleccionada
 
                 $cliente->idcartera = $request->get('idcartera');
+
+                $cliente->idcategoria = $request->get('idcategoria');
                 
                 //Actualizamos datos del cliente
                 $cliente->codigo = '0';                                     //quemado
@@ -182,7 +196,7 @@ class ClienteController extends Controller
                 $cliente->lugarexpedicion = $request->get('lugarexpedicion');
                 $cliente->fechaexpedicion = $request->get('fechaexpedicion');
                 $cliente->nit = $request->get('nit');
-                $cliente->edad = $request->get('edad');
+                $cliente->fechanacimiento = $request->get('fechanacimiento');
                 $cliente->direccion = $request->get('direccionCliente');
                 $cliente->telefonocel = $request->get('telefonocel');
                 $cliente->telefonofijo = $request->get('telefonofijo');

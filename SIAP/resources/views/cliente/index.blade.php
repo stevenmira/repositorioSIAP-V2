@@ -1,68 +1,68 @@
 @extends ('layouts.inicio')
 @section('contenido')
 <section class="content-header">
-  <h1 style="color: #333333; font-family: 'Times New Roman', Times, serif;">
-     CLIENTES ACTIVOS
-  </h1>
   <ol class="breadcrumb">
-    <li><a href="{{URL::action('ClienteController@index')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
-    <li class="active"><a href="{{URL::action('ClienteController@index')}}"> Clientes</a></li>
-    <li class="active">Activos</li>
+    <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
+    <li><a href="{{URL::action('ClienteController@index')}}"> Cliente </a></li>
+    <li><a href="{{URL::action('ClienteController@index')}}"> Activos </a></li>
   </ol>
 </section>
 
-<section class="content">
+<br>
+<br>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS</h4>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">AFIMID, S.A DE C.V</h4>
 
-  <!-- Notificación -->
+<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 40px 0px;"><b>GESTIÓN DE CLIENTES</b></h4>
+
+<!-- Criterios de búsquedas -->
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      @include('cliente.search')
+    </div>
+  </div>
+
+<!-- Notificación -->
+<div class="container" style="text-align:center; font-family:'Trebuchet MS', Helvetica, sans-serif; color: #1C2331;">
+
   @if (Session::has('create'))
   <div class="alert  fade in" style="background:  #ccff90;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4>Los datos del cliente <b>{{ Session::get('create')}}</b> han sido guardados correctamente.</h4>
+    <P>El cliente -- {{ Session::get('create')}} -- se ha guardado correctamente</P>
   </div>
   @endif
 
   @if (Session::has('unicidad'))
   <div class="alert  fade in" style="background:  #ff8a80;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4> No se pudo actualizar, el cliente con el número de DUI  <b>{{ Session::get('unicidad')}}</b>  ya está en uso.</h4>
+    <P> No se pudo actualizar, el cliente con el número de DUI -- {{ Session::get('unicidad')}} --  ya está en uso.</P>
   </div>
   @endif
 
   @if (Session::has('update'))
   <div class="alert  fade in" style="background:  #bbdefb;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4> Los datos del cliente  <b>{{ Session::get('update')}}</b>  han sido actualizados correctamente.</h4>
+    <P> El cliente  -- {{ Session::get('update')}} -- se ha actualizado correctamente</P>
   </div>
   @endif
 
   @if (Session::has('activo'))
   <div class="alert  fade in" style="background:  #f0f4c3;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4> El cliente  <b>{{ Session::get('activo')}}</b>  fué dado de baja exitosamente.</h4>
+    <P> El cliente  -- {{ Session::get('activo')}} --  se ha dado de baja correctamente</P>
   </div>
   @endif
 
   @if (Session::has('error'))
   <div class="alert  fade in" style="background:  #ff8a80;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4>   <b>{{ Session::get('error')}}</b>  </h4>
+    <P>   <b>{{ Session::get('error')}}</b>  </P>
   </div>
   @endif
-  <!-- Fin Notificación -->
-
-  <!-- Criterios de búsquedas -->
+ 
+</div>
+ <!-- Fin Notificación -->
   
-  <!-- /.row -->
-
-  <div class="row">
-    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-      <div class="alert  fade in" style="background:  rgba(255, 235, 59, 0.7);">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <font face="Comic Sans MS,arial,verdana">Puedes realizar tus búsquedas por el  <b>Número de DUI</b> ó bien por el <b style="color: black;"> Nombre</b> ó <b style="color: black;"> Apellido</b> <b style="color: black;">Completo </b> ó <b style="color: black;"> Parcial </b> del cliente</font>
-      </div>
-      @include('cliente.search')
-    </div>
-  </div>
 
 <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -82,6 +82,7 @@
                             <th>Apellidos</th>
                             <th>DUI</th>
                             <th style="width: 75px; text-align: center;">Negocios</th>
+                            <th style="width: 75px; text-align: center;">Comentarios</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -93,6 +94,10 @@
                           <td>{{ $ma->dui }}</td>
                           <td>
                             <a class=" verde" data-title="Ver lista de negocios" href="{{ url('negocios/list', ['id' => $ma->idcliente ]) }}"><button style="background: #b2ff59;" class=" btn btn-default center-block"><i class="fa fa-list"></i></button>
+                            </a> 
+                          </td>
+                          <td>
+                            <a class=" verde" data-title="Ver lista de comentarios" href="{{ url('comentarios/list', ['id' => $ma->idcliente ]) }}"><button style="background: #b2ff59;" class=" btn btn-default center-block"><i class="fa fa-list"></i></button>
                             </a> 
                           </td>
                           <td style="width: 230px;">
@@ -117,11 +122,10 @@
 
 <div class="row">
   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-      <h3 style="text-align:center; font-family:  Times New Roman, sans-serif; color: #1C2331; float: right;"><b>{{$fecha_actual}}</b></h3>
+      <h4 style="text-align:center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #1C2331; float: right;">
+      {{$fecha_actual}}</h4>
   </div>
 </div>
-
-</section>
 
 
 

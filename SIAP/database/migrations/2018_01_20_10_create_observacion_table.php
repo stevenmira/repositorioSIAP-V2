@@ -20,13 +20,9 @@ class CreateObservacionTable extends Migration
             $table->index('idcliente');
             $table->foreign('idcliente')->references('idcliente')->on('cliente')->onDelete('cascade');
 
-            //Relacion Observacion con Empleado
-            $table->integer('idempleado')->unsigned();
-            $table->index('idempleado');
-            $table->foreign('idempleado')->references('idempleado')->on('empleado')->onDelete('cascade');
-
             $table->date('fecha')->required();
             $table->string('comentario',1024)->required();
+            $table->string('responsable',100)->required();
 
             $table->timestamps();
         });

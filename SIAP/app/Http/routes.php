@@ -125,10 +125,14 @@ Route::resource('cliente','ClienteController');
 Route::resource('cliente/nuevo','ClienteController@create');
 Route::get('clientes/inactivos', 'ClienteController@inactivos');
 
-//Negocio
+//Negocios
 Route::resource('negocio','NegocioController');
 Route::get('negocios/list/{id}', ['as' => 'idcliente', 'uses' => 'NegocioController@getNegocios']);
 Route::get('negocios/nuevo/{id}', ['as' => 'idcliente', 'uses' => 'NegocioController@newNegocio']);
+
+//Comentarios
+Route::resource('comentario','ObservacionController');
+Route::get('comentarios/list/{id}', ['as' => 'idcliente', 'uses' => 'ObservacionController@getObservaciones']);
 
 //Record
 Route::resource('record','RecordClienteController');

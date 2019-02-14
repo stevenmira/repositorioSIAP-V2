@@ -13,9 +13,9 @@ class Observacion extends Model
 
     protected $fillable = [
         'idcliente',
-        'idempleado',
         'fecha',
-        'comentario'
+        'comentario',
+        'responsable'
     ];
 
     /**
