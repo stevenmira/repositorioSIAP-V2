@@ -12,7 +12,7 @@ class Codeudor extends Model
     protected $primaryKey='idcodeudor';
 
     protected $fillable = [
-        'idcliente', 'codigo', 'nombre', 'apellido', 'dui','nit','fechanacimiento',
+        'idcliente', 'nombre', 'apellido', 'dui','nit','fechanacimiento',
         'direccion','telefonocel','telefonofijo', 'profesion', 'domicilio','estado', 'lugarexpedicion', 'fechaexpedicion'
     ];
 

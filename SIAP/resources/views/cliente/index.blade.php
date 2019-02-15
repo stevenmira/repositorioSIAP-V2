@@ -1,5 +1,16 @@
 @extends ('layouts.inicio')
 @section('contenido')
+<style type="text/css">
+  .circuloCSS{
+  width: 31px;
+  height: 31px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 13px;
+  line-height: 1.43;
+  border-radius: 16px;
+}
+</style>
 <section class="content-header">
   <ol class="breadcrumb">
     <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
@@ -72,17 +83,18 @@
                         <tr class="success">
                           <th colspan="12">
                               
-                              <h3 style="text-align: center;font-family:  Times New Roman, sans-serif; color: #1C2331;"><b>LISTADO DE CLIENTES ACTIVOS</b><a class="btn btn-success pull-right verde" data-title="Agregar Nuevo Cliente" href="{{URL::action('ClienteController@create')}}"><i class="fa fa-fw -square -circle fa-plus-square"></i></a></h3>
+                              <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">LISTADO DE CLIENTES ACTIVOS<a class="btn btn-success pull-right verde" data-title="Agregar Nuevo Cliente" href="{{URL::action('ClienteController@create')}}"><i class="fa fa-fw -square -circle fa-plus-square"></i></a></h4>
                               
                           </th>
                       </tr>
                         <tr class="info">
-                            <th>Cartera</th>
-                            <th>Nombres</th>
-                            <th>Apellidos</th>
-                            <th>DUI</th>
+                            <th style="width: 120px;">Cartera</th>
+                            <th style="width: 120px;">Nombres</th>
+                            <th style="width: 120px;">Apellidos</th>
+                            <th style="width: 80px;">DUI</th>
                             <th style="width: 75px; text-align: center;">Negocios</th>
                             <th style="width: 75px; text-align: center;">Comentarios</th>
+                            <th style="width: 75px; text-align: center;">Codeudores</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -93,11 +105,15 @@
                           <td>{{ $ma->apellido }}</td>
                           <td>{{ $ma->dui }}</td>
                           <td>
-                            <a class=" verde" data-title="Ver lista de negocios" href="{{ url('negocios/list', ['id' => $ma->idcliente ]) }}"><button style="background: #b2ff59;" class=" btn btn-default center-block"><i class="fa fa-list"></i></button>
+                            <a class="dark" data-title="Ver lista de negocios" href="{{ url('negocios/list', ['id' => $ma->idcliente ]) }}"><button style="background: #263238; color: #fff;" class=" btn btn-default center-block circuloCSS"><i class="fa fa-briefcase"></i></button>
                             </a> 
                           </td>
                           <td>
-                            <a class=" verde" data-title="Ver lista de comentarios" href="{{ url('comentarios/list', ['id' => $ma->idcliente ]) }}"><button style="background: #b2ff59;" class=" btn btn-default center-block"><i class="fa fa-list"></i></button>
+                            <a class="dark" data-title="Ver lista de comentarios" href="{{ url('comentarios/list', ['id' => $ma->idcliente ]) }}"><button style="background: #263238; color: #fff;" class=" btn btn-default center-block circuloCSS"><i class="fa fa-sticky-note"></i></button>
+                            </a> 
+                          </td>
+                          <td>
+                            <a class="dark" data-title="Ver lista de codeudores" href="{{ url('codeudores/list', ['id' => $ma->idcliente ]) }}"><button style="background: #263238; color: #fff;" class=" btn btn-default center-block circuloCSS"><i class="fa fa-users"></i></button>
                             </a> 
                           </td>
                           <td style="width: 230px;">

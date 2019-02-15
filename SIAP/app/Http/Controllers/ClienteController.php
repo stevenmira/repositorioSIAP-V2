@@ -120,16 +120,28 @@ class ClienteController extends Controller
         $edad = Fecha::calcularEdad($cliente->fechanacimiento);
 
         //Parceo de fecha
-        $cliente->fechanacimiento = \Carbon\Carbon::parse($cliente->fechanacimiento)->format('d-m-Y');       
+        $cliente->fechanacimiento = \Carbon\Carbon::parse($cliente->fechanacimiento)->format('d-m-Y');
+        $cliente->fechaexpedicion = \Carbon\Carbon::parse($cliente->fechaexpedicion)->format('d-m-Y');       
 
         $cartera = Cartera::findOrFail($cliente->idcartera);
+        $categoria = Categoria::findOrFail($cliente->idcategoria);
 
         $negocios = DB::table('negocio')
         ->where('idcliente','=', $id)
         ->orderBy('idnegocio','asc')
         ->get();
 
-        return view('cliente.show',["cliente"=>$cliente, "edad"=>$edad, "negocios"=>$negocios, "cartera"=>$cartera, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);   
+        $codeudores = DB::table('codeudor')
+        ->where('idcliente','=', $cliente->idcliente)
+        ->orderBy('idcodeudor','des')
+        ->get();
+
+        $observaciones = DB::table('observacion')
+        ->where('idcliente','=', $cliente->idcliente)
+        ->orderBy('idobservacion','des')
+        ->get();
+
+        return view('cliente.show',["cliente"=>$cliente, "edad"=>$edad, "negocios"=>$negocios, "codeudores"=>$codeudores,"observaciones"=>$observaciones, "cartera"=>$cartera,"categoria"=>$categoria, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);   
     }
 
     public function edit($id)
