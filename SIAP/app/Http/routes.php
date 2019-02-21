@@ -56,7 +56,6 @@ Route::get('lista/clientesPDF/{id}','CarteraClientController@carteraClientPDF');
 
 //consulta a la base por jquery
 Route::get('search/{id}','TipoCreditoController@autoComplete');
-Route::get('search2/{id}','TipoCreditoController@autoCompleteCodeudor');
 //ERRORES 
 
 Route::get('error', function(){ 
@@ -141,11 +140,6 @@ Route::resource('codeudor','CodeudorController');
 Route::get('codeudores/list/{id}', ['as' => 'idcliente', 'uses' => 'CodeudorController@getCodeudores']);
 Route::get('codeudores/nuevo/{id}', ['as' => 'idcliente', 'uses' => 'CodeudorController@newCodeudor']);
 
-//Grarantias
-Route::resource('garantia','GarantiaController');
-Route::get('cliente/creditos/{id}', ['as' => 'idcliente', 'uses' => 'GarantiaController@getCreditos']);
-Route::get('cliente/credito/gatantias/{id}', ['as' => 'idcuenta', 'uses' => 'GarantiaController@getGarantias']);
-
 //Record
 Route::resource('record','RecordClienteController');
 
@@ -164,8 +158,6 @@ Route::resource('lista/clientes','CarteraClientController');
 Route::get('record','RecordClienteController@index');
 Route::resource('cuenta','CuentaController');
 Route::get('cuenta/desembolso/{idcuenta}', ['as' => 'idcuenta', 'uses' => 'CuentaController@desembolso']);
-
-//Nuevo Financiamiento
 Route::resource('credito','TipoCreditoController');
 Route::resource('credito/nuevo','TipoCreditoController@create');
 

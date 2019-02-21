@@ -102,7 +102,7 @@
 					$n++;
 					$interes_diario=round($monto_capital*$tasa_interes,2);
 					$cuota_capital=round($pagos_diarios-$interes_diario,2);
-					$nuvfecha=date("Y-m-d",strtotime("$prestamo->fechacomienzo + ".$cont." days "));
+					$nuvfecha=date("Y-m-d",strtotime("$prestamo->fecha + ".$cont." days "));
 					$liquidacion->fechadiaria=$nuvfecha;				
 			?>
 			<tr>
@@ -135,7 +135,7 @@
 
 				$n++;
 
-				$nuvfecha=date("Y-m-d",strtotime("$prestamo->fechacomienzo + ".$cont." days "));
+				$nuvfecha=date("Y-m-d",strtotime("$prestamo->fecha + ".$cont." days "));
 				$liquidacion->fechadiaria=$nuvfecha;
 
 
@@ -168,7 +168,7 @@
 					$n++;
 					$cont++;
 
-					$nuvfecha=date("Y-m-d",strtotime("$prestamo->fechacomienzo + ".$cont." days "));
+					$nuvfecha=date("Y-m-d",strtotime("$prestamo->fecha + ".$cont." days "));
 					$liquidacion->fechadiaria=$nuvfecha;
 
 				}

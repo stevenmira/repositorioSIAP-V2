@@ -95,7 +95,6 @@
                             <th style="width: 75px; text-align: center;">Negocios</th>
                             <th style="width: 75px; text-align: center;">Comentarios</th>
                             <th style="width: 75px; text-align: center;">Codeudores</th>
-                            <th style="width: 75px; text-align: center;">Garantias</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -115,10 +114,6 @@
                           </td>
                           <td>
                             <a class="dark" data-title="Ver lista de codeudores" href="{{ url('codeudores/list', ['id' => $ma->idcliente ]) }}"><button style="background: #263238; color: #fff;" class=" btn btn-default center-block circuloCSS"><i class="fa fa-users"></i></button>
-                            </a> 
-                          </td>
-                          <td>
-                            <a class="dark" data-title="Ver Garantias" href="{{ url('cliente/creditos', ['id' => $ma->idcliente ]) }}"><button style="background: #263238; color: #fff;" class=" btn btn-default center-block circuloCSS"><i class="fa fa-users"></i></button>
                             </a> 
                           </td>
                           <td style="width: 230px;">

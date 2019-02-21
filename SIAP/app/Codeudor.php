@@ -30,9 +30,4 @@ class Codeudor extends Model
     public function codeudor(){
         return $this->belongsTo(Codeudor::class);
     }
-
-    public static function codeudores($id)
-    {
-        return Codeudor::where('idcliente','=',$id)->where('estado','=','ACTIVO')->get();
-    }
 }

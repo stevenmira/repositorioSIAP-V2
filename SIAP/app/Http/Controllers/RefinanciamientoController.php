@@ -11,10 +11,6 @@ use siap\DetalleLiquidacion;
 use siap\TipoCredito;
 use siap\Prestamo;
 use siap\Negocio;
-use siap\Codeudor;
-use siap\TipoDesembolso;
-use siap\Fecha;
-
 use Carbon\Carbon;
 
 class RefinanciamientoController extends Controller
@@ -27,116 +23,73 @@ class RefinanciamientoController extends Controller
     public function create()
     {
         $usuarioactual = \Auth::user();
-        $fecha_actual = Fecha::spanish();
-
-        $clientes = DB::table('cliente')->where('estado','=','ACTIVO')->orderby('nombre', 'asc')->get();
-        $interesList = DB::table('tipo_credito')->orderby('tipo_credito.interes', 'asc')->get();
-
-        return view('tipoCredito.refinanciamiento.create', ["clientes" => $clientes, "interesList" => $interesList, "fecha_actual" => $fecha_actual, "usuarioactual" => $usuarioactual]);
+        $clientes = DB::table('cliente')->where('estado','=','ACTIVO')->orderby('cliente.apellido', 'asc')->get();
+        return view('tipoCredito.refinanciamiento.create', ["clientes" => $clientes, "usuarioactual" => $usuarioactual]);
 
     }
 
     public function store(Request $request)
     {
+        $clientes = DB::table('cliente')->where('estado','=','ACTIVO')->orderby('cliente.apellido', 'asc')->get();
         $usuarioactual = \Auth::user();
 
-        //Extraemos todos los datos del credito
-        $fechacredito = $request->get('fechacredito');
-        $fechacomienzo = $request->get('fechacomienzo');
-        $tipo1 = $request->get('tipo1');                    // Cobro de comision
-        $tipo2 = $request->get('tipo2');                    // Tipo de desembolso
-        $numcheque = $request->get('numcheque');
         $cliente = Cliente::where('idcliente', $request->get('searchItem'))->first();
-        $negocio = Negocio::where('idnegocio', $request->get('idnegocio'))->first();
-        $idcodeudor = $request->get('idcodeudor');
-        $codeudor = Codeudor::where('idcodeudor', $idcodeudor)->first();
-        $tipoCredito = TipoCredito::where('idtipocredito',$request->get('idtipocredito'))->first();
-        $monto = $request->get('monto');
-        $cuota = $request->get('cuota');
+        $cuenta = Cuenta::where('idnegocio', $request->get('idnegocio'))->where('estado','=','ACTIVO')->first();
+        //$cuenta1 = Cuenta::where('idnegocio', $request->get('idnegocio'))->first();
+        
 
-        //se validan las fechas
-        if ($fechacomienzo < $fechacredito) {
-            Session::flash('ban',2);
-            Session::flash('msj1', "La fecha de comienzo de la cartera de pagos -- ".($fechacomienzo)." -- debe ser mayor o igual a la fecha de creacion del credito -- ".$fechacredito." --");
-            return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual]);
+        if (is_null($cuenta)) {
+            Session::flash('ban',1);
+            Session::flash('error7', "El cliente ".$cliente->nombre." ".$cliente->apellido." no posee un credito el cual refinanciar");
+            return view('tipoCredito.fracaso', ["clientes" => $clientes, "usuarioactual" => $usuarioactual]);
+        }
+        $banderaDetalleLiquidacion = DetalleLiquidacion::where('idcuenta', $cuenta->idcuenta)->where('estado', '=', 'ABONO')->first();
+
+        if (!is_null($banderaDetalleLiquidacion)) {
+            Session::flash('ban',1);
+            Session::flash('error5', "El cliente ".$cliente->nombre." ".$cliente->apellido." tiene abonos pendientes.");
+            return view('tipoCredito.fracaso', ["clientes" => $clientes, "usuarioactual" => $usuarioactual,"cuenta"=>$cuenta->idcuenta]);
         }
 
-        //se validan el cliente
-        if (is_null($cliente)) {
-            Session::flash('ban',2);
-            Session::flash('msj2', "Hay un problema con el cliente, al parecer no se encuentra en nuesta base de datos");
+        //se comprueba que el cliente solicitante debe poseer un credito abierto.
+        
+
+        if (!is_null($cliente)) {
+
+            $montoCapital = ((intdiv($request->get('monto'), 50)) * 2.25) + $request->get('monto');
+            $type = Self::validacion($request->get('credito'),$montoCapital);
+
+            $tipoCredito = TipoCredito::where('idtipocredito',$type)->first();
+          
+            $interesDiario = $montoCapital * $tipoCredito->interes;
+
+            if($interesDiario>$request->get('cuota'))
+        {
+            Session::flash('ban',1);
+            Session::flash('error5', "Debe redefinir la Cuota, debe ser mayor de $".$interesDiario. "(Sugerencia de cuota: $".($interesDiario + 10)." )");
             return view('tipoCredito.fracaso', ["clientes" => $clientes, "usuarioactual" => $usuarioactual]);
         }
 
-        //se validan el negocio
-        if (is_null($negocio)) {
-            Session::flash('ban',2);
-            Session::flash('msj3', "El cliente debe poseer un negocio activo");
-            return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual]);
-        }
 
-        //se validan la tasa de interes
-        if (is_null($tipoCredito)) {
-            Session::flash('ban',2);
-            Session::flash('msj4', "Debe seleccionar una tasa de interes de la lista");
-            return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual]);
-        }
+            $resultado = Self::calculoCredito($request->get('monto'), $request->get('cuota'), $request->get('credito'), $cliente->idcliente, $request->get('idnegocio'),$request->get('fechaCredito'));
+            Session::flash('exito1', $resultado);
+             $count = Cuenta::where('idnegocio',$request->get('idnegocio'))->where('estado','=','ACTIVO')->first();
+            $prestamo = Prestamo::where('idprestamo',$count->idprestamo)->first();
+            $negocio = Negocio::where('idnegocio',$request->get('idnegocio'))->first();
 
-        $clientes = DB::table('cliente')->where('estado','=','ACTIVO')->orderby('cliente.apellido', 'asc')->get();
-
-
-        //Se valida que el cliente posea un credito abierto con ese negocio
-        $cuenta = Cuenta::where('idnegocio', $negocio->idnegocio)->where('estado','=','ACTIVO')->first();        
-        if (is_null($cuenta)) {
-            Session::flash('ban',2);
-            Session::flash('msj8', "El cliente -- ".$cliente->nombre." ".$cliente->apellido." -- no posee un credito en el cual -- refinanciar --");
-            return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual]);
-        }
-
-        //Se valida que el cliente no posea abonos pendientes de pago
-        $banderaDetalleLiquidacion = DetalleLiquidacion::where('idcuenta', $cuenta->idcuenta)->where('estado', '=', 'ABONO')->first();
-        if (!is_null($banderaDetalleLiquidacion)) {
-            Session::flash('ban',2);
-            Session::flash('msj9', "El cliente ".$cliente->nombre." ".$cliente->apellido." tiene abonos pendientes.");
-            return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual,"cuenta"=>$cuenta->idcuenta]);
-        }
-
-        $montoCapital = ((intdiv($monto, 50)) * 2.25) + $monto;
-
-        // Validacion: Redefinir cuota
-        $interesDiario = $montoCapital * $tipoCredito->interes;
-        $interesDiario = round($interesDiario,2);
-
-        if($interesDiario>$cuota){
-        Session::flash('ban',2);
-        Session::flash('msj6', "Debe redefinir la cuota, debe ser mayor de $".($interesDiario+0.01)."");
-        return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual, "cuota"=>$interesDiario]);
-        }
-
-        //se valida que el cliente este apto para adquirir un nuevo credito
-        if ($cliente->idcategoria == 5) {
+            if($resultado=='excede')
+            {
+                Session::flash('ban',1);
+                Session::flash('error8', "El monto a refinanciar excede el total capital del credito anterior");
+                return view('tipoCredito.fracaso', ["clientes" => $clientes, "usuarioactual" => $usuarioactual,"cuenta"=>$cuenta->idcuenta]);
+            }
+            $ok = Prestamo::actualizarEstado();
+            return view('tipoCredito.exito', ["clientes" => $clientes, "usuarioactual" => $usuarioactual,"cuenta"=> $count,"persona"=>$cliente,"prestamo"=>$prestamo,"negocio"=>$negocio]);
+        } else {
             Session::flash('ban',1);
-            Session::flash('msj7', "El cliente no es apto para adquirir un nuevo refinanciamiento, esta clasificado como categoria -- E --");
-            return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual]);
+            Session::flash('error5', "Hay un problema con el cliente, al parecer no se encuentra en nuesta base de datos");
+            return view('tipoCredito.fracaso', ["clientes" => $clientes, "usuarioactual" => $usuarioactual]);
         }
-
-        $resultado = Self::calculoCredito($request->get('monto'), $request->get('cuota'), $request->get('credito'), $cliente->idcliente, $request->get('idnegocio'),$request->get('fechaCredito'));
-        
-        Session::flash('exito1', $resultado);
-
-        $count = Cuenta::where('idnegocio',$request->get('idnegocio'))->where('estado','=','ACTIVO')->first();
-        $prestamo = Prestamo::where('idprestamo',$count->idprestamo)->first();
-        $negocio = Negocio::where('idnegocio',$request->get('idnegocio'))->first();
-
-        if($resultado=='excede')
-        {
-            Session::flash('ban',1);
-            Session::flash('error8', "El monto a refinanciar excede el total capital del credito anterior");
-            return view('tipoCredito.fracaso', ["clientes" => $clientes, "usuarioactual" => $usuarioactual,"cuenta"=>$cuenta->idcuenta]);
-        }
-        $ok = Prestamo::actualizarEstado();
-        return view('tipoCredito.exito', ["clientes" => $clientes, "usuarioactual" => $usuarioactual,"cuenta"=> $count,"persona"=>$cliente,"prestamo"=>$prestamo,"negocio"=>$negocio]);
-        
 
     }
 

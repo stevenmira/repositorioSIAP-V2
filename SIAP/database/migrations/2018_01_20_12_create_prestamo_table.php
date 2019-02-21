@@ -16,7 +16,7 @@ class CreatePrestamoTable extends Migration
             $table->increments('idprestamo');
 
             //Relacion Prestamo con Codeudor
-            $table->integer('idcodeudor')->nullable()->unsigned();
+            $table->integer('idcodeudor')->unsigned();
             $table->index('idcodeudor');
             $table->foreign('idcodeudor')->references('idcodeudor')->on('codeudor')->onDelete('cascade');
 
@@ -25,6 +25,7 @@ class CreatePrestamoTable extends Migration
             $table->index('idtipodesembolso');
             $table->foreign('idtipodesembolso')->references('idtipodesembolso')->on('tipo_desembolso')->onDelete('cascade');
 
+            $table->date('fechacredito')->required();
             $table->date('fechacomienzo')->required();
 
             $table->date('fecha')->required();

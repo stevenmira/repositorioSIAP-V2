@@ -11,75 +11,28 @@
     border: 1px solid #966;
   }
 </style>
-<section class="content-header">
-  <ol class="breadcrumb">
-    <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
-    <li class="active"> Nuevo </li>
 
-    @if(Session::has('bandera'))
-    <li class="active">Financiamiento</li>
-    @endif
-    @if(Session::has('ban'))
-    <li class="active">Refinanciamiento</li>
-    @endif
-
-    <li class="active"> Fracaso </li>
-  </ol>
-</section>
-<br>
-<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS</h4>
-<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">AFIMID, S.A DE C.V</h4>
-  
-<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 25px 0px;">
-  <b>
-    @if(Session::has('bandera'))
-        NUEVO CRÉDITO COMPLETO
-        @endif
-        @if(Session::has('ban'))
-        NUEVO REFINANCIAMIENTO
-    @endif
-  </b>
-</h4>
-<div class="row text-center">
-  <h2><i class="fa fa-info-circle"> Ha Ocurrido un Error  </i></h2>
-</div>
-<br>
     <!-- Notificación -->
  
-<div class="container" style="text-align:center; font-family:'Trebuchet MS', Helvetica, sans-serif; color: #1C2331;">
-    
-    @if (Session::has('msj1'))
+
+    @if (Session::has('unicidad'))
     <div class="alert  fade in" style="background:  #ff8a80;">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <h4>   <b>{{ Session::get('msj1')}}</b>  </h4>
+      <h4> No se pudo actualizar, el cliente con el número de DUI  <b>{{ Session::get('unicidad')}}</b>  ya está en uso.</h4>
     </div>
     @endif
-
-    @if (Session::has('msj2'))
-    <div class="alert  fade in" style="background:  #ff8a80;">
+  
+    @if (Session::has('update'))
+    <div class="alert  fade in" style="background:  #bbdefb;">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <h4>   <b>{{ Session::get('msj2')}}</b>  </h4>
+      <h4> El cliente  <b>{{ Session::get('update')}}</b>  ha sido actualizado correctamente.</h4>
     </div>
     @endif
-
-    @if (Session::has('msj3'))
-    <div class="alert  fade in" style="background:  #ff8a80;">
+  
+    @if (Session::has('activo'))
+    <div class="alert  fade in" style="background:  #ccff90;">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <h4>   <b>{{ Session::get('msj3')}}</b>  </h4>
-    </div>
-    @endif
-
-    @if (Session::has('msj4'))
-    <div class="alert  fade in" style="background:  #ff8a80;">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <h4>   <b>{{ Session::get('msj4')}}</b>  </h4>
-    </div>
-    @endif
-
-    @if (Session::has('msj5'))
-    <div class="alert  fade in" style="background:  #ff8a80;">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <h4>   <b>{{ Session::get('msj5')}}</b>  </h4>
+      <h4> El cliente  <b>{{ Session::get('activo')}}</b>  fué dado de baja exitosamente.</h4>
     </div>
     @endif
   
@@ -87,41 +40,6 @@
     <div class="alert  fade in" style="background:  #ff8a80;">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
       <h4>   <b>{{ Session::get('fallo')}}</b>  </h4>
-    </div>
-    @endif 
-
-    <!-- Redefinir Cuota -->
-    @if(Session::has('msj6'))
-    <div class="alert  fade in" style="background:  #ff8a80;">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <h4> {{ Session::get('msj6')}}  </h4>
-    </div>
-    @endif
-
-    <!-- Categoria E -->
-    @if(Session::has('msj7'))
-    <div class="alert  fade in" style="background:  #ff8a80;">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <h4> {{ Session::get('msj7')}}  </h4>
-    </div>
-    @endif
-
-    <!-- No posee credito para refinanciar -->
-    @if(Session::has('msj8'))
-    <div class="alert  fade in" style="background:  #ff8a80;">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <h4>   <b>{{ Session::get('msj8')}}</b>. Puede abrir un nuevo credito pulsando 
-        <a href="{{url('credito/create')}}">AQUI</a></h4>
-    </div>
-    @endif
-
-    <!-- Abonos pendientes de pago -->
-    @if (Session::has('msj9'))
-    <div class="alert  fade in" style="background:  #ff8a80;">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <h4>   <b>{{ Session::get('msj9')}}</b> Puede revisar la 
-        <a href="{{url('cuenta/carteraPagos/'.$cuenta)}}">cartera de pago</a>  
-      </h4>
     </div>
     @endif
   
@@ -132,24 +50,68 @@
     </div>
     @endif
   
-    
+    @if (Session::has('error5'))
+   
+    <div class="alert  fade in" style="background:  #ff8a80;">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <h4>   <b>{{ Session::get('error5')}}</b> Puede revisar la <a href="{{url('cuenta/carteraPagos/'.$cuenta)}}">cartera de pago</a>  </h4>
+    </div>
+    @endif
 
 
+    @if(Session::has('error6'))
+    <div class="alert  fade in" style="background:  #ff8a80;">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4>   <b>{{ Session::get('error6')}}</b>  </h4>
+    </div>
+    @endif
+
+    @if(Session::has('error7'))
+    <div class="alert  fade in" style="background:  #ff8a80;">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <h4>   <b>{{ Session::get('error7')}}</b>. Puede abrir un nuevo credito pulsando <a href="{{url('credito/create')}}">AQUI</a></h4>
+    </div>
+    @endif
 
     @if(Session::has('error8'))
     <div class="alert  fade in" style="background:  #ff8a80;">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <h4>   <b>{{ Session::get('error8')}}</b>. Puede revisar la <a href="{{url('cuenta/carteraPagos/'.$cuenta)}}">cartera de pago</a></h4>
+    <h4>   <b>{{ Session::get('error8')}}</b>. Puede revisar la <a href="{{url('cuenta/carteraPagos/'.$cuenta)}}">cartera de pago</a></h4>
     </div>
     @endif
 
-</div>
+
 
     <!-- Fin Notificación -->
 
 
+<section class="content-header">
+  <h1 style="color: #333333; font-family: 'Times New Roman', Times, serif;">
+    @if(Session::has('bandera'))
+    Credito Completo
+    @endif
+    @if(Session::has('ban'))
+    Refinanciamiento
+    @endif
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="{{URL::action('ClienteController@index')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
+    @if(Session::has('bandera'))
+    <li class="active">Credito</li>
+    @endif
+    @if(Session::has('ban'))
+    <li class="active">Refinanciamiento</li>
+    @endif
+  </ol>
+</section>
+<br>
+
+
   <div class="container">
     <div class="row text-center">
+        <div class="col-md-12">
+            <h2><i class="fa fa-info-circle"> Ha Ocurrido un Error  </i></h2>
+        </div>
         <div class="col-md-12" style="margin-top: 20px;">
             <div class="pricing-table">
                 <div class="panel panel-primary" style="border: none;">
