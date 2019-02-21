@@ -20,7 +20,6 @@ class CreateCodeudorTable extends Migration
             $table->index('idcliente');
             $table->foreign('idcliente')->references('idcliente')->on('cliente')->onDelete('cascade');
 
-            $table->string('codigo',10)->required();
             $table->string('nombre',50)->required();
             $table->string('apellido',50)->required();
             $table->string('dui',10)->required();

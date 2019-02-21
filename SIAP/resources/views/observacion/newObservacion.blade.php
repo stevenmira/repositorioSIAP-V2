@@ -12,7 +12,7 @@
   <ol class="breadcrumb">
     <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio </a></li>
     <li><a href="{{URL::action('ClienteController@index')}}"> Cliente </a></li>
-    <li><a href="{{ url('negocios/list', ['id' => $cliente->idcliente ]) }}"> Negocio </a></li>
+    <li><a href="{{ url('comentarios/list', ['id' => $cliente->idcliente ]) }}"> Comentario </a></li>
     <li class="active">Nuevo</li>
   </ol>
 </section>
@@ -22,14 +22,14 @@
 <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS</h4>
 <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">AFIMID, S.A DE C.V</h4>
   
-<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 25px 0px;"><b>NUEVO NEGOCIO</b></h4>
+<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 25px 0px;"><b>NUEVO COMENTARIO</b></h4>
 
 
 <div class="container">
   <p class="a"> <span><i class="fa fa-user" style="padding: 0px 13px 0px 13px;"> {{$cliente->nombre}} {{$cliente->apellido}}</i></span> </p>
 </div>
 
-{!!Form::open(array('url'=>'negocio','method'=>'POST','autocomplete'=>'off', 'onsubmit'=> 'return checkSubmit();'))!!}
+{!!Form::open(array('url'=>'comentario','method'=>'POST','autocomplete'=>'off', 'onsubmit'=> 'return checkSubmit();'))!!}
             {{Form::token()}}
 
 <div class="container">
@@ -56,42 +56,43 @@
       <div class="row"> 
 
         <div class="form-group col-md-4">
-          <label for="nombreNegocio">Nombre del Negocio</label>
+          <label for="nombreNegocio">Fecha</label>
+          <div class="input-group">
+            <div class="input-group-addon">
+              <i class="fa fa-calendar" aria-hidden="true"></i>
+            </div>
+            {!! Form::date('fecha', \Carbon\Carbon::now(), ['class' => 'form-control' , 'required' => 'required']) !!}
+          </div>
+        </div>
+
+        <div class="form-group col-md-7">
+          <label for="actividadEconomica">Responsable</label>
           <div class="input-group">
             <div class="input-group-addon">
               <i class="fa fa-pencil" aria-hidden="true"></i>
             </div>
-            {!! Form::textarea('nombreNegocio', null, ['class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Digite el nombre del negocio . . .', 'autofocus'=>'on', 'rows'=>'3']) !!}
+           {!! Form::text('responsable', null, ['class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca el responsable . . .', 'autofocus'=>'on', 'maxlength'=>'100']) !!}
           </div>
         </div>
+      </div>
 
-        <div class="form-group col-md-4">
-          <label for="actividadEconomica">Actividad Economica</label>
+      <div class="row">
+        <div class="form-group col-md-11">
+          <label for="comentario">Comentario</label>
           <div class="input-group">
             <div class="input-group-addon">
               <i class="fa fa-pencil" aria-hidden="true"></i>
             </div>
-            {!! Form::textarea('actividadEconomica', null, ['class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Digite la actividad economica del negocio . . . ', 'autofocus'=>'on', 'rows'=>'3']) !!}
+            {!! Form::textarea('comentario', null, ['class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca el Comentario . . .', 'autofocus'=>'on', 'rows'=>'5', 'maxlength'=>'1024']) !!}
           </div>
         </div>
-
-        <div class="form-group col-md-4">
-          <label for="direccionNegocio">Dirección del Negocio</label>
-          <div class="input-group">
-            <div class="input-group-addon">
-              <i class="fa fa-pencil" aria-hidden="true"></i>
-            </div>
-            {!! Form::textarea('direccionNegocio', null, ['class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Digite la dirección del negocio . . .', 'autofocus'=>'on', 'rows'=>'3']) !!}
-          </div>
-        </div>
-
       </div>
 
       <div class="row">
         <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12" id="guardar">
           <div class="form-group">
           <input name="_token" value="{{csrf_token()}}" type="hidden"></input>
-              <a href="{{ url('negocios/list', ['id' => $cliente->idcliente ]) }}" class="btn btn-danger btn-lg col-md-offset-2"><i class="fa fa-times" aria-hidden="true"></i> Cancelar</a>
+              <a href="{{ url('comentarios/list', ['id' => $cliente->idcliente ]) }}" class="btn btn-danger btn-lg col-md-offset-2"><i class="fa fa-times" aria-hidden="true"></i> Cancelar</a>
               <button id="btsubmit" class="btn btn-primary btn-lg col-md-offset-6" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Guardar</button>
             </div>
         </div>

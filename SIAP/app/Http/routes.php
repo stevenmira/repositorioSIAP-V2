@@ -133,6 +133,12 @@ Route::get('negocios/nuevo/{id}', ['as' => 'idcliente', 'uses' => 'NegocioContro
 //Comentarios
 Route::resource('comentario','ObservacionController');
 Route::get('comentarios/list/{id}', ['as' => 'idcliente', 'uses' => 'ObservacionController@getObservaciones']);
+Route::get('comentarios/nuevo/{id}', ['as' => 'idcliente', 'uses' => 'ObservacionController@newObservacion']);
+
+//Codeudor
+Route::resource('codeudor','CodeudorController');
+Route::get('codeudores/list/{id}', ['as' => 'idcliente', 'uses' => 'CodeudorController@getCodeudores']);
+Route::get('codeudores/nuevo/{id}', ['as' => 'idcliente', 'uses' => 'CodeudorController@newCodeudor']);
 
 //Record
 Route::resource('record','RecordClienteController');

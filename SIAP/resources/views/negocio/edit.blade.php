@@ -26,7 +26,7 @@
 
 
 <div class="container">
-  <p class="a"> <span><i class="fa fa-user" style="padding: 0px 13px 0px 13px;"> Juan Antonio Perez Gomez</i></span> </p>
+  <p class="a"> <span><i class="fa fa-user" style="padding: 0px 13px 0px 13px;"> {{$cliente->nombre}} {{$cliente->apellido}}</i></span> </p>
 </div>
 
 {!!Form::model($negocio, ['method'=>'PATCH','route'=>['negocio.update',$negocio->idnegocio]])!!}

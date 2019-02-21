@@ -58,7 +58,7 @@
 </div>
 
 <div class="row">
-  <p class="a"> <span><i class="fa fa-user" style="padding: 0px 0px 0px 25px;"> Juan Antonio Perez Gomez</i></span> </p>
+  <p class="a"> <span><i class="fa fa-user" style="padding: 0px 0px 0px 25px;"> {{$cliente->nombre}} {{$cliente->apellido}}</i></span> </p>
 </div>
 
 <div class="row">
