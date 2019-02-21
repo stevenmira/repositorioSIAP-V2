@@ -24,6 +24,8 @@ class TasaInteresFormRequest extends Request
     public function rules()
     {
         return [
+            'nombre'=>'required|max:50',
+            'interes'=>'required',
             //
         ];
     }

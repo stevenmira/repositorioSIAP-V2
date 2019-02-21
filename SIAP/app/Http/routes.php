@@ -156,8 +156,24 @@ Route::resource('credito','TipoCreditoController');
 Route::resource('credito/nuevo','TipoCreditoController@create');
 
 //Gestionar Personal
-Route::resource('empleados','EmpleadoController');
 Route::get('personal','EmpleadoController@indexPersonal');
+
+//Empleado
+Route::resource('empleado','EmpleadoController');
+
+//Supervisor
+Route::resource('supervisor','SupervisorController');
+Route::get('supervisores/inactivos', 'SupervisorController@inactivos');
+
+//Ejecutivo
+Route::resource('ejecutivo','EjecutivoController');
+Route::get('ejecutivos/inactivos', 'EjecutivoController@inactivos');
+
+//Categoria
+Route::resource('categoria','CategoriaController');
+
+
+
 	
 });
 

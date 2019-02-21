@@ -15,8 +15,8 @@ class CreateCategoriaTable extends Migration
         Schema::create('categoria', function (Blueprint $table) {
             $table->increments('idcategoria');
             $table->string('letra',2)->required();
-            $table->string('descripcion',255)->required();
-            $table->string('estado',20)->required();
+            $table->string('calificacion',30)->required();
+            $table->string('descripcion',255)->nullable();
             
             $table->timestamps();
         });
