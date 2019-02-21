@@ -71,29 +71,115 @@ class TasaInteresController extends Controller
     public function store( TasaInteresFormRequest $request)		//Para almacenar
     {
 
-        try{
-                DB::beginTransaction();
+        #try{
+              #  DB::beginTransaction();
 
                 $tasa = new TipoCredito;
 
                 $tasa->nombre = $request->get('nombre');
                 $tasa->condicion = $request->get('condicion');
-                $tasa->monto = $request->get('monto');
-                $tasa->interes = $request->get('interes');
+                #$tasa->monto = $request->get('monto');
+                if (is_numeric($request->get('monto'))){
+                    $tasa->monto = $request->get('monto');
+                }else{
+                    $tasa->monto = 0;
+                }
+
+                #$tasa->interes = $request->get('interes');
+                $interes = $request->get('interes');
+                if ($interes < 0) {
+                    Session::flash('msj1', ' El << Interés >> debe ser ingresado en porcentaje y debe ser mayor o igual a 0. ');
+                    return Redirect::to('tasa-interes/create');
+                }
+                if ($interes > 100) {
+                    Session::flash('msj1', ' El << Interés >> debe ser ingresado en porcentaje y debe ser menor o igual a 100. ');
+                    return Redirect::to('tasa-interes/create');
+                }
+
+                $tasa->interes = $interes/100;
+
                 $tasa->estado = 'DISPONIBLE';
 
                 $tasa->save();
 
-                Session::flash('create', ' '.$tasa->interes.' ');                
+                $porc = $tasa->interes*100;
 
-           DB::commit();
+                Session::flash('create', ' '.$porc.' ');                
 
-        } catch(\Exception $e)
-        {
-          DB::rollback();
-          Session::flash('error', ''.' No se pudo guardar los datos de la tasa de interes, notificalo con los desarrolladores');
-        }   	
+           #DB::commit();
+
+        #} catch(\Exception $e)
+        #{
+         # DB::rollback();
+          #Session::flash('error', ''.' No se pudo guardar los datos de la tasa de interes, notificalo con los desarrolladores');
+        #}   	
 
     	return Redirect::to('tasa-interes');
     }
+    public function edit($idtipocredito)
+    {
+        $usuarioactual=\Auth::user();
+        $fecha_actual = Fecha::spanish();
+
+        //Búscamos la tasa
+        $interes = TipoCredito::findOrFail($idtipocredito);
+
+         return view('tasaInteres.edit',["fecha_actual"=>$fecha_actual, "interes"=>$interes,"usuarioactual"=>$usuarioactual]);   
+    }
+
+    public function update(TasaInteresFormRequest $request, $id)
+    {   
+        $usuarioactual=\Auth::user();
+
+        #try{
+         #       DB::beginTransaction();
+                
+                //Actualizamos datos de la tasa
+                $tasa = TipoCredito::findOrFail($id);
+
+                $tasa->nombre = $request->get('nombre');
+                $tasa->condicion = $request->get('condicion');
+                #$tasa->monto = $request->get('monto');
+                if (is_numeric($request->get('monto'))){
+                    $tasa->monto = $request->get('monto');
+                }else{
+                    $tasa->monto = 0;
+                }
+
+                $tasa->interes = $request->get('interes');
+
+                $interes = $request->get('interes');
+
+                if ($interes < 0) {
+                    Session::flash('msj1', ' El << Interés >> debe ser ingresado en porcentaje y debe ser mayor o igual a 0. ');
+                    return Redirect::to('tasa-interes/'.$id.'/edit');
+                }
+
+                if ($interes > 100) {
+                    Session::flash('msj1', ' El << Interés >> debe ser ingresado en porcentaje y debe ser menor o igual a 100. ');
+                    return Redirect::to('tasa-interes/'.$id.'/edit');
+                }
+                $tasa->interes = $interes/100;
+
+                $tasa->estado = 'DISPONIBLE';
+
+                $tasa->update();
+
+                $porc = $tasa->interes*100;
+
+
+                Session::flash('update', ' '.$porc.' ');
+                
+          # DB::commit();
+
+#        } catch(\Exception $e)
+        #{
+         # DB::rollback();
+          #Session::flash('error', ''.' No se pudo actualizar la Tasa , algo salió mal');
+
+          
+           return Redirect::to('tasa-interes');
+    
+    }
+
 }

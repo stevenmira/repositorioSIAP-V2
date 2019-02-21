@@ -14,14 +14,32 @@ class CategoriaSeed extends Seeder
     {
         DB::table('categoria')->insert([
             'letra' => 'A',
-            'descripcion' => 'Es menor a x cuota',
-            'estado' => 'APROBADO',
+            'calificacion' => 'EXCELENTE',
+            'descripcion' => 'Maximo 1 cuota de atraso',
+        ]);
+
+        DB::table('categoria')->insert([
+            'letra' => 'B',
+            'calificacion' => 'BUENO',
+            'descripcion' => 'De 1 a 5 cuotas de atraso',
+        ]);
+
+        DB::table('categoria')->insert([
+            'letra' => 'C',
+            'calificacion' => 'REGULAR',
+            'descripcion' => 'Mayor a 6 cuotas de atraso',
+        ]);
+
+        DB::table('categoria')->insert([
+            'letra' => 'D',
+            'calificacion' => 'MALO',
+            'descripcion' => 'Mayor a 13 cuotas de atraso',
         ]);
 
         DB::table('categoria')->insert([
             'letra' => 'E',
-            'descripcion' => 'Es mayor a y cuota',
-            'estado' => 'REPROBADO',
+            'calificacion' => 'MORA',
+            'descripcion' => 'Maximo 1 cuotra de atraso',
         ]);
     }
 }

@@ -17,30 +17,32 @@
   @if (Session::has('create'))
   <div class="alert  fade in" style="background:  #ccff90;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4>Los datos del cliente <b>{{ Session::get('create')}}</b> han sido guardados correctamente.</h4>
+    <h4>La tasa de interés del <b>{{ Session::get('create')}}%</b> ha sido guardada correctamente.</h4>
   </div>
   @endif
 
   @if (Session::has('unicidad'))
   <div class="alert  fade in" style="background:  #ff8a80;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4> No se pudo actualizar, el cliente con el número de DUI  <b>{{ Session::get('unicidad')}}</b>  ya está en uso.</h4>
+    <h4> No se pudo actualizar la tasa de interes <b>{{ Session::get('unicidad')}}</b>  ya está en uso.</h4>
   </div>
   @endif
 
   @if (Session::has('update'))
   <div class="alert  fade in" style="background:  #bbdefb;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4> Los datos del cliente  <b>{{ Session::get('update')}}</b>  han sido actualizados correctamente.</h4>
+    <h4> La tasa de interés del <b>{{ Session::get('update')}}%</b>  ha sido actualizada correctamente.</h4>
   </div>
   @endif
 
-  @if (Session::has('activo'))
-  <div class="alert  fade in" style="background:  #f0f4c3;">
+   @if (Session::has('delete'))
+  <div class="alert  fade in" style="background:  #ccff90;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4> El cliente  <b>{{ Session::get('activo')}}</b>  fué dado de baja exitosamente.</h4>
+    <h4>La tasa de interés del <b>{{ Session::get('delete')}}%</b> fué eliminada correctamente.</h4>
   </div>
   @endif
+
+  <!-- Fin Notificación -->
 
   @if (Session::has('error'))
   <div class="alert  fade in" style="background:  #ff8a80;">
@@ -95,12 +97,10 @@
                           @endif
                           <td>{{ $ma->interes*100 }}%</td>
                           <td style="width: 230px;">
-                              <a class="btn btn-info azul" data-title="Editar Tasa de Intrerés" href="{{URL::action('TasaInteresController@edit',$ma->idtipocredito)}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                              <a class="btn btn-info azul" data-title="Editar Tasa de Interés" href="{{URL::action('TasaInteresController@edit',$ma->idtipocredito)}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
 
-                              <a class="btn btn-danger rojo" data-title="Inhabilitar Tasa" href="" data-target="#modal-delete-{{$ma->idtipocredito}}" data-toggle="modal"><i class="fa fa-trash" aria-hidden="true"></i></a>
                           </td>
                       </tr>
-                      @include('tasaInteres.modal')
                   @endforeach
                 </table>
             </div>
