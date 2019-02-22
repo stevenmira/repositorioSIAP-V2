@@ -61,7 +61,6 @@
                 <li><a href="{{URL::action('CategoriaController@index')}}"><i class="fa fa-circle-o"></i>  Categorias</a></li>
                 <li><a href="{{URL::action('EmpleadoController@indexPersonal')}}"><i class="fa fa-circle-o"></i> Personal</a></li>
                 <li><a href="{{URL::action('TasaInteresController@index')}}"><i class="fa fa-circle-o"></i> Tasas de interés</a></li>
-                <li><a href="{{URL::action('ImprimirController@index')}}"><i class="fa fa-circle-o"></i> Imprimir</a></li>
               </ul>
             </li>
 

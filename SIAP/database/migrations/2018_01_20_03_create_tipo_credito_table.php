@@ -17,7 +17,7 @@ class CreateTipoCreditoTable extends Migration
             $table->string('nombre')->required();
             $table->string('condicion',100)->nullable();
             //formato tipo decimal('nombre de campo',tamaño, precision)
-            $table->float('monto');
+            $table->float('monto')->nullable();
             $table->float('interes')->required();
             $table->string('estado',20)->nullable();
             $table->timestamps();
