@@ -33,9 +33,14 @@ class EmpleadoController extends Controller
             
     		$query = trim($request->get('searchText'));
 
-    		$empleados = DB::table('empleado')->orderBy('idempleado','asc')->paginate(25);
+            $consulta = DB::table('empleado')->orderby('empleado.apellido','asc')->get();
 
-    		return view('personal.empleado.index',["empleados"=>$empleados, "fecha_actual"=>$fecha_actual, "searchText"=>$query,"usuarioactual"=>$usuarioactual]);
+            $empleados = DB::table('empleado')
+            ->where('empleado.apellido','LIKE','%'.$query.'%')
+            ->orderBy('idempleado','asc')
+            ->paginate(25);
+
+    		return view('personal.empleado.index',["empleados"=>$empleados, "consulta"=>$consulta,"fecha_actual"=>$fecha_actual, "searchText"=>$query,"usuarioactual"=>$usuarioactual]);
     	}
 
     }
@@ -116,11 +121,15 @@ class EmpleadoController extends Controller
 
         $empleado = Empleado::findOrFail($id);
 
-        //Calculo de la edad
+       //Calculo de la edad
+        if (!is_null($empleado->fechanacimiento)) {
         $edad = Fecha::calcularEdad($empleado->fechanacimiento);
 
-        //Parceo de fecha
-        $empleado->fechanacimiento = \Carbon\Carbon::parse($empleado->fechanacimiento)->format('d-m-Y');       
+        $empleado->fechanacimiento = \Carbon\Carbon::parse($empleado->fechanacimiento)->format('d-m-Y');
+        }
+        else{
+            $edad="";
+        }      
 
 
         return view('personal.empleado.show',["empleado"=>$empleado, "edad"=>$edad, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);   
