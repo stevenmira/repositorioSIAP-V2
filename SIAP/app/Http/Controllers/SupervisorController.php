@@ -26,7 +26,11 @@ class SupervisorController extends Controller
 
             $consulta = DB::table('supervisor')->where('supervisor.estado','=','ACTIVO')->orderby('supervisor.apellido','asc')->get();
 
-    		$supervisores = DB::table('supervisor')->orderBy('idsupervisor','asc')->paginate(25);
+            $supervisores = DB::table('supervisor')
+            ->where('supervisor.apellido','LIKE','%'.$query.'%')
+            ->where('supervisor.estado','=','ACTIVO')
+            ->orderBy('idsupervisor','asc')
+            ->paginate(25);
 
     		return view('personal.supervisor.index',["supervisores"=>$supervisores,"consulta"=>$consulta,"fecha_actual"=>$fecha_actual, "searchText"=>$query,"usuarioactual"=>$usuarioactual]);
     	}
@@ -109,10 +113,14 @@ public function show($id)       //Para mostrar
         $supervisor = Supervisor::findOrFail($id);
 
         //Calculo de la edad
+        if (!is_null($supervisor->fechanacimiento)) {
         $edad = Fecha::calcularEdad($supervisor->fechanacimiento);
 
-        //Parceo de fecha
-        $supervisor->fechanacimiento = \Carbon\Carbon::parse($supervisor->fechanacimiento)->format('d-m-Y');       
+        $supervisor->fechanacimiento = \Carbon\Carbon::parse($supervisor->fechanacimiento)->format('d-m-Y');
+        }
+        else{
+            $edad="";
+        }      
 
 
         return view('personal.supervisor.show',["supervisor"=>$supervisor, "edad"=>$edad, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);   

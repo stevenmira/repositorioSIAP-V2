@@ -5,7 +5,7 @@
 			<label for="matricula">Selecciona el ejecutivo</label>
 			<select name="searchText"  class="form-control selectpicker" id="searchText" data-Live-search="true" title="-- Introduzca el criterio de búsqueda --">
 				@foreach($consulta as $ejecutivo)
-				<option value="{{ $ejecutivo->idejecutivo }}">{{$ejecutivo->nombre}} {{$ejecutivo->apellido}}</option>
+				<option value="{{ $ejecutivo->apellido }}">{{$ejecutivo->nombre}} {{$ejecutivo->apellido}}</option>
 				@endforeach
 			</select>
 		</div>

@@ -22,12 +22,15 @@ class EjecutivoController extends Controller
             $usuarioactual=\Auth::user();
             $fecha_actual = Fecha::spanish();
             
-    		#$query = trim($request->get('searchText'));
             $query = $request->get('searchText');
 
             $consulta = DB::table('ejecutivo')->where('ejecutivo.estado','=','ACTIVO')->orderby('ejecutivo.apellido','asc')->get();
 
-    		$ejecutivos = DB::table('ejecutivo')->orderBy('idejecutivo','asc')->paginate(25);
+    		$ejecutivos = DB::table('ejecutivo')
+            ->where('ejecutivo.apellido','LIKE','%'.$query.'%')
+            ->where('ejecutivo.estado','=','ACTIVO')
+            ->orderBy('idejecutivo','asc')
+            ->paginate(25);
 
     		return view('personal.ejecutivo.index',["ejecutivos"=>$ejecutivos, "searchText"=>$query,"consulta"=>$consulta, "fecha_actual"=>$fecha_actual, "searchText"=>$query,"usuarioactual"=>$usuarioactual]);
     	}
@@ -109,11 +112,14 @@ class EjecutivoController extends Controller
         $ejecutivo = Ejecutivo::findOrFail($id);
 
         //Calculo de la edad
+        if (!is_null($ejecutivo->fechanacimiento)) {
         $edad = Fecha::calcularEdad($ejecutivo->fechanacimiento);
 
-        //Parceo de fecha
-        $ejecutivo->fechanacimiento = \Carbon\Carbon::parse($ejecutivo->fechanacimiento)->format('d-m-Y');       
-
+        $ejecutivo->fechanacimiento = \Carbon\Carbon::parse($ejecutivo->fechanacimiento)->format('d-m-Y');
+        }
+        else{
+            $edad="";
+        }       
 
         return view('personal.ejecutivo.show',["ejecutivo"=>$ejecutivo, "edad"=>$edad, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);   
     }
