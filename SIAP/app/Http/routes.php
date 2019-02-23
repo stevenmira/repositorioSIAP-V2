@@ -144,7 +144,8 @@ Route::get('codeudores/nuevo/{id}', ['as' => 'idcliente', 'uses' => 'CodeudorCon
 //Grarantias
 Route::resource('garantia','GarantiaController');
 Route::get('cliente/creditos/{id}', ['as' => 'idcliente', 'uses' => 'GarantiaController@getCreditos']);
-Route::get('cliente/credito/gatantias/{id}', ['as' => 'idcuenta', 'uses' => 'GarantiaController@getGarantias']);
+Route::get('cliente/credito/garantias/{id}', ['as' => 'idcuenta', 'uses' => 'GarantiaController@getGarantias']);
+Route::get('cliente/credito/garantias/nuevo/{idprestamo}', ['as' => 'lista', 'uses' => 'GarantiaController@newGarantia']);
 
 //Record
 Route::resource('record','RecordClienteController');
