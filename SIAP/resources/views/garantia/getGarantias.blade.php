@@ -93,6 +93,13 @@
   </div>
   @endif
 
+  @if (Session::has('delete'))
+    <div class="alert  fade in" style="background:  #f0f4c3;">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <p> La garantía del -- {{ Session::get('delete')}} --  se ha eliminado correctamente</p>
+    </div>
+  @endif
+
 </div>
 
 <div class="row">
@@ -134,6 +141,7 @@
                     <a class="btn btn-danger rojo" data-title="Eliminar Garantía" href="" data-target="#modal-delete-{{$ma->idgarantia}}" data-toggle="modal"><i class="fa fa-trash" aria-hidden="true"></i></a>
                   </td>
               </tr>
+              @include('garantia.modal')
           <?php $cont = $cont + 1; ?>
           @endforeach
       </table>

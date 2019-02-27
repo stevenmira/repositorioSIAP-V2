@@ -176,4 +176,15 @@ class GarantiaController extends Controller
         return Redirect::to('cliente/credito/garantias/'.$garantia->idprestamo);
     }
 
+    public function destroy($idgarantia)
+    {
+        $usuarioactual=\Auth::user();
+
+        $garantia = Garantia::findOrFail($idgarantia);
+        $garantia->delete();
+        Session::flash('delete'," ".$garantia->tipogarante.' ');
+
+         return Redirect::to('cliente/credito/garantias/'.$garantia->idprestamo);
+    }
+
 }
