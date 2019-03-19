@@ -20,15 +20,18 @@ use Carbon\Carbon;
 </style>
 
 <section class="content-header">
-  <h1 style="color: #333333; font-family: 'Times New Roman', Times, serif;">
-    CALCULAR CRÉDITO - CARTERA DE PAGOS
-  </h1>
   <ol class="breadcrumb">
     <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
-    <li><a href="{{URL::action('calcularCreditoController@create')}}"><i></i> Cálculo del crédito</a></li>
-    <li><a href="#"><i></i> Resultado</a></li>
+    <li class="active"><a href="{{URL::action('calcularCreditoController@create')}}"> Calcular Crédito Completo</a> </li>
+    <li class="active"> Resultado </li>
   </ol>
 </section>
+
+<br>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS</h4>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">AFIMID, S.A DE C.V</h4>
+
+<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 40px 0px;"><b>CARTERA DE PAGOS (RESULTADO) </b></h4>
 
 <section class="content">
 <?php
@@ -37,7 +40,6 @@ $tasa = $tasaInteres*100;
 ?>
 <!--asignacion del nuevo monto-->
 
-<br>
 {!!Form::open(array('url'=>'calcular-credito/imprimir','method'=>'GET','autocomplete'=>'off'))!!}
             {{Form::token()}}
 

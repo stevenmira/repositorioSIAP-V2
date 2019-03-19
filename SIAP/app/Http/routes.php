@@ -57,6 +57,7 @@ Route::get('lista/clientesPDF/{id}','CarteraClientController@carteraClientPDF');
 //consulta a la base por jquery
 Route::get('search/{id}','TipoCreditoController@autoComplete');
 Route::get('search2/{id}','TipoCreditoController@autoCompleteCodeudor');
+Route::get('search3/{id}','RefinanciamientoController@autoCompleteSaldos');
 //ERRORES 
 
 Route::get('error', function(){ 
@@ -116,6 +117,7 @@ Route::group(['middleware' => 'usuarioAdmin'], function () {
 //cartera de pagos
 Route::get('cuenta/carteraPagos/{id}', ['as' => 'idcuenta', 'uses' => 'LiquidacionController@cuenta']);
 Route::resource('ingresarPago', 'LiquidacionController');  //edit
+Route::post('cuenta/carteraPagos/estados', 'LiquidacionController@updateEstado');
 
 //Refinanciamiento de credito
 Route::resource('refinanciamiento','RefinanciamientoController');

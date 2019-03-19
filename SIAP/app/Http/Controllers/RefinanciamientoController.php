@@ -28,7 +28,6 @@ class RefinanciamientoController extends Controller
     {
         $usuarioactual = \Auth::user();
         $fecha_actual = Fecha::spanish();
-
         $clientes = DB::table('cliente')->where('estado','=','ACTIVO')->orderby('nombre', 'asc')->get();
         $interesList = DB::table('tipo_credito')->orderby('tipo_credito.interes', 'asc')->get();
 
@@ -45,6 +44,7 @@ class RefinanciamientoController extends Controller
         $fechacomienzo = $request->get('fechacomienzo');
         $tipo1 = $request->get('tipo1');                    // Cobro de comision
         $tipo2 = $request->get('tipo2');                    // Tipo de desembolso
+        $tipo3 = $request->get('tipo3');                    // Cancelar con Ref.
         $numcheque = $request->get('numcheque');
         $cliente = Cliente::where('idcliente', $request->get('searchItem'))->first();
         $negocio = Negocio::where('idnegocio', $request->get('idnegocio'))->first();
@@ -54,10 +54,24 @@ class RefinanciamientoController extends Controller
         $monto = $request->get('monto');
         $cuota = $request->get('cuota');
 
+        //Estado Prestamo Anterior
+        $capitalanterior = $request->get('capitalanterior');
+        $cuotaatrasada = $request->get('cuotaatrasada');
+        $mora = $request->get('mora');
+
         //se validan las fechas
         if ($fechacomienzo < $fechacredito) {
+
+            // Se retornan las fechas a espaniol
+            $f1 = new DetalleLiquidacion;
+            $f1->fechadiaria = Carbon::parse($fechacredito);
+
+            $f2 = new DetalleLiquidacion;
+            $f2->fechadiaria = Carbon::parse($fechacomienzo);
+
             Session::flash('ban',2);
-            Session::flash('msj1', "La fecha de comienzo de la cartera de pagos -- ".($fechacomienzo)." -- debe ser mayor o igual a la fecha de creacion del credito -- ".$fechacredito." --");
+            Session::flash('msj1A', " -- ".$f1->fechadiaria->format('l j  F Y ')." -- ");
+            Session::flash('msj1B', " -- ".$f2->fechadiaria->format('l j  F Y ')." -- ");
             return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual]);
         }
 
@@ -65,13 +79,13 @@ class RefinanciamientoController extends Controller
         if (is_null($cliente)) {
             Session::flash('ban',2);
             Session::flash('msj2', "Hay un problema con el cliente, al parecer no se encuentra en nuesta base de datos");
-            return view('tipoCredito.fracaso', ["clientes" => $clientes, "usuarioactual" => $usuarioactual]);
+            return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual]);
         }
 
         //se validan el negocio
         if (is_null($negocio)) {
             Session::flash('ban',2);
-            Session::flash('msj3', "El cliente debe poseer un negocio activo");
+            Session::flash('msj3', "No ha seleccionado negocio");
             return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual]);
         }
 
@@ -82,14 +96,11 @@ class RefinanciamientoController extends Controller
             return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual]);
         }
 
-        $clientes = DB::table('cliente')->where('estado','=','ACTIVO')->orderby('cliente.apellido', 'asc')->get();
-
-
-        //Se valida que el cliente posea un credito abierto con ese negocio
+        //Se valida que el cliente posea una cuenta activa con ese negocio
         $cuenta = Cuenta::where('idnegocio', $negocio->idnegocio)->where('estado','=','ACTIVO')->first();        
         if (is_null($cuenta)) {
             Session::flash('ban',2);
-            Session::flash('msj8', "El cliente -- ".$cliente->nombre." ".$cliente->apellido." -- no posee un credito en el cual -- refinanciar --");
+            Session::flash('msj8', "El cliente -- ".$cliente->nombre." ".$cliente->apellido." -- no posee una cuenta -- activa -- en la cual -- refinanciar --");
             return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual]);
         }
 
@@ -97,20 +108,30 @@ class RefinanciamientoController extends Controller
         $banderaDetalleLiquidacion = DetalleLiquidacion::where('idcuenta', $cuenta->idcuenta)->where('estado', '=', 'ABONO')->first();
         if (!is_null($banderaDetalleLiquidacion)) {
             Session::flash('ban',2);
-            Session::flash('msj9', "El cliente ".$cliente->nombre." ".$cliente->apellido." tiene abonos pendientes.");
+            Session::flash('msj9', "El cliente ".$cliente->nombre." ".$cliente->apellido." tiene un -- abono -- pendiente.");
             return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual,"cuenta"=>$cuenta->idcuenta]);
         }
 
-        $montoCapital = ((intdiv($monto, 50)) * 2.25) + $monto;
+        //Se obtiene el verdadero  monto capital
+        switch ($tipo1) 
+        {
+            case 'SI':
+              $montoCapital = ((intdiv($monto, 50)) * 2.25) + $monto;
+            break;
+
+            case 'NO':
+                $montoCapital=$monto;
+            break;
+        }
 
         // Validacion: Redefinir cuota
         $interesDiario = $montoCapital * $tipoCredito->interes;
         $interesDiario = round($interesDiario,2);
 
         if($interesDiario>$cuota){
-        Session::flash('ban',2);
-        Session::flash('msj6', "Debe redefinir la cuota, debe ser mayor de $".($interesDiario+0.01)."");
-        return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual, "cuota"=>$interesDiario]);
+            Session::flash('ban',2);
+            Session::flash('msj6', "Debe redefinir la cuota, debe ser mayor de $".($interesDiario+0.01)."");
+            return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual, "cuota"=>$interesDiario]);
         }
 
         //se valida que el cliente este apto para adquirir un nuevo credito
@@ -120,29 +141,66 @@ class RefinanciamientoController extends Controller
             return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual]);
         }
 
-        $resultado = Self::calculoCredito($request->get('monto'), $request->get('cuota'), $request->get('credito'), $cliente->idcliente, $request->get('idnegocio'),$request->get('fechaCredito'));
-        
-        Session::flash('exito1', $resultado);
+        // se valida que el saldo capital anterior no exceda el nuevo monto a adquirir
+        $liqui = DetalleLiquidacion::where('idcuenta',$cuenta->idcuenta)->where('abonocapital','pivote')->first();
+        $saldoCapitalCreditoAnterior = $liqui->monto;
 
-        $count = Cuenta::where('idnegocio',$request->get('idnegocio'))->where('estado','=','ACTIVO')->first();
-        $prestamo = Prestamo::where('idprestamo',$count->idprestamo)->first();
-        $negocio = Negocio::where('idnegocio',$request->get('idnegocio'))->first();
-
-        if($resultado=='excede')
+        if($saldoCapitalCreditoAnterior>$monto)
         {
-            Session::flash('ban',1);
-            Session::flash('error8', "El monto a refinanciar excede el total capital del credito anterior");
-            return view('tipoCredito.fracaso', ["clientes" => $clientes, "usuarioactual" => $usuarioactual,"cuenta"=>$cuenta->idcuenta]);
+            Session::flash('ban',2);
+            Session::flash('msj10', "El monto a refinanciar excede el saldo capital del credito anterior");
+            return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual,"cuenta"=>$cuenta->idcuenta]);
         }
-        $ok = Prestamo::actualizarEstado();
-        return view('tipoCredito.exito', ["clientes" => $clientes, "usuarioactual" => $usuarioactual,"cuenta"=> $count,"persona"=>$cliente,"prestamo"=>$prestamo,"negocio"=>$negocio]);
-        
 
-    }
+        //Se valida que el prestamo anterior no se encuentre cerrado
+        $prestamo = Prestamo::where('idprestamo', $cuenta->idprestamo)->where('estadodos','=','CERRADO')->first();        
+        if (!is_null($prestamo)) {
+            Session::flash('ban',2);
+            Session::flash('msj11', "El cliente -- ".$cliente->nombre." ".$cliente->apellido." -- tiene actualmente el prestamo anterior en estado -- cerrado --. No se puede -- refinanciar --");
+            return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual]);
+        }
 
-    public function show()
-    {
+        // ---------- Se procede a saldar la vieja cuenta ---------- //
 
+        // Se pagan las cuotas con refinanciamiento y se actualizan los pagos de la antigua cuenta
+        if ($tipo3 == 'SI') {
+            $sms2 = Self::pagoCuotaConRefinanciamiento($cuenta->idcuenta, $cuotaatrasada);
+            $updateCuentaAntigua = DetalleLiquidacion::calculoModificadoN($cuenta->idcuenta);
+
+            // Se retorna el componente que fallo
+            if ($sms2 != 'exito') {
+                Session::flash('ban',2);
+                Session::flash('cmp1', ''.$sms2);
+                return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual]);
+            }
+
+        }
+
+        // Metodo para inactivar la cuenta y  cerrar prestamo, anterior
+        Self::finalizarCuentaPrestamo($cuenta->idcuenta, $capitalanterior, $cuotaatrasada, $mora);
+
+        // ---------- Se procede a tratar la nueva cuenta ---------- //
+
+        // Metodo para crear el nuevo prestamo y la cuenta
+        $idPrestamo = Self::insertarCuentaPrestamo($fechacredito, $fechacomienzo, $tipo1, $tipo2, $numcheque, $cliente->idcliente, $negocio->idnegocio, $idcodeudor,  $tipoCredito->idtipocredito, $monto, $cuota, $cuenta->idcuenta);
+
+        // creacion de la cartera de pagos
+        $idcuenta = DetalleLiquidacion::calculoDetalleLiquidacion($montoCapital, $tipoCredito->idtipocredito, $cuota, $idPrestamo,$fechacomienzo);
+
+        //Se actualizan las liquidacines creadas --pivote--
+        $sms = DetalleLiquidacion::calculoModificadoN($idcuenta);
+        // Se retorna el componente que fallo
+        if ($sms != 'exito') {
+            Session::flash('cmp1', ''.$sms);
+        }
+
+        Session::flash('ban',2);
+        Session::flash('exito1', ''.' Credito de tipo -- '.$tipoCredito->nombre.' -- guardado con exito');
+
+        $cuentaNueva = Cuenta::where('idprestamo',$idPrestamo)->first();
+        $prestamo = Prestamo::where('idprestamo',$idPrestamo)->first();
+
+        return view('tipoCredito.exito', ["usuarioactual" => $usuarioactual,"cuenta"=> $cuentaNueva,"persona"=>$cliente,"prestamo"=>$prestamo,"negocio"=>$negocio]);
     }
 
     public function edit()
@@ -160,161 +218,6 @@ class RefinanciamientoController extends Controller
 
     }
 
-    /*
-    Nombre: calculoCredito
-    Objetivo: bifurca entre los diferentes tipos de creditos
-    Autor: Lexan
-    parámetros de entrada: monto, cuota,tipo del credito, ID de cliente y ID del negocio
-    parámetros de salida: mensaje exito o fracaso.
-     */
-    public function calculoCredito($monto, $cuota, $tipo, $id, $idN,$fecha)
-    {
-        $usuarioactual = \Auth::user();
-        $clientes = DB::table('cliente')->where('estado','=','ACTIVO')->orderby('cliente.apellido', 'asc')->get();
-        //$saldoCapitalCreditoAnterior = Self::calculoSaldoCapital($idN);
-        $saldoCapitalCreditoAnterior = DetalleLiquidacion::saldoCapital($idN);
-        $montoCapitalInicial = ((intdiv($monto, 100)) * 4.50) + $monto;
-        // $montoTotal = $saldoCapitalCreditoAnterior + $montoCapitalInicial;
-        $montoTotal=$montoCapitalInicial;
-
-        
-        
-        $cuenta = Cuenta::where('idnegocio', $idN)->where('estado','=','ACTIVO')->first();
-        $prestamo = Prestamo::where('idprestamo',$cuenta->idprestamo)->first();
-        $estadoanterior=$prestamo->estadodos;
-        $cuotas = (Self::cuotasAtrasadas($cuenta->idcuenta))+1;
-
-        $interesDiario = Self::getInteres($tipo,$montoTotal);
-
-        if($saldoCapitalCreditoAnterior>$monto)
-        {
-            return 'excede';
-        }
-
-        DetalleLiquidacion::calculoN_modificado($cuenta->idcuenta);
-        $n=DetalleLiquidacion::estados_cuotas($cuenta->idcuenta);
-
-
-        
-
-        if ($prestamo->estadodos=='ACTIVO') {
-            $cuenta->capitalanterior = $saldoCapitalCreditoAnterior;
-            $cuenta->mora = 0;
-            $cuenta->cuotaatrasada = $cuotas;
-            $cuenta->estado = 'INACTIVO';
-            $cuenta->update();
-
-           
-            $prestamo->estadodos = 'CERRADO';
-            
-            $prestamo->update();
-
-           
-        } 
-        
-        if($prestamo->estadodos=='VENCIDO')
-        {
-            //$prestamo = Prestamo::where('idprestamo', $cuenta->idprestamo)->first();
-            $fechaActual = Carbon::now();
-            $fechaFinalizacionContrato = Carbon::parse($prestamo->fechaultimapago);
-            $diasExpirados=$fechaActual->diffInDays($fechaFinalizacionContrato);
-            $mora = $saldoCapitalCreditoAnterior * $cuenta->interes * $diasExpirados;
-            
-
-            $cuenta->capitalanterior = $saldoCapitalCreditoAnterior;
-            $cuenta->mora = $mora;
-            $cuenta->cuotaatrasada = $cuotas;
-            $cuenta->estado = 'INACTIVO';
-            $cuenta->update();
-
-            $prestamo = Prestamo::where('idprestamo',$cuenta->idprestamo)->first();
-            
-            $prestamo->estadodos = 'CERRADO';
-            $prestamo->update();
-
-        }
-
-        switch ($tipo) {
-            case 'normal':
-
-                if ($montoTotal <= 80) {
-                    $tipoCredito = 1;
-                } elseif ($montoTotal > 80 && $montoTotal <= 105) {
-                    $tipoCredito = 2;
-                } else {
-                    $tipoCredito = 3;
-                }
-
-                $idPrestamo = Self::insertarCuentaPrestamo($montoTotal, $cuota, $tipoCredito, $id, $idN,$monto,$cuenta->idcuenta,$fecha,$estadoanterior);
-
-                Self::calculoDetalleLiquidacion($montoTotal, $tipoCredito, $cuota, $id, $idPrestamo, $idN,$fecha,$cuenta->idcuenta);
-                return 'Refinanciamiento de tipo NORMAl guardado con exito';
-                break;
-
-            case 'preferencial':
-                $tipoCredito = 4;
-                $idPrestamo = Self::insertarCuentaPrestamo($montoTotal, $cuota, $tipoCredito, $id, $idN,$monto,$cuenta->idcuenta,$fecha,$estadoanterior);
-
-                Self::calculoDetalleLiquidacion($montoTotal, $tipoCredito, $cuota, $id, $idPrestamo, $idN,$fecha,$cuenta->idcuenta);
-                return 'Refinanciamiento de tipo Preferencial guardado con exito';
-
-                break;
-
-            case 'oro':
-                $tipoCredito = 5;
-                $idPrestamo = Self::insertarCuentaPrestamo($montoTotal, $cuota, $tipoCredito, $id, $idN,$monto,$cuenta->idcuenta,$fecha,$estadoanterior);
-
-                Self::calculoDetalleLiquidacion($montoTotal, $tipoCredito, $cuota, $id, $idPrestamo, $idN,$fecha,$cuenta->idcuenta);
-                return 'Refinanciamiento de tipo ORO guardado con exito';
-                break;
-        }
-
-    }
-
-    /*
-    Nombre: cuotasAtrasadas
-    Objetivo: cuenta el numero de cuotas atrasadas de un cliente
-    Autor: Lexan
-    parámetros de entrada: 
-    parámetros de salida:
-     */
-    public function cuotasAtrasadas($cuenta)
-    {
-        //$cuenta = Cuenta::where('idnegocio', $idN)->first();
-        $cuotas = DetalleLiquidacion::where('idcuenta', $cuenta)->where('estado', '=', 'ATRASO')->count();
-
-        if (is_null($cuotas)) {
-            return -1;
-        } else {
-            return $cuotas;
-        }
-    }
-
-    /*
-    Nombre: calcula el saldo del monto capital de la cuenta anterior.
-    Objetivo: cuenta el numero de cuotas atrasadas de un cliente
-    Autor: Lexan
-    parámetros de entrada:
-    parámetros de salida:
-     */
-    public function calculoSaldoCapital($idN)
-    {
-        $saldo = 0;
-        $cuenta = Cuenta::where('idnegocio', $idN)->where('estado', '=', 'ACTIVO')->firstorFail();
-        $detallesLiquidaciones = DetalleLiquidacion::where('idcuenta', $cuenta->idcuenta)->get();
-
-        foreach ($detallesLiquidaciones as $detalle) {
-            if (is_null($detalle->fechaefectiva) && !is_null($detalle->monto)) {
-                $saldo = $detalle->monto;
-            }
-        }
-
-        if (is_null($saldo)) {
-            return 0;
-        } else {
-            return $saldo;
-        }
-    }
 
     /*
     Nombre: insertarCuentaPrestamodetalleLiquidacion
@@ -323,16 +226,49 @@ class RefinanciamientoController extends Controller
     parámetros de entrada: monto, cuota, tipo del credito y ID del cliente.
     parámetros de salida: el ID del prestamo recien creado.
      */
-    public function insertarCuentaPrestamo($montoCapital, $cuota, $tipoCredito, $id, $idN,$monto,$idcuenta,$date,$estadoanterior)
+    public function insertarCuentaPrestamo($fechacredito, $fechacomienzo, $tipo1, $tipo2, $numcheque, $idcliente, $idnegocio, $idcodeudor,  $idtipocredito, $monto, $cuota, $idcuenta)
     {
-        $nuevoTipoCredito = TipoCredito::where('idtipocredito', $tipoCredito)->first();
-        $number = Self::numeroPrestamo($id);
+        $tipoCredito = TipoCredito::where('idtipocredito', $idtipocredito)->first();
+        $codeudor = Codeudor::where('idcodeudor', $idcodeudor)->first();
+
+        $number = Self::numeroPrestamo($idcliente);
+        $fecha= Carbon::parse($fechacredito)->format('Y-m-d');
+        $fechacomienzo= Carbon::parse($fechacomienzo)->format('Y-m-d');
+
         //se crea un nuevo prestamo
-        $fechaUno= Carbon::parse($date);
         $prestamo = new Prestamo;
-        $fecha = $fechaUno->addDay();
-        $prestamo->fecha = $fecha->format('Y-m-d');
+        $prestamo->fecha = $fecha;
+        $prestamo->fechacomienzo = $fechacomienzo;
+
+        switch ($tipo1) 
+        {
+            case 'SI':
+              $montoCapital = ((intdiv($monto, 50)) * 2.25) + $monto;
+            break;
+
+            case 'NO':
+                $montoCapital=$monto;
+            break;
+        }
+
+        switch ($tipo2) 
+        {
+            case 'SI':
+              $prestamo->idtipodesembolso = 1;
+            break;
+
+            case 'NO':
+                $prestamo->idtipodesembolso = 2;
+                $prestamo->numerocheque = $numcheque;
+            break;
+        }
+
+        if(!is_null($codeudor)){
+            $prestamo->idcodeudor = $codeudor->idcodeudor;
+        }
+
         $prestamo->monto = $montoCapital;
+
         $prestamo->cuotadiaria = $cuota;
         $prestamo->estado = 'REFINANCIAMIENTO';
         $prestamo->estadodos = 'ACTIVO';
@@ -342,150 +278,15 @@ class RefinanciamientoController extends Controller
 
         //se crea una nueva cuenta
         $cuenta = new Cuenta;
-        $cuenta->montocapital = $montoCapital;
-        $cuenta->interes = $nuevoTipoCredito->interes;
-        $cuenta->idtipocredito = $nuevoTipoCredito->idtipocredito;
+        $cuenta->idtipocredito = $tipoCredito->idtipocredito;
         $cuenta->idprestamo = $prestamo->idprestamo;
+        $cuenta->idnegocio=$idnegocio;
+        $cuenta->montocapital = $montoCapital;
+        $cuenta->interes = $tipoCredito->interes;
         $cuenta->numeroprestamo = $number+1;
-        $cuenta->idnegocio=$idN;
         $cuenta->estado = 'ACTIVO';
-        $cuenta->estadocuenta=$estadoanterior;
         $cuenta->save();
         return $prestamo->idprestamo;
-    }
-
-    /*
-    Nombre: calculoDetalleLiquidacion
-    Objetivo: inserta la tuplas correspondientes a cada cuota de pago del credito.
-    Autor: Lexan
-    parámetros de entrada: monto, cuota, tipo del credito y ID de cliente
-    parámetros de salida: ninguno
-     */
-    public function calculoDetalleLiquidacion($montoCapital, $tipoCredito, $cuota, $id, $idPrestamo, $idN,$Date,$idCuenta)
-    {
-        $clientes = DB::table('cliente')->where('estado','=','ACTIVO')->orderby('cliente.apellido', 'asc')->get();
-        $usuarioactual = \Auth::user();
-        $nuevoTipoCredito = TipoCredito::where('idtipocredito', $tipoCredito)->first();
-        $fechaDos= Carbon::parse($Date);
-        $cuenta = Cuenta::where('idnegocio', $idN)->where('estado', '=', 'ACTIVO')->first();
-        $cuentados = Cuenta::where('idcuenta',$idCuenta)->first();
-        
- 
-        $interesDiario = $montoCapital * $nuevoTipoCredito->interes;
-    
-       /*  $detalleLiquidacion = new DetalleLiquidacion;
-        $count = 0;
-        $detalleLiquidacion->idcuenta = $cuenta->idcuenta;
-        $detalleLiquidacion->fechadiaria = $fechaDos->format('Y-m-d');
-        $detalleLiquidacion->estado = "ACTIVO";
-        $detalleLiquidacion->idusuario = $usuarioactual->idusuario;
-        $detalleLiquidacion->contador = $count;
-        //esta linea ingresaria el monto anterior 
-       // $detalleLiquidacion->monto = $cuentados->capitalanterior;
-        $detalleLiquidacion->save(); */
-        
-        $fecha = $fechaDos->addDay();
-
-        $detalleLiquidacion = new DetalleLiquidacion;
-        $count = 1;
-        $detalleLiquidacion->idcuenta = $cuenta->idcuenta;
-        $detalleLiquidacion->fechadiaria = $fecha->format('Y-m-d');
-        $detalleLiquidacion->estado = "ACTIVO";
-        $detalleLiquidacion->idusuario = $usuarioactual->idusuario;
-        $detalleLiquidacion->contador = $count;
-        $detalleLiquidacion->save();
-
-        while ($montoCapital > $cuota) {
-            $count++;
-            if ($cuota > $interesDiario) {
-                $cuotaCapital = $cuota - $interesDiario;
-            } else {
-                Session::flash('error1', "Defina bien la cuota");
-                return view('tipoCredito.refinanciamiento.create', ["clientes" => $clientes, "usuarioactual" => $usuarioactual]);
-            }
-
-            $montoCapital = $montoCapital - $cuotaCapital;
-            $interesDiario = $montoCapital * $nuevoTipoCredito->interes;
-
-            $detalleLiquidacion = new DetalleLiquidacion;
-
-            $detalleLiquidacion->idcuenta = $cuenta->idcuenta;
-            $fechadiaria = $fecha->addDay();
-            $detalleLiquidacion->fechadiaria = $fechadiaria->format('Y-m-d');
-            //  $detalleLiquidacion->monto = $montoCapital;
-            //$detalleLiquidacion->interes = $interesDiario;
-            $detalleLiquidacion->estado = "ACTIVO";
-            $detalleLiquidacion->idusuario = $usuarioactual->idusuario;
-            $detalleLiquidacion->contador = $count;
-           // $detalleLiquidacion->idcartera = $cliente->idcartera;
-            $detalleLiquidacion->save();
-
-        }
-
-        //guarda la ultima fecha de pago
-        $prestamo = Prestamo::where('idprestamo', $idPrestamo)->first();
-        $prestamo->fechaultimapago = $detalleLiquidacion->fechadiaria;
-        $prestamo->update();
-    }
-
-
-    public function getInteres($tipo,$montoCapital)
-    {
-        $tipoCredito=null;
-        switch ($tipo) {
-            case 'normal':
-
-                if ($montoCapital <= 80) {
-                    $tipoCredito = 1;
-                } elseif ($montoCapital > 80 && $montoCapital <= 105) {
-                    $tipoCredito = 2;
-                } else {
-                    $tipoCredito = 3;
-                }
-
-                break;
-
-            case 'preferencial':
-                $tipoCredito = 4;
-               
-
-                break;
-
-            case 'oro':
-                $tipoCredito = 5;
-               
-                break;
-        }
-
-        $nuevoTipoCredito = TipoCredito::where('idtipocredito', $tipoCredito)->first();
-        $interes = $montoCapital * $nuevoTipoCredito->interes;
-        return $interes;
-    }
-
-    public function validacion($tipo,$montoCapital)
-    {
-        switch ($tipo) {
-            case 'normal':
-
-                if ($montoCapital <= 80) {
-                    $tipoCredito = 1;
-                } elseif ($montoCapital > 80 && $montoCapital <= 105) {
-                    $tipoCredito = 2;
-                } else {
-                    $tipoCredito = 3;
-                }
-                break;
-
-            case 'preferencial':
-                $tipoCredito = 4;
-                break;
-
-            case 'oro':
-                $tipoCredito = 5;
-                break;
-        }
-
-        return $tipoCredito;
     }
 
 
@@ -496,6 +297,162 @@ class RefinanciamientoController extends Controller
         ->where('negocio.idcliente','=',$idcliente)
         ->count();
         return $consulta;
+    }
+
+    public function autoCompleteSaldos(Request $request,$idnegocio)
+    {
+       if($request->ajax()){
+            
+            $negocio = Negocio::where('idnegocio', $idnegocio)->first();
+            
+            //Se valida que el cliente posea un credito abierto con ese negocio
+            $cuenta = Cuenta::where('idnegocio', $negocio->idnegocio)->where('estado','=','ACTIVO')->first();
+            if (is_null($cuenta)) {
+                $var = "noPoseeCreditoAbierto";
+                return response()->json($var);
+            } 
+
+            //Se valida que el cliente no posea abonos pendientes de pago
+            $pago = DetalleLiquidacion::where('idcuenta', $cuenta->idcuenta)->where('estado', '=', 'ABONO')->first();
+            if (!is_null($pago)) {
+                $var = "abonoPendiente";
+                return response()->json($var);
+                #"El cliente tiene abono pendiente"
+            }
+
+            $prestamo = Prestamo::where('idprestamo',$cuenta->idprestamo)->first();
+
+            $cuenta->cuotaatrasada = DetalleLiquidacion::estadoCuentaRef($cuenta->idcuenta,1);
+            $cuenta->capitalanterior = DetalleLiquidacion::estadoCuentaRef($cuenta->idcuenta,2);
+            $cuenta->mora = DetalleLiquidacion::estadoCuentaRef($cuenta->idcuenta,3);
+            $cuenta->estadocuenta = $cuenta->estado;    //solamente el cambio de campo
+            $cuenta->estado = $prestamo->estadodos;
+
+           return response()->json($cuenta);
+       }
+    }
+
+
+    /*
+    Nombre: finalizarCuentaPrestamo
+    Objetivo: Metodo para inactivar la cuenta y  cerrar prestamo, anterior
+    Autor: Steven
+    Fecha creación: 18-03-2019, 10:10
+    Fecha modificacion: 18-03-2019, 10:10
+    Parámetros de entrada: idcuenta, capitalanterior, cuotaatrasada, mora\
+    Parámetros de salida: Cuenta Inactiva y Prestamo Cerrado
+     */
+    public function finalizarCuentaPrestamo($idcuenta, $capitalanterior, $cuotaatrasada, $mora){
+        //Recupero la cuenta y el prestamo
+        $cuenta = Cuenta::where('idcuenta',$idcuenta)->first();
+        $prestamo = Prestamo::where('idprestamo',$cuenta->idprestamo)->first();
+
+        $cuenta->capitalanterior = $capitalanterior;
+        $cuenta->cuotaatrasada = $cuotaatrasada;
+        $cuenta->mora = $mora;
+        $cuenta->estado = 'INACTIVO';
+        $cuenta->update();
+
+        $prestamo->estadodos = 'CERRADO';
+        $prestamo->update();
+    }
+
+    /*
+    Nombre: pagoCuotaConRefinanciamiento
+    Objetivo: Se pagan las cuotas con refinanciamiento y se actualizan los pagos de la antigua cuenta
+    Autor: Steven
+    Fecha creación: 18-03-2019, 19:24
+    Fecha modificacion: 18-03-2019, 19:24
+    Parámetros de entrada: idcuenta y cuotaatrasada
+    Parámetros de salida: Cuotas -- CANCELADO CON REF. --
+     */
+    public function pagoCuotaConRefinanciamiento($idcuenta, $cuotaatrasada){
+
+        $usuarioactual=\Auth::user();
+
+        try{
+            DB::beginTransaction();
+
+            //Encontramos la cuenta con sus repectivas relaciones
+            $cuenta = Cuenta::findOrFail($idcuenta);
+            $prestamo = Prestamo::findOrFail($cuenta->idprestamo);
+            $tipo_credito = TipoCredito::findOrFail($cuenta->idtipocredito);
+
+            $liquidaciones = DetalleLiquidacion::where('idcuenta','=',$cuenta->idcuenta)
+            ->orderby('iddetalleliquidacion', 'asc')
+            ->get();
+
+            //Obtenemos la fecha de hoy
+            $fechaefectiva = Carbon::now();
+            $fechaefectiva = $fechaefectiva->format('Y-m-d');
+
+            $monto_capital = $prestamo->monto;          //  $313.50
+
+            $i = $cuotaatrasada;
+
+            foreach ($liquidaciones as $liq) {
+
+                if($liq->abonocapital == "NO") {
+
+                  $liq->monto = round($monto_capital, 2);
+                  $liq->interes = round($monto_capital * $tipo_credito->interes, 2);    // 3.14
+                  $liq->totaldiario = round($liq->totaldiario, 2);                      // 10
+                  $liq->cuotacapital = round($liq->totaldiario - $liq->interes,2);      // 6.86
+                  //$liq->update();
+
+                  $monto_capital = $liq->monto - $liq->cuotacapital;
+
+                }
+                elseif($liq->abonocapital == "SI"){
+
+                    $liq->monto = round($monto_capital,2);
+                    //$liq->update();
+
+                    $monto_capital = $liq->monto - $liq->totaldiario;
+
+                }elseif($i > 0){                                              // Modificamos la siguiente tupla
+
+                    if ($monto_capital > $prestamo->cuotadiaria) {                                // 10
+
+                        $liq->monto = round($monto_capital, 2);                                  //$276.64
+                        $liq->interes = round($monto_capital * $tipo_credito->interes, 2);
+                        $liq->cuotacapital = round($prestamo->cuotadiaria - $liq->interes,2);
+                        $liq->totaldiario = $prestamo->cuotadiaria;
+                        $liq->fechaefectiva = $fechaefectiva;
+                        $liq->estado = 'CANCELADO CON REF.';
+                        $liq->abonocapital = 'NO';
+                        $liq->update();
+
+                        $monto_capital = $liq->monto - $liq->cuotacapital;
+
+                    }elseif($monto_capital <= $prestamo->cuotadiaria && $monto_capital > 0){
+
+                        $liq->monto = round($monto_capital, 2);                                  //$276.64
+                        $liq->interes = round($monto_capital * $tipo_credito->interes, 2);
+                        $liq->cuotacapital = $liq->monto;
+                        $liq->totaldiario = round($liq->interes + $liq->cuotacapital,2);;
+                        $liq->fechaefectiva = $fechaefectiva;
+                        $liq->estado = 'CANCELADO CON REF.';
+                        $liq->abonocapital = 'NO';
+                        $liq->update();
+
+                        $monto_capital = $liq->monto - $liq->cuotacapital;                  // $0.00
+                    }
+
+                    $i = $i - 1; 
+                }
+            }
+
+            DB::commit();
+            $msj = 'exito';
+
+        } catch(\Exception $e)
+        {
+            DB::rollback();
+            $msj = 'pagoCuotaConRefinanciamiento';
+        }
+
+        return $msj;
     }
 
 }

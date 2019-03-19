@@ -76,6 +76,9 @@
                 </table>
             </div>
         </div>
+    @if($cuentas == null)
+      <p style="text-align: center;">No hay créditos para este cliente</p>
+    @endif
 </div>
 
 <div class="row">

@@ -17,5 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ReciboSeed::class);
         $this->call(CategoriaSeed::class);
         $this->call(Tipo_Desembolso::class);
+        $this->call(EstadoSeed::class);
     }
 }

@@ -104,11 +104,12 @@ class calcularCreditoController extends Controller
       //validacion para un interes diario menor a la cuota diaria
 
       $interesDiario=$nuevo_monto*$tasaInteres;
+      $interesDiario = round($interesDiario,2);
       $tasa = $tasaInteres*100;
 
       if($interesDiario>$cuota)
       {
-        Session::flash('negativo3', ' Para una tasa de interes de '.$tasa.'% y un monto de $'.$monto_capital.' su cuota debe de ser mayor a $'.$interesDiario.' , transacción fallida. ');
+        Session::flash('negativo3', ' Para una tasa de interes de '.$tasa.'% y un monto de $'.$monto_capital.' su cuota debe de ser mayor a $'.($interesDiario+0.01).' , transacción fallida. ');
         return Redirect::to('calcular-credito/create');
       }
 

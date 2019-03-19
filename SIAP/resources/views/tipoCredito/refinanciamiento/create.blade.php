@@ -165,9 +165,55 @@
       </a>
       @include('tipoCredito.refinanciamiento.modalAyuda')
     </div>
-       
 
+    <div class="row">
+      <h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 30px 0px 20px 0px;"><b>VERIFIQUE LOS ESTADO DEL PRÉSTAMO ANTERIOR</b></h4>
+      <p id="pres"></p>
+      <div class="form-group col-lg-2 col-md-2 col-sm-2 col-xs-12">
+        <label>Estado Cuenta</label>
+        <div class="input-group">
+          {!! Form::text('estadocuenta', null, ['class' => 'form-control', 'id'=>'estadocuenta', 'disabled' => 'on']) !!}
+        </div>
+      </div>
+      <div class="form-group col-lg-2 col-md-2 col-sm-2 col-xs-12">
+        <label>Estado Préstamo</label>
+        <div class="input-group">
+          {!! Form::text('estadoprestamo', null, ['class' => 'form-control', 'id'=>'estadoprestamo', 'disabled' => 'on']) !!}
+        </div>
+      </div>
+      <div class="form-group col-lg-2 col-md-2 col-sm-2 col-xs-12">
+        <label>Saldo Capital Anterior</label>
+        <div class="input-group">
+          {!! Form::number('capitalanterior', null, ['class' => 'form-control','required' => 'required', 'min'=>'0','step'=>'0.01', 'id'=>'capitalanterior']) !!}
+        </div>  
+      </div> 
+      <div class="form-group col-lg-2 col-md-2 col-sm-2 col-xs-12">
+        <label>Cuotas atrasadas</label>
+        <div class="input-group">
+          {!! Form::number('cuotaatrasada', null, ['class' => 'form-control','required' => 'required','min'=>'0','step'=>'0.01', 'id'=>'cuotaatrasada']) !!}
+        </div>
+      </div>
+      <div class="form-group col-lg-2 col-md-2 col-sm-2 col-xs-12">
+        <label>Mora</label>
+        <div class="input-group">
+          {!! Form::number('mora', null, ['class' => 'form-control','required' => 'required','min'=>'0','step'=>'0.01', 'id'=>'mora']) !!}
+        </div>
+      </div>
+      <div class="form-group col-lg-2 col-md-2 col-sm-2 col-xs-12">
+        <label> Cancelar con Ref.</label>
+        <div class="input-group">
+          <div class="input-group-addon">
+            <i class="fa fa-list-alt" aria-hidden="true"></i>
+          </div>
+          <input type="radio" name="tipo3"  value="SI" checked> SI<br>
+          <input type="radio" name="tipo3"  value="NO"> NO
+        </div>
+      </div>
+      
+    </div>
 </div>
+
+
 
 <div class="row">
   <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12" id="guardar">
@@ -187,6 +233,7 @@
 <!--Autocomplete-->
 <script src="{{asset('js/search/autocomplete.js')}}"></script>
 <script src="{{asset('js/search/autocompleteCodeudor.js')}}"></script>
+<script src="{{asset('js/search/saldos.js')}}"></script>
 @endpush
 
 @push('scripts')

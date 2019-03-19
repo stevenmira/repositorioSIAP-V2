@@ -4,54 +4,56 @@
 <!-- Select CSS -->
 
 
-
 <section class="content-header">
-  <h1 style="color: #333333; ">
-    CÁLCULO DE CRÉDITO
-  </h1>
   <ol class="breadcrumb">
     <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
-   
-    <li class="active">Calcular Crédito Completo</li>
+    <li class="active"><a href="{{URL::action('calcularCreditoController@create')}}"> Calcular Crédito Completo</a> </li>
   </ol>
 </section>
+
 <br>
-<section class="content-header">
- @if (Session::has('negativo'))
-       <div class="alert  fade in" style="background: #ff6666;">
+<br>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS</h4>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">AFIMID, S.A DE C.V</h4>
+
+<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 40px 0px;"><b>CÁCULAR CRÉDITO COMPLETO</b></h4>
+
+<div class="container" style="text-align:center; font-family:'Trebuchet MS', Helvetica, sans-serif; color: #1C2331;">
+  @if (Session::has('negativo'))
+      <div class="alert  fade in" style="background: #ff6666;">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-         <h4>{{ Session::get('negativo')}}</h4>
+         <p>{{ Session::get('negativo')}}</p>
       </div>
   @endif
 
   @if (Session::has('negativo1'))
-       <div class="alert  fade in" style="background: #ff6666;">
+      <div class="alert  fade in" style="background: #ff6666;">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-         <h4>{{ Session::get('negativo1')}}</h4>
+         <p>{{ Session::get('negativo1')}}</p>
       </div>
   @endif
 
   @if (Session::has('negativo2'))
-       <div class="alert  fade in" style="background: #ff6666;">
+      <div class="alert  fade in" style="background: #ff6666;">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-         <h4>{{ Session::get('negativo2')}}</h4>
+         <p>{{ Session::get('negativo2')}}</p>
       </div>
   @endif
 
   @if (Session::has('negativo3'))
-       <div class="alert  fade in" style="background: #ff6666;">
+      <div class="alert  fade in" style="background: #ff6666;">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-         <h4>{{ Session::get('negativo3')}}</h4>
+         <p>{{ Session::get('negativo3')}}</p>
       </div>
   @endif
 
   @if (Session::has('mayor'))
-       <div class="alert  fade in" style="background: #ff6666;">
+      <div class="alert  fade in" style="background: #ff6666;">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-         <h4>{{ Session::get('mayor')}}</h4>
+         <p>{{ Session::get('mayor')}}</p>
       </div>
   @endif
-</section>
+</div>
 
 {!!Form::open(array('url'=>'calcular-credito','method'=>'POST','autocomplete'=>'off'))!!}
             {{Form::token()}}

@@ -1,4 +1,4 @@
-{!! Form::open(array('url'=>'cliente','method'=>'GET','autocomplete'=>'off','role'=>'search')) !!}
+{!! Form::open(array('url'=>'ingresarPago','method'=>'GET','autocomplete'=>'off','role'=>'search')) !!}
 <div class="row">
 	<div class="col-md-5 col-sm-5 col-xs-5 col-md-offset-0">
 		<div class="form-group">

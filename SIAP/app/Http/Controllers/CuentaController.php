@@ -31,11 +31,7 @@ class CuentaController extends Controller
     public function show($idcuenta)
     {
     	$usuarioactual=\Auth::user();
-
-        //Actualización de montos y estados
-        $componente = DetalleLiquidacion::calculoN_modificado($idcuenta);
-        $n = DetalleLiquidacion::estados_cuotas($idcuenta);
-
+        
     	//Encontramos la cuenta con sus repectivas relaciones
         $cuenta = Cuenta::findOrFail($idcuenta);
         $negocio = Negocio::findOrFail($cuenta->idnegocio);
