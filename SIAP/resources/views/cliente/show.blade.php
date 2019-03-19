@@ -224,8 +224,8 @@
                       <a type="button" class="btn btn-labeled btn-primary" href="{{URL::action('ClienteController@edit',$cliente->idcliente)}}">
                           <span class="btn-label"><i class="fa fa-pencil"></i></span>Actualizar</a>
 
-                      <button type="button" class="btn btn-labeled btn-danger pull-right" href="#">
-                          <span class="btn-label"><i class="fa fa-print"></i></span>Imprimir</button>
+                      <a type="button" class="btn btn-labeled btn-danger pull-right" href="{{URL::action('ClienteController@perfilClientePDF', $cliente->idcliente)}}">
+                          <span class="btn-label"><i class="fa fa-print"></i></span>Imprimir</a>
                   </div>
               </div>
               

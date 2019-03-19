@@ -53,6 +53,7 @@ Route::get('cuenta/carteraRealPDF/{id}','LiquidacionController@carteraRealPDF');
 
 Route::get('lista/clientesPDF/{id}','CarteraClientController@carteraClientPDF');
 
+Route::get('clientes/perfilClientePDF/{id}','ClienteController@perfilClientePDF');
 
 //consulta a la base por jquery
 Route::get('search/{id}','TipoCreditoController@autoComplete');

@@ -206,6 +206,16 @@ class EmpleadoController extends Controller
     
     }
 
-  
+    public function destroy($idempleado)
+    {
+        $usuarioactual=\Auth::user();
+
+        $empleado = Empleado::findOrFail($idempleado);
+        $empleado->delete();
+        Session::flash('delete'," ".$empleado->nombre.' ');  
+    
+        return Redirect::to('empleado');
+    }
+
     
 }

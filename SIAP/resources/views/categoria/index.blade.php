@@ -70,7 +70,10 @@
                           <td>{{ $ma->descripcion }}</td>
                           <td style="width: 230px;">
 
+                              @if($ma->letra != 'E')
+
                               <a class="btn btn-info azul" data-title="Editar Datos de la Categoria" href="{{URL::action('CategoriaController@edit',$ma->idcategoria)}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                            @endif
                           </td>
                       </tr>
                   @endforeach

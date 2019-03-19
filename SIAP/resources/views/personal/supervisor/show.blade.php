@@ -3,7 +3,7 @@
 <section class="content-header">
   <ol class="breadcrumb">
     <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
-    <li><a href="{{URL::action('SupervisorController@index')}}"> Supervisor</a></li>
+    <li><a href="{{URL::action('SupervisorController@index')}}"> Ejecutivo</a></li>
     <li class="active">Perfil</li>
   </ol>
 </section>
@@ -27,7 +27,7 @@
         <div class="panel-body">
           <div class="row">
             <div class="col-md-3 col-lg-3 " align="center"> 
-              <img alt="User Pic" ssrc="{{asset('imagenes/supervisor/'.$supervisor->fotografia)}}" class="img-circle img-responsive"> 
+              <img alt="User Pic" src="{{asset('imagenes/supervisor/'.$supervisor->fotografia)}}" class="img-rounded img-responsive"> 
             </div>
 
             <div class=" col-md-9 col-lg-9 "> 
