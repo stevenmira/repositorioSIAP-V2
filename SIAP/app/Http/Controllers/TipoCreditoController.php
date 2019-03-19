@@ -48,8 +48,17 @@ class TipoCreditoController extends Controller
 
         //se validan las fechas
         if ($fechacomienzo < $fechacredito) {
+
+            // Se retornan las fechas a espaniol
+            $f1 = new DetalleLiquidacion;
+            $f1->fechadiaria = Carbon::parse($fechacredito);
+
+            $f2 = new DetalleLiquidacion;
+            $f2->fechadiaria = Carbon::parse($fechacomienzo);
+
             Session::flash('bandera',1);
-            Session::flash('msj1', "La fecha de comienzo de la cartera de pagos -- ".($fechacomienzo)." -- debe ser mayor o igual a la fecha de creacion del credito -- ".$fechacredito." --");
+            Session::flash('msj1A', " -- ".$f1->fechadiaria->format('l j  F Y ')." -- ");
+            Session::flash('msj1B', " -- ".$f2->fechadiaria->format('l j  F Y ')." -- ");
             return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual]);
         }
 
@@ -57,13 +66,13 @@ class TipoCreditoController extends Controller
         if (is_null($cliente)) {
             Session::flash('bandera',1);
             Session::flash('msj2', "Hay un problema con el cliente, al parecer no se encuentra en nuesta base de datos");
-            return view('tipoCredito.fracaso', ["clientes" => $clientes, "usuarioactual" => $usuarioactual]);
+            return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual]);
         }
 
         //se validan el negocio
         if (is_null($negocio)) {
             Session::flash('bandera',1);
-            Session::flash('msj3', "El cliente debe poseer un negocio activo");
+            Session::flash('msj3', "No ha seleccionado negocio");
             return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual]);
         }
 
@@ -76,24 +85,34 @@ class TipoCreditoController extends Controller
 
         //se comprueba que el cliente solicitante no posea un credito abierto.
         $cuenta = Cuenta::where('idnegocio','=',$request->get('idnegocio'))->where('estado','=','ACTIVO')->first();
-        $clientes = DB::table('cliente')->where('estado','=','ACTIVO')->orderby('cliente.apellido', 'asc')->get();
+        #$clientes = DB::table('cliente')->where('estado','=','ACTIVO')->orderby('cliente.apellido', 'asc')->get();
 
         if (!is_null($cuenta)) {
             Session::flash('bandera',1);
-            Session::flash('msj5', "El negocio del cliente ".$cliente->nombre." ".$cliente->apellido." ya posee un credito abierto");
-            return view('tipoCredito.fracaso', ["clientes" => $clientes, "usuarioactual" => $usuarioactual, "idcliente"=>$cliente->idcliente]);    
+            Session::flash('msj5', "El negocio del cliente ".$cliente->nombre." ".$cliente->apellido." ya posee una cuenta activa");
+            return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual, "idcliente"=>$cliente->idcliente]);    
         }
-           
-        $montoCapital = ((intdiv($monto, 50)) * 2.25) + $monto;
+        
+        //Se obtiene el verdadero  monto capital
+        switch ($tipo1) 
+        {
+            case 'SI':
+              $montoCapital = ((intdiv($monto, 50)) * 2.25) + $monto;
+            break;
+
+            case 'NO':
+                $montoCapital=$monto;
+            break;
+        }   
 
         // Validacion: Redefinir cuota
         $interesDiario = $montoCapital * $tipoCredito->interes;
         $interesDiario = round($interesDiario,2);
 
         if($interesDiario>$cuota){
-        Session::flash('bandera',1);
-        Session::flash('msj6', "Debe redefinir la cuota, debe ser mayor de $".($interesDiario+0.01)."");
-        return view('tipoCredito.fracaso', ["clientes" => $clientes, "usuarioactual" => $usuarioactual, "cuota"=>$interesDiario]);
+            Session::flash('bandera',1);
+            Session::flash('msj6', "Debe redefinir la cuota, debe ser mayor de $".($interesDiario+0.01)."");
+            return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual, "cuota"=>$interesDiario]);
         }
 
         //se valida que el cliente este apto para adquirir un nuevo credito
@@ -103,22 +122,26 @@ class TipoCreditoController extends Controller
             return view('tipoCredito.fracaso', ["usuarioactual" => $usuarioactual]);
         }
 
-        // creacion del prestamo y cuenta
+        // Metodo para crear el nuevo prestamo y la cuenta
         $idPrestamo = Self::insertarCuentaPrestamo($fechacredito, $fechacomienzo, $tipo1, $tipo2, $numcheque, $cliente->idcliente, $negocio->idnegocio, $idcodeudor,  $tipoCredito->idtipocredito, $monto, $cuota);
 
         // creacion de la cartera de pagos
-        Self::calculoDetalleLiquidacion($montoCapital, $tipoCredito->idtipocredito, $cuota, $cliente->idcliente,$idPrestamo,$negocio->idnegocio,$fechacomienzo);
+        $idcuenta = DetalleLiquidacion::calculoDetalleLiquidacion($montoCapital, $tipoCredito->idtipocredito, $cuota, $idPrestamo,$fechacomienzo);
+
+        //Se actualizan las liquidacines creadas --pivote--
+        $sms = DetalleLiquidacion::calculoModificadoN($idcuenta);
+        // Se retorna el componente que fallo
+        if ($sms != 'exito') {
+            Session::flash('cmp1', ''.$sms);
+        }
 
         Session::flash('bandera',1);
         Session::flash('exito1', ''.' Credito de tipo -- '.$tipoCredito->nombre.' -- guardado con exito');
 
-        $count = Cuenta::where('idnegocio',$negocio->idnegocio)->where('estado','=','ACTIVO')->first();
-        $prestamo = Prestamo::where('idprestamo',$count->idprestamo)->first();
-        $negocio = Negocio::where('idnegocio',$negocio->idnegocio)->first();
-        #$ok=Prestamo::actualizarEstado();
+        $cuentaNueva = Cuenta::where('idprestamo',$idPrestamo)->first();
+        $prestamo = Prestamo::where('idprestamo',$idPrestamo)->first();
         
-        return view('tipoCredito.exito', ["clientes" => $clientes, "usuarioactual" => $usuarioactual,"cuenta"=> $count,"persona"=>$cliente,"prestamo"=>$prestamo,"negocio"=>$negocio]);
-
+        return view('tipoCredito.exito', ["usuarioactual" => $usuarioactual,"cuenta"=> $cuentaNueva,"persona"=>$cliente,"prestamo"=>$prestamo,"negocio"=>$negocio]);
     }
 
     public function show()
@@ -178,73 +201,6 @@ class TipoCreditoController extends Controller
        }
     }
 
-
-
-    /*
-    Nombre: calculoDetalleLiquidacion
-    Objetivo: inserta la tuplas correspondientes a cada cuota de pago del credito.
-    Autor: Lexan
-    parámetros de entrada: monto, cuota, tipo del credito y ID de cliente
-    parámetros de salida: ninguno
-     */
-    public function calculoDetalleLiquidacion($montoCapital, $tipoCredito, $cuota, $id,$idPrestamo,$idN,$Date)
-    {
-        $clientes = DB::table('cliente')->where('estado','=','ACTIVO')->orderby('cliente.apellido', 'asc')->get();
-        $usuarioactual = \Auth::user();
-        $nuevoTipoCredito = TipoCredito::where('idtipocredito', $tipoCredito)->first();
-        $fechaDos= Carbon::parse($Date);
-        $cuenta = Cuenta::where('idnegocio',$idN)->where('estado', '=', 'ACTIVO')->first();
-        //incluye tupla de fecha de creacion para las carteras de pagos
-      /*   $detalleLiquidacion = new DetalleLiquidacion;
-        $count = 0;
-        $detalleLiquidacion->idcuenta = $cuenta->idcuenta; 
-        $detalleLiquidacion->fechadiaria = $fechaDos->format('Y-m-d');
-        $detalleLiquidacion->estado = "ACTIVO";
-        $detalleLiquidacion->idusuario = $usuarioactual->idusuario;
-        $detalleLiquidacion->contador = $count;
-        $detalleLiquidacion->save(); */
-        ///////////////////////////////////////////////////////////////
-        
-        #$fecha = $fechaDos->addDay();
-        $fecha = $fechaDos;
-        $interesDiario = $montoCapital * $nuevoTipoCredito->interes;
-        $cuotaCapital = $montoCapital;
-        
-        $detalleLiquidacion = new DetalleLiquidacion;
-        $count = 1;
-        $detalleLiquidacion->idcuenta = $cuenta->idcuenta; 
-        $detalleLiquidacion->fechadiaria = $fecha->format('Y-m-d');
-        $detalleLiquidacion->estado = "ACTIVO";
-        $detalleLiquidacion->idusuario = $usuarioactual->idusuario;
-        $detalleLiquidacion->contador = $count;
-        $detalleLiquidacion->save();
-
-        while ($montoCapital > $cuota) {
-            $count++;
-            $cuotaCapital = $cuota - $interesDiario;
-
-            $montoCapital = $montoCapital - $cuotaCapital;
-            $interesDiario = $montoCapital * $nuevoTipoCredito->interes;
-
-            $detalleLiquidacion = new DetalleLiquidacion;
-
-            $detalleLiquidacion->idcuenta = $cuenta->idcuenta;
-            $fechadiaria = $fecha->addDay();
-            $detalleLiquidacion->fechadiaria = $fechadiaria->format('Y-m-d');
-         
-            $detalleLiquidacion->estado = "ACTIVO";
-            $detalleLiquidacion->idusuario = $usuarioactual->idusuario;
-            $detalleLiquidacion->contador = $count;
-           
-            $detalleLiquidacion->save();
-            
-        }
-
-        //guarda la ultima fecha de pago
-        $prestamo = Prestamo::where('idprestamo',$idPrestamo)->first();
-        $prestamo->fechaultimapago=$detalleLiquidacion->fechadiaria;
-        $prestamo->update();
-    }
 
     /*
     Nombre: insertarCuentaPrestamodetalleLiquidacion

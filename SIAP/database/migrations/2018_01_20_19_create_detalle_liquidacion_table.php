@@ -36,7 +36,7 @@ class CreateDetalleLiquidacionTable extends Migration
             $table->decimal('totaldiario',6, 2)->nullable();
             $table->string('abonocapital',10)->nullable();
 
-            $table->string('estado',10)->nullable();
+            $table->string('estado',30)->nullable();
             $table->integer('contador')->nullable();
             $table->timestamps();
         });

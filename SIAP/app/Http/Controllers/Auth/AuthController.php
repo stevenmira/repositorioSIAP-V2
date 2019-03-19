@@ -83,7 +83,7 @@ class AuthController extends Controller
     {
     
        $usuarioactual=\Auth::user();
-       //funcion que comprueba los prestamos vencidos
+       /*//funcion que comprueba los prestamos vencidos
        $fecha_actual = Carbon::now();
        $fecha_actual = $fecha_actual->format('Y-m-d');
        $prestamos = Prestamo::all();
@@ -93,7 +93,7 @@ class AuthController extends Controller
             $prestamo->estadodos = 'VENCIDO';
             $prestamo->update();
         }
-       }
+       }*/
 
        
 

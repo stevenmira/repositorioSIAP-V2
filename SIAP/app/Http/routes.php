@@ -58,6 +58,7 @@ Route::get('clientes/perfilClientePDF/{id}','ClienteController@perfilClientePDF'
 //consulta a la base por jquery
 Route::get('search/{id}','TipoCreditoController@autoComplete');
 Route::get('search2/{id}','TipoCreditoController@autoCompleteCodeudor');
+Route::get('search3/{id}','RefinanciamientoController@autoCompleteSaldos');
 //ERRORES 
 
 Route::get('error', function(){ 
@@ -117,6 +118,7 @@ Route::group(['middleware' => 'usuarioAdmin'], function () {
 //cartera de pagos
 Route::get('cuenta/carteraPagos/{id}', ['as' => 'idcuenta', 'uses' => 'LiquidacionController@cuenta']);
 Route::resource('ingresarPago', 'LiquidacionController');  //edit
+Route::post('cuenta/carteraPagos/estados', 'LiquidacionController@updateEstado');
 
 //Refinanciamiento de credito
 Route::resource('refinanciamiento','RefinanciamientoController');
@@ -145,7 +147,8 @@ Route::get('codeudores/nuevo/{id}', ['as' => 'idcliente', 'uses' => 'CodeudorCon
 //Grarantias
 Route::resource('garantia','GarantiaController');
 Route::get('cliente/creditos/{id}', ['as' => 'idcliente', 'uses' => 'GarantiaController@getCreditos']);
-Route::get('cliente/credito/gatantias/{id}', ['as' => 'idcuenta', 'uses' => 'GarantiaController@getGarantias']);
+Route::get('cliente/credito/garantias/{id}', ['as' => 'idcuenta', 'uses' => 'GarantiaController@getGarantias']);
+Route::get('cliente/credito/garantias/nuevo/{idprestamo}', ['as' => 'lista', 'uses' => 'GarantiaController@newGarantia']);
 
 //Record
 Route::resource('record','RecordClienteController');

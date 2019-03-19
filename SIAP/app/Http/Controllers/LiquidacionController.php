@@ -16,6 +16,8 @@ use siap\TipoCredito;
 use siap\DetalleLiquidacion;
 use siap\Fecha;
 use siap\Comprobante;
+use siap\Categoria;
+use siap\Estado;
 
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -28,77 +30,124 @@ use DB;
 class LiquidacionController extends Controller
 {
     
-    public function cuenta($id)
+    public function cuenta(Request $request, $id)
     {
-        $usuarioactual=\Auth::user();
+        if ($request) 
+        {
+            $usuarioactual=\Auth::user();
 
-        //Obtenemos la fecha de hoy
-        $fecha_actual = Carbon::now();
+            $query = trim($request->get('searchText'));
+            if ($query == "actualizarPagos") {
+                $sms = DetalleLiquidacion::calculoModificadoN($id);
+                // Se retorna el componente que fallo
+                if ($sms == 'exito') {
+                    Session::flash('msj0', 'Los pago(s) se han actualizado correctamente');
+                }
+                elseif ($sms != 'exito') {
+                    Session::flash('cmp1', ''.$sms);
+                }
+            }
+            elseif ($query == "actualizarEstadosCuotas") { 
+                // Actualizacion de estados de cuotas pendientes, atrasadas y no validas
+                $sms = DetalleLiquidacion::actualizarEstados($id, 0);
+                if ($sms == 'exito') {
+                    Session::flash('msj0', 'El estado de las cuota(s) se ha actualizado correctamente');
+                }
+                elseif ($sms == 'prestamo_cerrado') {
+                    Session::flash('msj1', 'No se pudo actualizar, el prestamo se encuentra en estado  -- cerrado --');
+                }elseif($sms == 'cuenta_inactiva'){
+                    Session::flash('msj2', 'No se pudo actualizar, la cuenta se encuentra en estado  -- inactivo --');
+                }else{
+                    // Se retorna el componente que fallo
+                    Session::flash('cmp2', 'actualizarEstados');
+                }
+            }
+            elseif ($query == "actualizarNoValido") {
+                // Actualizacion de estados de  cuotas no validas
+                $sms = DetalleLiquidacion::actualizarEstados($id, 1);
+                if ($sms == 'exito') {
+                    Session::flash('msj0', 'Cuota(s) -- no valido -- se han actualizado correctamente');
+                }
+                elseif ($sms == 'prestamo_cerrado') {
+                    Session::flash('msj1', 'No se pudo actualizar, el prestamo se encuentra en estado  -- cerrado --');
+                }elseif($sms == 'cuenta_inactiva'){
+                    Session::flash('msj2', 'No se pudo actualizar, la cuenta se encuentra en estado  -- inactivo --');
+                }else{
+                    // Se retorna el componente que fallo
+                    Session::flash('cmp2', 'actualizarEstados');
+                }
+            }   
 
-        //Encontramos la cuenta con sus repectivas relaciones
-        $cuenta = Cuenta::findOrFail($id);
-        $negocio = Negocio::findOrFail($cuenta->idnegocio);
-        $cliente = Cliente::findOrFail($negocio->idcliente);
-        $cartera = Cartera::findOrFail($cliente->idcartera);
-        $prestamo = Prestamo::findOrFail($cuenta->idprestamo);
-        $tipo_credito = TipoCredito::findOrFail($cuenta->idtipocredito);
+            //Obtenemos la fecha de hoy
+            $fecha_actual = Carbon::now();
 
-        $componente = DetalleLiquidacion::calculoN_modificado($id);
-        $n = DetalleLiquidacion::estados_cuotas($id);
+            //Encontramos la cuenta con sus repectivas relaciones
+            $cuenta = Cuenta::findOrFail($id);
+            $negocio = Negocio::findOrFail($cuenta->idnegocio);
+            $cliente = Cliente::findOrFail($negocio->idcliente);
+            $categoria = Categoria::findOrFail($cliente->idcategoria);
+            $cartera = Cartera::findOrFail($cliente->idcartera);
+            $prestamo = Prestamo::findOrFail($cuenta->idprestamo);
+            $tipo_credito = TipoCredito::findOrFail($cuenta->idtipocredito);
 
-        #$componente = Self::calculoN_modificado($cuenta->idcuenta);
-        #$n = Self::estados_cuotas($cuenta->idcuenta);
+            $categorias = Categoria::orderBy('letra','asc')->get();
+            $estadosCuota = Estado::orderBy('idestado','asc')->get();
 
-        $liquidaciones = DetalleLiquidacion::where('idcuenta','=',$cuenta->idcuenta)
-        ->orderby('iddetalleliquidacion', 'asc')
-        ->paginate(400);
+            $n = 999;
 
 
-        //suma de totales
-        $sum_interes_diario = 0;
-        $sum_cuota_capital = 0;
-        $sum_total_diario = 0;
+            $liquidaciones = DetalleLiquidacion::where('idcuenta','=',$cuenta->idcuenta)
+            ->orderby('iddetalleliquidacion', 'asc')
+            ->paginate(400);
 
-        $atraso = 0;
-        $cancelado = 0;
-        $abono = 0;
-        $pendiente = 0;
-        $novalido = 0;
+
+            //suma de totales
+            $sum_interes_diario = 0;
+            $sum_cuota_capital = 0;
+            $sum_total_diario = 0;
+
+            $atraso = 0;
+            $cancelado = 0;
+            $abono = 0;
+            $pendiente = 0;
+            $novalido = 0;
 
         
-        foreach ($liquidaciones as $liq) {
-            //sumas de totales
-            $sum_interes_diario = $sum_interes_diario + $liq->interes;
-            $sum_cuota_capital = $sum_cuota_capital + $liq->cuotacapital;
-            $sum_total_diario = $sum_total_diario + $liq->totaldiario;
+            foreach ($liquidaciones as $liq) {
+                //sumas de totales
+                $sum_interes_diario = $sum_interes_diario + $liq->interes;
+                $sum_cuota_capital = $sum_cuota_capital + $liq->cuotacapital;
+                $sum_total_diario = $sum_total_diario + $liq->totaldiario;
 
-            if ($liq->estado == 'ATRASO') {
-                $atraso = $atraso + 1;
+                if ($liq->estado == 'ATRASO') {
+                    $atraso = $atraso + 1;
+                }
+
+                if ($liq->estado == 'ABONO') {
+                    $abono = $abono + 1;
+                }
+
+                if ($liq->estado == 'PENDIENTE') {
+                    $pendiente = $pendiente + 1;
+                }
+
+                if ($liq->estado == 'NO VALIDO') {
+                    $novalido = $novalido + 1;
+                }
+
+                if ($liq->estado == 'CANCELADO') {
+                    $cancelado = $cancelado + 1;
+                }
+
+
             }
 
-            if ($liq->estado == 'ABONO') {
-                $abono = $abono + 1;
-            }
+            //Obtenemos la fecha de hoy en español usando carbon y array
+            $fecha_server = Fecha::spanish();
 
-            if ($liq->estado == 'PENDIENTE') {
-                $pendiente = $pendiente + 1;
-            }
-
-            if ($liq->estado == 'NO VALIDO') {
-                $novalido = $novalido + 1;
-            }
-
-            if ($liq->estado == 'CANCELADO') {
-                $cancelado = $cancelado + 1;
-            }
-
-
+            return view('liquidacion.index',["cuenta"=>$cuenta,"n"=>$n, "cliente"=>$cliente, "categoria"=>$categoria, "categorias"=>$categorias, "cartera"=>$cartera, "prestamo"=>$prestamo, "tipo_credito"=>$tipo_credito, "negocio"=>$negocio, "liquidaciones"=>$liquidaciones, "estadosCuota"=>$estadosCuota, "sum_interes_diario"=>$sum_interes_diario, "sum_cuota_capital"=>$sum_cuota_capital, "sum_total_diario"=>$sum_total_diario, "atraso"=>$atraso, "abono"=>$abono, "pendiente"=>$pendiente, "novalido"=>$novalido,  "cancelado"=>$cancelado, "fecha_actual"=>$fecha_actual, "fecha_server"=>$fecha_server, "usuarioactual"=>$usuarioactual ]);
         }
-
-        //Obtenemos la fecha de hoy en español usando carbon y array
-        $fecha_server = Fecha::spanish();
-
-        return view('liquidacion.index',["cuenta"=>$cuenta,"n"=>$n, "cliente"=>$cliente, "cartera"=>$cartera, "prestamo"=>$prestamo, "tipo_credito"=>$tipo_credito, "negocio"=>$negocio, "liquidaciones"=>$liquidaciones, "sum_interes_diario"=>$sum_interes_diario, "sum_cuota_capital"=>$sum_cuota_capital, "sum_total_diario"=>$sum_total_diario, "atraso"=>$atraso, "abono"=>$abono, "pendiente"=>$pendiente, "novalido"=>$novalido,  "cancelado"=>$cancelado, "fecha_actual"=>$fecha_actual, "fecha_server"=>$fecha_server, "usuarioactual"=>$usuarioactual ]);
+        
     }
 
     //Recibe una liquidacion
@@ -162,6 +211,30 @@ class LiquidacionController extends Controller
                     /****************************   PAGO_CUOTA    ****************************/
 
                     $mensaje = Self::PAGO_CUOTA($id, $montocapital, $totaldiario, $fechaefectiva, $abonocapital, $fecha_actual);
+
+                    //Se actualizan los pagos antes de retornar el resultado
+                    $sms = DetalleLiquidacion::calculoModificadoN($liquidacion->idcuenta);
+                    // Se retorna el componente que fallo
+                    if ($sms == 'exito') {
+                        //Session::flash('msj0', 'Los pago(s) se han actualizado correctamente');
+                    }
+                    elseif ($sms != 'exito') {
+                        Session::flash('cmp1', ''.$sms);
+                    }
+
+                    // Actualizacion de estados de  cuotas no validas antes de retornar el resultado
+                    $sms = DetalleLiquidacion::actualizarEstados($liquidacion->idcuenta, 1);
+                    if ($sms == 'exito') {
+                        //Session::flash('msj0', 'Cuota(s) -- no valido -- se han actualizado correctamente');
+                    }
+                    elseif ($sms == 'prestamo_cerrado') {
+                        Session::flash('msj1', 'No se pudo actualizar, el prestamo se encuentra en estado  -- cerrado --');
+                    }elseif($sms == 'cuenta_inactiva'){
+                        Session::flash('msj2', 'No se pudo actualizar, la cuenta se encuentra en estado  -- inactivo --');
+                    }else{
+                        // Se retorna el componente que fallo
+                        Session::flash('cmp2', 'actualizarEstados');
+                    }
 
                     switch ($mensaje) 
                     {
@@ -355,10 +428,6 @@ class LiquidacionController extends Controller
             }   
     }
 
-
-
-
-    
     public function destroy($iddetalleliquidacion)
     {
         $usuarioactual=\Auth::user();
@@ -377,8 +446,64 @@ class LiquidacionController extends Controller
 
         Session::flash('limpiar', 'El pago a sido anulado');
         return Redirect::to('cuenta/carteraPagos/'.$cuenta->idcuenta);
+    }
 
+    //funcion utilizada para actualizar la categoria
+    public function store(Request $request)
+    {
+        $usuarioactual=\Auth::user();
 
+        $idcuenta= $request->get('idcuenta');
+
+        $cliente = Cliente::findOrFail($request->get('idcliente'));
+        $cliente->idcategoria = $request->get('idcategoria');
+        $cliente->update();
+
+        Session::flash('msj0', 'La categoria del cliente se ha actualizado correctamente');
+        return Redirect::to('cuenta/carteraPagos/'.$idcuenta);
+    }
+
+    //funcion utilizada para actualizar la categoria
+    public function updateEstado(Request $request)
+    {
+        $usuarioactual=\Auth::user();
+
+        $liquidacion = DetalleLiquidacion::findOrFail($request->get('iddetalleliquidacion'));
+        $old = $liquidacion->estado;
+        $liquidacion->estado = $request->get('nombre');
+        $liquidacion->update();
+
+        Session::flash('msj0', 'Se modificó la cuota del estado -- '.$old.' -- al estado -- '.$liquidacion->estado.' --  correctamente');
+        return Redirect::to('cuenta/carteraPagos/'.$liquidacion->idcuenta);
+    }
+
+    public function show($idcuenta)
+    {
+        $usuarioactual = \Auth::user();
+        $liquidaciones=DetalleLiquidacion::proyeccionCarteraPago($idcuenta);
+
+        $cuenta = Cuenta::findOrFail($idcuenta);
+        $negocio = Negocio::findOrFail($cuenta->idnegocio);
+        $cliente = Cliente::findOrFail($negocio->idcliente);
+        $categoria = Categoria::findOrFail($cliente->idcategoria);
+        $cartera = Cartera::findOrFail($cliente->idcartera);
+        $prestamo = Prestamo::findOrFail($cuenta->idprestamo);
+        $tipo_credito = TipoCredito::findOrFail($cuenta->idtipocredito);
+        $fecha_actual = Carbon::now();
+
+        //suma de totales
+        $sum_interes_diario = 0;
+        $sum_cuota_capital = 0;
+        $sum_total_diario = 0;
+        
+        foreach ($liquidaciones as $liq) {
+            //sumas de totales
+            $sum_interes_diario = $sum_interes_diario + $liq->interes;
+            $sum_cuota_capital = $sum_cuota_capital + $liq->cuotacapital;
+            $sum_total_diario = $sum_total_diario + $liq->totaldiario;
+        }
+
+        return view('liquidacion.proyeccionCarteraPagos', ["liquidaciones" => $liquidaciones, "cuenta" => $cuenta, "prestamo" => $prestamo,"tipo_credito" => $tipo_credito,"cartera"=>$cartera, "fecha_actual"=>$fecha_actual,"sum_interes_diario"=>$sum_interes_diario, "sum_cuota_capital"=>$sum_cuota_capital, "sum_total_diario"=>$sum_total_diario, "usuarioactual" => $usuarioactual]);
     }
 
     public function carteraPDF($id){

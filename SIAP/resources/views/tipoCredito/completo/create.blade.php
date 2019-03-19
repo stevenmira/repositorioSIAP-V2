@@ -10,8 +10,9 @@
 
 <section class="content-header">
   <ol class="breadcrumb">
-    <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
-    <li class="active">Nuevo Financiamiento</li>
+    <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio </a></li>
+    <li class="active"><a href="{{URL::action('TipoCreditoController@create')}}"> Nuevo </a></li> 
+    <li class="active"> Financiamiento </li>
   </ol>
 </section>
 

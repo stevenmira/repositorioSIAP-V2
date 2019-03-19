@@ -53,7 +53,7 @@ class prestamo extends Model
         
     }
 
-    public static function actualizarEstado()
+    /*public static function actualizarEstado()
     {
         $fecha_actual = Carbon::now();
         $fecha_actual = $fecha_actual->format('Y-m-d');
@@ -67,20 +67,18 @@ class prestamo extends Model
         }
 
         return 1;
-    }
+    }*/
 
-    public static function estadoAnterior($idcuenta)
+    /*public static function estadoAnterior($idcuenta)
     {
         $cuenta = Cuenta::where('idcuenta',$idcuenta)->first();
         $prestamo = Prestamo::where('idprestamo',$cuenta->idprestamo)->first();
         return $prestamo->estadodos;
-    }
+    }*/
 
-    public static function cuenta_atraso($idcuenta)
+/*  public static function cuenta_atraso($idcuenta)
     {
-
-
-    try{
+        try{
 
             $cuenta = DB::table('cuenta')->where('idcuenta','=',$idcuenta)->first();
 
@@ -104,13 +102,6 @@ class prestamo extends Model
             $ultimoPago = 0;
             $total = 0;
             $estadoAnt = "";
-
-            //Se verifica que la última cuota NO este atrasada Si lo esta devuelve aumento
-            /*foreach ($liquidacionesAnt as $ma) {
-                if ($ma->estado == 'PENDIENTE' || $ma->estado == 'ATRASO') {
-                    $bandera = $bandera + 1;
-                }
-            }*/
 
             //Se verifica cuál es la cantidad del último pago
             foreach ($liquidacionesAnt as $liq) {
@@ -162,21 +153,13 @@ class prestamo extends Model
             }
 
 
-            /*if ($estadoAnt == "ATRASO") {
-                $var = $atrasos - 1;
-                $total = round($var*$prestamoAnt->cuotadiaria + $ultimoPago, 2);
-            }else{
-                $total = round($atrasos*$prestamoAnt->cuotadiaria,2);
-            }*/
-
-
         } catch(\Exception $e)
         {
           $total = 0;
         }
 
-        return $total;
+            return $total;
     }
-
+*/
 
 }

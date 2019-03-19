@@ -46,12 +46,24 @@
 <br>
     <!-- Notificación -->
  
-<div class="container" style="text-align:center; font-family:'Trebuchet MS', Helvetica, sans-serif; color: #1C2331;">
+<div class="container" style="text-align:center; font-family:'Trebuchet MS', Helvetica, sans-serif; color: #212121; padding: 0px 0px 0px 0px;">
     
-    @if (Session::has('msj1'))
-    <div class="alert  fade in" style="background:  #ff8a80;">
-      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <h4>   <b>{{ Session::get('msj1')}}</b>  </h4>
+    @if (Session::has('msj1A') && Session::has('msj1B'))
+    <div class="alert  fade in" style="background:  #ff8a80; font-size: 15px; height: 110px">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+          <div class="table-responsive">
+              <table  class="table">
+                <tr>
+                  <td style="border:0px">La fecha de creacion del préstamo: </td>
+                  <td style="border:0px"> {{ Session::get('msj1A')}}</td>
+                </tr>
+                <tr>
+                  <td style="border:0px">Debe ser menor a la fecha de comienzo de la cartera de pagos:</td>
+                  <td style="border:0px"> {{ Session::get('msj1B')}}</td>
+                </tr>
+              </table>
+          </div>
+        </div>
     </div>
     @endif
 
@@ -124,6 +136,20 @@
       </h4>
     </div>
     @endif
+
+    @if(Session::has('msj10'))
+    <div class="alert  fade in" style="background:  #ff8a80;">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4>   <b>{{ Session::get('msj10')}}</b>. Puede revisar la <a href="{{url('cuenta/carteraPagos/'.$cuenta)}}">cartera de pago</a></h4>
+    </div>
+    @endif
+
+    @if (Session::has('msj11'))
+    <div class="alert  fade in" style="background:  #ff8a80;">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4>   <b>{{ Session::get('msj11')}}</b>  </h4>
+    </div>
+    @endif
   
     @if (Session::has('error1'))
     <div class="alert  fade in" style="background:  #ff8a80;">
@@ -131,15 +157,11 @@
       <h4>   <b>{{ Session::get('error1')}}</b>  </h4>
     </div>
     @endif
-  
-    
 
-
-
-    @if(Session::has('error8'))
-    <div class="alert  fade in" style="background:  #ff8a80;">
+    @if (Session::has('cmp1'))
+    <div class="alert  fade in" style="background:  #ffe57f;">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-      <h4>   <b>{{ Session::get('error8')}}</b>. Puede revisar la <a href="{{url('cuenta/carteraPagos/'.$cuenta)}}">cartera de pago</a></h4>
+      <h4>  <b>Advertencia: componente -- {{ Session::get('cmp1')}} --. Verifique la cuenta anterior o -- Cancele Con Refinancimiento -- los pagos de forma manual.</b> </h4>
     </div>
     @endif
 
@@ -150,7 +172,7 @@
 
   <div class="container">
     <div class="row text-center">
-        <div class="col-md-12" style="margin-top: 20px;">
+        <div class="col-md-12" style="margin-top: 0px;">
             <div class="pricing-table">
                 <div class="panel panel-primary" style="border: none;">
                     <div class="controle-header panel-heading panel-heading-landing">

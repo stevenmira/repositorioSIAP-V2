@@ -20,10 +20,10 @@ class CreateGarantiaTable extends Migration
             $table->index('idprestamo');
             $table->foreign('idprestamo')->references('idprestamo')->on('prestamo')->onDelete('cascade');
 
-            $table->string('descripcion',255)->required();
+            $table->string('descripcion',1024)->required();
             $table->string('marca',50)->nullable();
             $table->string('serie',50)->nullable();
-            $table->string('otros',255)->nullable();
+            $table->string('otros',1024)->nullable();
             $table->float('valor')->nullable();
             $table->string('tipogarante',10)->nullable();
 

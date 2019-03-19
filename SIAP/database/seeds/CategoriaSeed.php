@@ -39,7 +39,7 @@ class CategoriaSeed extends Seeder
         DB::table('categoria')->insert([
             'letra' => 'E',
             'calificacion' => 'MORA',
-            'descripcion' => 'Maximo 1 cuotra de atraso',
+            'descripcion' => 'No sujeto a crédito',
         ]);
     }
 }

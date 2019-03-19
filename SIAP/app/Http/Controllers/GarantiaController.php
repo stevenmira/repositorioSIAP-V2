@@ -9,6 +9,10 @@ use siap\Http\Requests\GarantiaFormRequest;
 
 use siap\Garantia;
 use siap\Cliente;
+use siap\Prestamo;
+use siap\Cuenta;
+use siap\Codeudor;
+use siap\Negocio;
 use siap\Fecha;
 
 use Illuminate\Support\Facades\Redirect;
@@ -51,25 +55,136 @@ class GarantiaController extends Controller
 
     }
 
-    public function getCreditos2($idcliente){
+    public function getGarantias($idprestamo){
     	$usuarioactual=\Auth::user();
         $fecha_actual = Fecha::spanish();
 
-    	$cliente = Cliente::where('idcliente','=',$idcliente)->first();
+        $prestamo = Prestamo::where('idprestamo','=',$idprestamo)->first();
+        $cuenta = Cuenta::where('idprestamo','=',$idprestamo)->first();
+        $negocio = Negocio::where('idnegocio','=',$cuenta->idnegocio)->first();
+    	$cliente = Cliente::where('idcliente','=',$negocio->idcliente)->first();
+        $codeudor = Codeudor::where('idcodeudor','=',$prestamo->idcodeudor)->first();
 
-    	$garantiasDeudor = DB::table('garantia as garantia')
-    	->select('garantia.descripcion')
-    	->join('prestamo as prestamo','garantia.idprestamo','=','prestamo.idprestamo')
-    	->join('cuenta as cuenta','prestamo.idprestamo','=','cuenta.idprestamo')
-    	->join('negocio as negocio','cuenta.idnegocio','=','negocio.idnegocio')
-    	->join('cliente as cliente','negocio.idcliente','=','cliente.idcliente')
-    	->where('idcliente','=', $idcliente)
-    	->where('tipogarante','=', 'DEUDOR')
-    	->orderBy('idgarantia','des')
+    	$garantias = DB::table('garantia as garantia')
+    	->where('idprestamo','=', $idprestamo)
+    	->orderBy('garantia.tipogarante','des')
     	->paginate(15);
 
-    	return view('garantia.getCreditos',['garantiasDeudor'=>$garantiasDeudor, 'cliente'=>$cliente, 'fecha_actual'=>$fecha_actual, 'usuarioactual'=>$usuarioactual]);
+    	return view('garantia.getGarantias',['garantias'=>$garantias, 'negocio'=>$negocio,'prestamo'=>$prestamo,'idprestamo'=>$idprestamo,'cliente'=>$cliente, 'codeudor'=>$codeudor, 'fecha_actual'=>$fecha_actual, 'usuarioactual'=>$usuarioactual]);
     }
 
+    public function newGarantia($idprestamo){
+        $usuarioactual=\Auth::user();
+        $fecha_actual = Fecha::spanish();
+
+        $prestamo = Prestamo::where('idprestamo','=',$idprestamo)->first();
+        $cuenta = Cuenta::where('idprestamo','=',$idprestamo)->first();
+        $negocio = Negocio::where('idnegocio','=',$cuenta->idnegocio)->first();
+        $cliente = Cliente::where('idcliente','=',$negocio->idcliente)->first();
+        $codeudor = Codeudor::where('idcodeudor','=',$prestamo->idcodeudor)->first();
+
+        return view('garantia.newGarantia', ['cliente'=>$cliente, 'negocio'=>$negocio, 'idprestamo'=>$idprestamo, 'codeudor'=>$codeudor, 'prestamo'=>$prestamo, 'fecha_actual'=>$fecha_actual, 'usuarioactual'=>$usuarioactual]);
+    }
+
+    public function store(GarantiaFormRequest $request)
+    {
+
+        try{
+                DB::beginTransaction();
+
+                $garantia = new Garantia;
+
+                $garantia->idprestamo = $request->get('idprestamo');
+                $garantia->descripcion = $request->get('descripcion');
+                $garantia->marca = $request->get('marca');
+                $garantia->serie = $request->get('serie');
+
+                if ($request->get('valor') != null) {
+                    $garantia->valor = $request->get('valor');
+                }
+
+                $garantia->otros = $request->get('otros');
+                $garantia->tipogarante = $request->get('tipogarante');
+
+                $garantia->save();
+
+                Session::flash('create', ' '.$garantia->tipogarante.' ');
+
+           DB::commit();
+
+        } catch(\Exception $e)
+        {
+          DB::rollback();
+          Session::flash('error', ''.' No se pudo guardar la garantía, algo salió mal');
+        }       
+
+        $idprestamo = $request->get('idprestamo');
+        return Redirect::to('cliente/credito/garantias/'.$idprestamo);
+    }
+
+    public function edit($idgarantia)
+    {
+        $usuarioactual=\Auth::user();
+        $fecha_actual = Fecha::spanish();
+
+        $garantia = Garantia::where('idgarantia','=',$idgarantia)->first();
+        $prestamo = Prestamo::where('idprestamo','=',$garantia->idprestamo)->first();
+        $cuenta = Cuenta::where('idprestamo','=',$prestamo->idprestamo)->first();
+        $negocio = Negocio::where('idnegocio','=',$cuenta->idnegocio)->first();
+        $cliente = Cliente::where('idcliente','=',$negocio->idcliente)->first();
+        $codeudor = Codeudor::where('idcodeudor','=',$prestamo->idcodeudor)->first();
+
+
+        return view('garantia.edit', ['garantia'=>$garantia,'cliente'=>$cliente, 'negocio'=>$negocio, 'codeudor'=>$codeudor, 'prestamo'=>$prestamo, 'fecha_actual'=>$fecha_actual, 'usuarioactual'=>$usuarioactual]);
+    }
+
+    public function update(GarantiaFormRequest $request, $idgarantia)
+    {
+        $usuarioactual=\Auth::user();
+
+        try{
+                DB::beginTransaction();
+            
+                //Encontramos la garantia
+                $garantia = Garantia::findOrFail($idgarantia);
+
+                //actualizamos el Codeudor
+                $garantia->descripcion = $request->get('descripcion');
+                $garantia->marca = $request->get('marca');
+                $garantia->serie = $request->get('serie');
+
+                if ($request->get('valor') != null) {
+                    $garantia->valor = $request->get('valor');
+                }
+
+                $garantia->otros = $request->get('otros');
+                $garantia->tipogarante = $request->get('tipogarante');
+                
+                $garantia->update();
+
+                Session::flash('update', ' '.$garantia->tipogarante.' ');
+                
+           DB::commit();
+
+        } catch(\Exception $e)
+        {
+          DB::rollback();
+          Session::flash('error', ''.' No se pudo actualizar la garantia, algo salió mal');
+
+        }       
+
+        return Redirect::to('cliente/credito/garantias/'.$garantia->idprestamo);
+    }
+
+    public function destroy($idgarantia)
+    {
+        $usuarioactual=\Auth::user();
+
+        $garantia = Garantia::findOrFail($idgarantia);
+        $garantia->delete();
+        Session::flash('delete'," ".$garantia->tipogarante.' ');
+
+         return Redirect::to('cliente/credito/garantias/'.$garantia->idprestamo);
+    }
 
 }

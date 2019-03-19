@@ -3,6 +3,17 @@
 <style type="text/css">
   p.a {font: oblique; font-size: 20px; text-shadow: 0 0 0.2em #cfd8dc;}
 </style>
+<style type="text/css">
+  .circuloCSS{
+  width: 31px;
+  height: 31px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 13px;
+  line-height: 1.43;
+  border-radius: 16px;
+}
+</style>
 
 <section class="content-header">
   <ol class="breadcrumb">
@@ -57,7 +68,7 @@
                           <td>{{ $tasa }} %</td>
                           <td>{{ $ma->cuotadiaria }}</td>
                           <td style="width: 150px;">
-                            <a class="btn btn-warning amarillo"  data-title="Ver Datos del Codeudor" href="{{ url('cliente/credito/garantias', ['id' => $ma->idprestamo]) }}" ><i class="fa fa-eye" aria-hidden="true"></i></a>
+                            <a class="btn btn-warning amarillo"  data-title="Ver Garantias" href="{{ url('cliente/credito/garantias', ['id' => $ma->idprestamo]) }}" ><i class="fa fa-eye" aria-hidden="true"></i></a>
                           </td>
                       </tr>
                   <?php $cont = $cont + 1; ?>
@@ -65,6 +76,9 @@
                 </table>
             </div>
         </div>
+    @if($cuentas == null)
+      <p style="text-align: center;">No hay créditos para este cliente</p>
+    @endif
 </div>
 
 <div class="row">
