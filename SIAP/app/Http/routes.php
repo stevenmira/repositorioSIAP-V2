@@ -45,13 +45,20 @@ Route::get('cuenta/carteraPagosPDF/{id}', 'LiquidacionController@carteraPDF');
 Route::get('calcular-credito/imprimir','calcularCreditoController@generarPDF');
 
 Route::get('cuenta/desembolsoPDF/{idcuenta}','CuentaController@desembolsoPDF');
-Route::get('cuenta/desembolsoPDF2/{idcuenta}','CuentaController@desemSinMoraPDF');
+Route::post('cuenta/desembolsoPDF/refinanciamiento', 'CuentaController@desembolsoRefinanciamientoPDF');
 
 Route::get('agregarestado/estadoPDf/{id}','ComprobanteController@estadoPDF');
 
 Route::get('cuenta/carteraRealPDF/{id}','LiquidacionController@carteraRealPDF');
 
 Route::get('lista/clientesPDF/{id}','CarteraClientController@carteraClientPDF');
+
+// Reportes adicionales
+Route::get('reportes/lista','ReportesController@lista');
+
+//Cartera de Pagos
+Route::get('reportes/cartera/pagos','ReportesController@carteraPagos');
+Route::post('reportes/cartera/pagos/review','ReportesController@carteraPagosReview');
 
 
 //consulta a la base por jquery
@@ -101,9 +108,6 @@ Route::group(['middleware' => 'auth'], function () {
 
    //Tasa de interes
    Route::resource('tasa-interes','TasaInteresController');
-
-   //Descargar ayuda
-   Route::get('ayuda/descargar','UsuarioController@download');
 
    //Record
    Route::resource('record','RecordClienteController');

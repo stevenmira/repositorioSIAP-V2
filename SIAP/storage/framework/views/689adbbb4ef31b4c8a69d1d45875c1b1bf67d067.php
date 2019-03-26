@@ -17,7 +17,7 @@
 </head>
 <body>
 	<div align=center><b>AFIMID S.A. de C.V.</b></div>
-	<div align=center>ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo e($prestamo->created_at->format('d/m/y')); ?></div>
+	<div align=center>ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php echo e($prestamo->fecha->format('d/m/y')); ?></div>
 
 	<table style="border-collapse: collapse;">
 		<tbody>
@@ -230,6 +230,38 @@
 				<td></td>
 			</tr>
 		</tbody>
+		<br>
 	</table>
+	<?php if($codeudor != null): ?>
+	<table>
+		<tbody>
+			<tr>
+				<th>
+					<span>F:&nbsp;&nbsp;<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></span>
+				</th>
+			</tr>
+		</tbody>
+	</table>
+	<table>
+		<tbody>
+			<tr>
+				<th><span>NOMBRE:</span></th>
+				<td style="width: 220px"><span>&nbsp;<?php echo e(strtoupper($codeudor->nombre)); ?> <?php echo e(strtoupper($codeudor->apellido)); ?>&nbsp;</td>
+			</tr>
+			<tr>
+				<th><span>DUI:</span></th>
+				<td><span>&nbsp;<?php echo e(strtoupper($codeudor->dui)); ?>&nbsp;</td>
+			</tr>
+			<tr>
+				<th><span>NIT:</span></th>
+				<td><span>&nbsp;<?php echo e(strtoupper($codeudor->nit)); ?>&nbsp;</td>
+			</tr>
+			<tr>
+				<th><span>CODEUDOR/A&nbsp;&nbsp;</span></th>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+	<?php endif; ?>
 </body>
 </html>

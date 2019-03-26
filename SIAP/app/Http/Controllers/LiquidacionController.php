@@ -18,6 +18,7 @@ use siap\Fecha;
 use siap\Comprobante;
 use siap\Categoria;
 use siap\Estado;
+use siap\Codeudor;
 
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -513,6 +514,7 @@ class LiquidacionController extends Controller
         $cliente = Cliente::findOrFail($negocio->idcliente);
         $prestamo = Prestamo::findOrFail($cuenta->idprestamo);
         $tipo_credito = TipoCredito::findOrFail($cuenta->idtipocredito);
+        $codeudor = Codeudor::where('idcodeudor',$prestamo->idcodeudor)->first();
 
         $fechahoy = date('d/m/y');
     
@@ -522,13 +524,13 @@ class LiquidacionController extends Controller
 
         $liquidacion = new DetalleLiquidacion;
   
-        return $this -> crearPDF($vistaurl,$negocio,$cliente,$prestamo,$tipo_credito,$liquidacion,$name,$cuenta);
+        return $this -> crearPDF($vistaurl,$negocio,$cliente,$prestamo,$tipo_credito,$liquidacion,$name,$cuenta,$codeudor);
     }
 
-    public function crearPDF($vistaurl,$negocio,$cliente,$prestamo,$tipo_credito,$liquidacion,$name,$cuenta)
+    public function crearPDF($vistaurl,$negocio,$cliente,$prestamo,$tipo_credito,$liquidacion,$name,$cuenta,$codeudor)
     {
         
-        $view=\View::make($vistaurl,compact('negocio','cliente','prestamo','tipo_credito','liquidacion','cuenta'))->render();
+        $view=\View::make($vistaurl,compact('negocio','cliente','prestamo','tipo_credito','liquidacion','cuenta','codeudor'))->render();
         $pdf =\App::make('dompdf.wrapper');
 
         $pdf->loadHTML($view);
@@ -548,13 +550,10 @@ class LiquidacionController extends Controller
         $cliente = Cliente::findOrFail($negocio->idcliente);
         $prestamo = Prestamo::findOrFail($cuenta->idprestamo);
         $tipo_credito = TipoCredito::findOrFail($cuenta->idtipocredito);
+        $codeudor = Codeudor::where('idcodeudor',$prestamo->idcodeudor)->first();
 
-        $componente = DetalleLiquidacion::calculoN_modificado($id);
-        $n = DetalleLiquidacion::estados_cuotas($id);
         $comprobante = Comprobante::where('idcuenta',$id);
 
-        #$componente = Self::calculoN_modificado($cuenta->idcuenta);
-        #$n = Self::estados_cuotas($cuenta->idcuenta);
 
         $liquidaciones = DetalleLiquidacion::where('idcuenta','=',$cuenta->idcuenta)
         ->orderby('iddetalleliquidacion', 'asc')
@@ -607,14 +606,14 @@ class LiquidacionController extends Controller
         $name = "CarteraPagoReal".$cuenta->idcuenta.$cliente->idcliente.$negocio->nombre.".pdf";
         $vistaurl= "reportes/carteraReal";
 
-        return $this -> carteraRPDF($vistaurl,$cuenta,$n,$cliente,$prestamo,$tipo_credito,$negocio,$liquidaciones,$sum_interes_diario,$sum_cuota_capital,$sum_total_diario,$atraso,$abono,$pendiente,$novalido,$cancelado,$fecha_actual,$fecha_server,$name,$comprobante);
+        return $this -> carteraRPDF($vistaurl,$cuenta,$cliente,$prestamo,$tipo_credito,$negocio,$liquidaciones,$sum_interes_diario,$sum_cuota_capital,$sum_total_diario,$atraso,$abono,$pendiente,$novalido,$cancelado,$fecha_actual,$fecha_server,$name,$comprobante,$codeudor);
 
     }
 
-     public function carteraRPDF($vistaurl,$cuenta,$n,$cliente,$prestamo,$tipo_credito,$negocio,$liquidaciones,$sum_interes_diario,$sum_cuota_capital,$sum_total_diario,$atraso,$abono,$pendiente,$novalido,$cancelado,$fecha_actual,$fecha_server,$name,$comprobante)
+     public function carteraRPDF($vistaurl,$cuenta,$cliente,$prestamo,$tipo_credito,$negocio,$liquidaciones,$sum_interes_diario,$sum_cuota_capital,$sum_total_diario,$atraso,$abono,$pendiente,$novalido,$cancelado,$fecha_actual,$fecha_server,$name,$comprobante,$codeudor)
     {
         
-        $view=\View::make($vistaurl,compact('cuenta','n','cliente','prestamo','tipo_credito','negocio','liquidaciones','sum_interes_diario','sum_cuota_capital','sum_total_diario','atraso','abono','pendiente','novalido','cancelado','fecha_actual','fecha_server','comprobante'))->render();
+        $view=\View::make($vistaurl,compact('cuenta','cliente','prestamo','tipo_credito','negocio','liquidaciones','sum_interes_diario','sum_cuota_capital','sum_total_diario','atraso','abono','pendiente','novalido','cancelado','fecha_actual','fecha_server','comprobante','codeudor'))->render();
         $pdf =\App::make('dompdf.wrapper');
 
         $pdf->loadHTML($view);

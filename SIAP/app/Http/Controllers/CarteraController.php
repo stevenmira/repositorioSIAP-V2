@@ -52,8 +52,8 @@ class CarteraController extends Controller
         $fecha_actual = Fecha::spanish();
 
         //En casos que no haya listado, devuelve vacia la lista
-        $ejecutivos = Ejecutivo::orderBy('nombre','asc');
-        $supervisores = Supervisor::orderBy('nombre','asc');
+        $ejecutivos = Ejecutivo::where('estado','ACTIVO')->orderBy('nombre','asc');
+        $supervisores = Supervisor::where('estado','ACTIVO')->orderBy('nombre','asc');
         
     	return view("carteras.create",["ejecutivos"=>$ejecutivos, "supervisores"=>$supervisores, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);
     }

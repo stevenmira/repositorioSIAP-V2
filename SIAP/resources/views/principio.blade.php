@@ -203,6 +203,17 @@
       </div>
       @endif
 
+
+      
+      @if($usuarioactual->idtipousuario==1)
+      <div class="col-md-3" align="center">
+        <a href="{{URL::action('ReportesController@lista')}}">
+          <span class="fa fa-file fa-3x"></span><i class="fab fa-cuttlefish"></i>
+          <h3>Reportes</h3>
+        </a>
+      </div>
+      @endif
+
       @if($usuarioactual->idtipousuario==1)
       <div class="col-md-3" align="center">
         <a href="{{URL::action('EmpleadoController@indexPersonal')}}">
