@@ -288,4 +288,51 @@ class ClienteController extends Controller
         }
     }
 
+    public function perfilClientePDF($id){
+
+
+            $usuarioactual=\Auth::user();
+
+
+            //Obtenemos la fecha actual
+            $hoy= Carbon::now();
+            $hoy= $hoy->format('Y-m-d');
+
+            //Obtenemos la fecha de hoy en español usando carbon y array
+            $fecha_actual = Fecha::spanish();
+
+
+            $cliente = Cliente::findOrFail($id);
+            $cartera = Cartera::findOrFail($cliente->idcartera);
+            $categoria = Categoria::findOrFail($cliente->idcategoria);
+
+            $observaciones = DB::table('observacion')
+            ->where('idcliente','=', $cliente->idcliente)
+            ->orderBy('idobservacion','des')
+            ->get();
+
+            //Calculo de la edad
+            $edad = Fecha::calcularEdad($cliente->fechanacimiento);
+
+            //Parceo de fecha
+            $cliente->fechanacimiento = \Carbon\Carbon::parse($cliente->fechanacimiento)->format('d-m-Y');
+            $cliente->fechaexpedicion = \Carbon\Carbon::parse($cliente->fechaexpedicion)->format('d-m-Y');       
+
+
+            $vistaurl = "cliente/perfil/perfilCliente";
+            $name = "perfilCliente".$cliente->nombre.$cliente->apellido.".pdf";
+
+            return $this -> crearPDF($vistaurl,$fecha_actual,$edad,$id,$cliente,$cartera,$categoria,$name,$observaciones, $usuarioactual);
+    }
+
+    public function crearPDF($vistaurl,$fecha_actual,$edad,$id,$cliente,$cartera,$categoria,$name,$observaciones,$usuarioactual)
+    {
+        $view=\View::make($vistaurl,compact('cliente','edad','fecha_actual','cartera','categoria','observaciones','usuarioactual'))->render();
+        $pdf =\App::make('dompdf.wrapper');
+
+        $pdf->loadHTML($view);
+        return $pdf->stream($name.".pdf");
+    }
+
+
 }

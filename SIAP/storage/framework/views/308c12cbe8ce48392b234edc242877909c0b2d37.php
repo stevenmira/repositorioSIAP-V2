@@ -1,5 +1,4 @@
-@extends ('layouts.inicio')
-@section('contenido')
+<?php $__env->startSection('contenido'); ?>
 
 <style>
   .errors{
@@ -9,9 +8,9 @@
 </style>
 <section class="content-header">
   <ol class="breadcrumb">
-    <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
-    <li><a href="{{ URL::action('EmpleadoController@indexPersonal')}}"><i class="fa fa-dashboard"></i> Personal</a></li>
-    <li><a href="{{ URL::action('EjecutivoController@index')}}"> Ejecutivo </a></li>
+    <li><a href="<?php echo e(url('home')); ?>"><i class="fa fa-dashboard"></i> Inicio</a></li>
+    <li><a href="<?php echo e(URL::action('EmpleadoController@indexPersonal')); ?>"><i class="fa fa-dashboard"></i> Personal</a></li>
+    <li><a href="<?php echo e(URL::action('EjecutivoController@index')); ?>"> Ejecutivo </a></li>
     <li class="active">Editar</li>
   </ol>
 </section>
@@ -23,25 +22,27 @@
   
 <h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 25px 0px;"><b>EDITAR EJECUTIVO</b></h4>
 
-{!!Form::model($ejecutivo,['method'=>'PATCH','route'=>['ejecutivo.update',$ejecutivo->idejecutivo], 'files'=>'true'])!!}
-{{Form::token()}}
+<?php echo Form::model($ejecutivo,['method'=>'PATCH','route'=>['ejecutivo.update',$ejecutivo->idejecutivo], 'files'=>'true']); ?>
+
+<?php echo e(Form::token()); ?>
+
 
 <div class="container">
   <div class="col-lg-12 col-md-12 col-sm-12">
           <div class="row">
             <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-              @if(count($errors) > 0)
+              <?php if(count($errors) > 0): ?>
               <div class="errors">
                 <ul>
                   <p><b>Por favor, corrige lo siguiente:</b></p>
                   <?php $cont = 1; ?>
-                @foreach($errors->all() as $error)
-                  <li>{{$cont}}. {{ $error }}</li>
+                <?php foreach($errors->all() as $error): ?>
+                  <li><?php echo e($cont); ?>. <?php echo e($error); ?></li>
                   <?php $cont=$cont+1; ?>
-                @endforeach
+                <?php endforeach; ?>
                 </ul>
               </div>
-            @endif
+            <?php endif; ?>
             </div>
           </div>
 
@@ -54,7 +55,8 @@
                 <div class="input-group-addon">
                   <i class="fa fa-pencil" aria-hidden="true"></i>
                 </div>
-                {!! Form::text('nombre', $ejecutivo->nombre, ['class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca el nombre . . .', 'autofocus'=>'on', 'maxlength'=>'30']) !!}
+                <?php echo Form::text('nombre', $ejecutivo->nombre, ['class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca el nombre . . .', 'autofocus'=>'on', 'maxlength'=>'30']); ?>
+
               </div>
             </div>
 
@@ -64,7 +66,8 @@
                 <div class="input-group-addon">
                   <i class="fa fa-pencil" aria-hidden="true"></i>
                 </div>
-                {!! Form::text('apellido', $ejecutivo->apellido, ['class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca el apellido . . .', 'autofocus'=>'on', 'maxlength'=>'30']) !!}
+                <?php echo Form::text('apellido', $ejecutivo->apellido, ['class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca el apellido . . .', 'autofocus'=>'on', 'maxlength'=>'30']); ?>
+
               </div>
             </div>
             
@@ -78,7 +81,8 @@
                 <div class="input-group-addon">
                   <i class="fa fa-pencil" aria-hidden="true"></i>
                 </div>
-                {!! Form::text('dui', $ejecutivo->dui, ['class' => 'form-control', 'data-inputmask'=>'"mask": "99999999-9"',  'data-mask'=>'on']) !!}
+                <?php echo Form::text('dui', $ejecutivo->dui, ['class' => 'form-control', 'data-inputmask'=>'"mask": "99999999-9"',  'data-mask'=>'on']); ?>
+
               </div>
             </div>
 
@@ -88,7 +92,8 @@
                 <div class="input-group-addon">
                   <i class="fa fa-calendar" aria-hidden="true"></i>
                 </div>
-                {!! Form::date('fechanacimiento', $ejecutivo->fechanacimiento, ['class' => 'form-control']) !!}
+                <?php echo Form::date('fechanacimiento', $ejecutivo->fechanacimiento, ['class' => 'form-control']); ?>
+
               </div>
             </div>
 
@@ -101,13 +106,13 @@
                 <div class="input-group-addon">
                   <i class="fa fa-pencil" aria-hidden="true"></i>
                 </div>
-                @if ($ejecutivo->sexo == "Masculino['select'=>'on']" )
-                  <label>{!! Form::radio('sexo',true) !!} Femenino</label>
-                  <label>{!! Form::radio('sexo',false) !!} Masculino</label>
-                @else
-                  <label>{!! Form::radio('sexo',false) !!} Femenino</label>
-                  <label>{!! Form::radio('sexo',true) !!} Masculino</label>
-                @endif
+                <?php if($ejecutivo->sexo == "Masculino['select'=>'on']" ): ?>
+                  <label><?php echo Form::radio('sexo',true); ?> Femenino</label>
+                  <label><?php echo Form::radio('sexo',false); ?> Masculino</label>
+                <?php else: ?>
+                  <label><?php echo Form::radio('sexo',false); ?> Femenino</label>
+                  <label><?php echo Form::radio('sexo',true); ?> Masculino</label>
+                <?php endif; ?>
 
               </div>
             </div>
@@ -117,7 +122,8 @@
                 <div class="input-group-addon">
                   <i class="fa fa-pencil" aria-hidden="true"></i>
                 </div>
-                {!! Form::textarea('direccion', $ejecutivo->direccion, ['class' => 'form-control', 'placeholder'=>'Introduzca la direccion . . .', 'rows'=>'1', 'maxlength'=>'255']) !!}
+                <?php echo Form::textarea('direccion', $ejecutivo->direccion, ['class' => 'form-control', 'placeholder'=>'Introduzca la direccion . . .', 'rows'=>'1', 'maxlength'=>'255']); ?>
+
               </div>
             </div>
           </div>
@@ -129,7 +135,8 @@
                 <div class="input-group-addon">
                   <i class="fa fa-android" aria-hidden="true"></i>
                 </div>
-                {!! Form::text('telefono', $ejecutivo->telefono, ['class' => 'form-control', 'data-inputmask'=>'"mask": "9999-9999"',  'data-mask'=>'on']) !!}
+                <?php echo Form::text('telefono', $ejecutivo->telefono, ['class' => 'form-control', 'data-inputmask'=>'"mask": "9999-9999"',  'data-mask'=>'on']); ?>
+
               </div>
             </div>
 
@@ -139,7 +146,8 @@
                 <div class="input-group-addon">
                   <i class="fa fa-pencil" aria-hidden="true"></i>
                 </div>
-                {!! Form::email('correo', $ejecutivo->correo, ['class' => 'form-control']) !!}
+                <?php echo Form::email('correo', $ejecutivo->correo, ['class' => 'form-control']); ?>
+
               </div>
             </div>
 
@@ -152,7 +160,8 @@
                 <div class="input-group-addon">
                   <i class="fa fa-pencil" aria-hidden="true"></i>
                 </div>
-                {!! Form::textarea('comentario', $ejecutivo->comentario, ['class' => 'form-control', 'rows'=>'4']) !!}
+                <?php echo Form::textarea('comentario', $ejecutivo->comentario, ['class' => 'form-control', 'rows'=>'4']); ?>
+
               </div>
             </div>
           </div> 
@@ -166,9 +175,9 @@
                 <div class="input-group-addon">
                   <i class="fa fa-user" aria-hidden="true"></i>
                 </div>
-                  @if(($ejecutivo->fotografia)!="")
-                        <img class="img-rounded" src="{{asset('imagenes/ejecutivo/'.$ejecutivo->fotografia)}}" height="223px" width="250px">
-                  @endif
+                  <?php if(($ejecutivo->fotografia)!=""): ?>
+                        <img class="img-rounded" src="<?php echo e(asset('imagenes/ejecutivo/'.$ejecutivo->fotografia)); ?>" height="223px" width="250px">
+                  <?php endif; ?>
                   <input type="file" name="fotografia" class="form-control" style="width: 250px;">
               </div>
             </div>
@@ -179,27 +188,28 @@
 <div class="row">
   <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12" id="guardar">
     <div class="form-group">
-    <input name="_token" value="{{csrf_token()}}" type="hidden"></input>
-        <a href="{{URL::action('EjecutivoController@index')}}" class="btn btn-danger btn-lg col-md-offset-2"> Cancelar</a>
+    <input name="_token" value="<?php echo e(csrf_token()); ?>" type="hidden"></input>
+        <a href="<?php echo e(URL::action('EjecutivoController@index')); ?>" class="btn btn-danger btn-lg col-md-offset-2"> Cancelar</a>
         <button class="btn btn-primary btn-lg col-md-offset-6" type="submit"> Actualizar</button>
       </div>
   </div>
 </div>
-{!!Form::close()!!}
+<?php echo Form::close(); ?>
+
 
 <div class="row">
   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-      <h4 style="text-align:center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #1C2331; float: right;">{{$fecha_actual}}</h4>
+      <h4 style="text-align:center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #1C2331; float: right;"><?php echo e($fecha_actual); ?></h4>
   </div>
 </div>
 
-@push('scripts')
+<?php $__env->startPush('scripts'); ?>
 
 
 <!-- InputMask -->
-<script src="{{asset('js/inputmask/jquery3.js')}}"></script>  
-<script src="{{asset('js/inputmask/input-mask.js')}}"></script>
-<script src="{{asset('js/inputmask/input-mask-date.js')}}"></script>
+<script src="<?php echo e(asset('js/inputmask/jquery3.js')); ?>"></script>  
+<script src="<?php echo e(asset('js/inputmask/input-mask.js')); ?>"></script>
+<script src="<?php echo e(asset('js/inputmask/input-mask-date.js')); ?>"></script>
 
 <script>
   $(function () {
@@ -208,7 +218,8 @@
 
   })
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
 
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.inicio', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

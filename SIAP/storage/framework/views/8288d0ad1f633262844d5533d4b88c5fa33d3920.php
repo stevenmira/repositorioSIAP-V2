@@ -1,6 +1,7 @@
 <div class="modal fade modal-slide-in-right" aria-hidden="true"
-role="dialog" tabindex="-1" id="modal-delete-{{$ma->idempleado}}">
-	{{Form::Open(array('action'=>array('EmpleadoController@destroy',$ma->idempleado),'method'=>'delete'))}}
+role="dialog" tabindex="-1" id="modal-delete-<?php echo e($ma->idempleado); ?>">
+	<?php echo e(Form::Open(array('action'=>array('EmpleadoController@destroy',$ma->idempleado),'method'=>'delete'))); ?>
+
 	<div class="modal-dialog">
 		<div class="modal-content" style="color: #000;">
 			<div class="modal-header" style="background: #b71c1c; color: #fff;">
@@ -16,12 +17,12 @@ role="dialog" tabindex="-1" id="modal-delete-{{$ma->idempleado}}">
 				</h4>
 
 				<p style="font-size: 14px;">
-					Nombre: <span style="padding: 10px 25px 0px 10px;">{{ $ma->nombre }}</span>
+					Nombre: <span style="padding: 10px 25px 0px 10px;"><?php echo e($ma->nombre); ?></span>
 				</p>
 
 				<p style="font-size: 14px;">
 					 Cargo: 
-				</p><span style="padding: 5px 0px 0px 0px;">{{ $ma->cargo }}</span>
+				</p><span style="padding: 5px 0px 0px 0px;"><?php echo e($ma->cargo); ?></span>
 
 
 			</div>
@@ -31,5 +32,6 @@ role="dialog" tabindex="-1" id="modal-delete-{{$ma->idempleado}}">
 			</div>
 		</div>
 	</div>
-	{{Form::Close()}}
+	<?php echo e(Form::Close()); ?>
+
 </div>

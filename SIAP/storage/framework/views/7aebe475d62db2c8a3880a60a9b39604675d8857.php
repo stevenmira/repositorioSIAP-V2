@@ -1,9 +1,8 @@
-@extends ('layouts.inicio')
-@section('contenido')
+<?php $__env->startSection('contenido'); ?>
 <section class="content-header">
   <ol class="breadcrumb">
-    <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
-    <li><a href="{{URL::action('SupervisorController@index')}}"> Ejecutivo</a></li>
+    <li><a href="<?php echo e(url('home')); ?>"><i class="fa fa-dashboard"></i> Inicio</a></li>
+    <li><a href="<?php echo e(URL::action('SupervisorController@index')); ?>"> Ejecutivo</a></li>
     <li class="active">Perfil</li>
   </ol>
 </section>
@@ -27,7 +26,7 @@
         <div class="panel-body">
           <div class="row">
             <div class="col-md-3 col-lg-3 " align="center"> 
-              <img alt="User Pic" src="{{asset('imagenes/supervisor/'.$supervisor->fotografia)}}" class="img-rounded img-responsive"> 
+              <img alt="User Pic" src="<?php echo e(asset('imagenes/supervisor/'.$supervisor->fotografia)); ?>" class="img-rounded img-responsive"> 
             </div>
 
             <div class=" col-md-9 col-lg-9 "> 
@@ -36,51 +35,52 @@
 
                   <tr>
                     <td>NOMBRES Y APELLIDOS:</td>
-                    <td>{{ $supervisor->nombre}} {{ $supervisor->apellido }}</td>
+                    <td><?php echo e($supervisor->nombre); ?> <?php echo e($supervisor->apellido); ?></td>
                   </tr>
 
                   <tr>
                     <td>DUI:</td>
-                    <td>{{ $supervisor->dui }}</td>
+                    <td><?php echo e($supervisor->dui); ?></td>
                   </tr>
 
                   <tr>
                     <td>FECHA DE NACIMIENTO:</td>
-                    <td>{{ $supervisor->fechanacimiento}} ({{ $edad }} años)</td>
+                    <td><?php echo e($supervisor->fechanacimiento); ?> (<?php echo e($edad); ?> años)</td>
                   </tr>
 
                   <tr>
                     <td>DIRECCIÓN:</td>
-                    <td>{{ $supervisor->direccion}}</td>
+                    <td><?php echo e($supervisor->direccion); ?></td>
                   </tr>
 
                   <tr>
                     <td>SEXO:</td>
-                    <td>{{ $supervisor->sexo }}</td>
+                    <td><?php echo e($supervisor->sexo); ?></td>
                   </tr>
 
                   <tr>
                     <td>NÚMERO TELEFONICO:</td>
-                    <td>{{ $supervisor->telefono}}</td>
+                    <td><?php echo e($supervisor->telefono); ?></td>
                   </tr>
 
                   <tr>
                     <td>CORREO:</td>
-                    <td>{{ $supervisor->correo}}</td>
+                    <td><?php echo e($supervisor->correo); ?></td>
                   </tr>
 
                   <tr>
                     <td>COMENTARIO:</td>
-                    <td>{{ $supervisor->comentario}}</td>
+                    <td><?php echo e($supervisor->comentario); ?></td>
                   </tr>
 
                 </tbody>
               </table>
-              <a href="{{URL::action('SupervisorController@edit',$supervisor->idsupervisor)}}" class="btn btn-primary btn-lg  pull-right">Actualizar</a>
+              <a href="<?php echo e(URL::action('SupervisorController@edit',$supervisor->idsupervisor)); ?>" class="btn btn-primary btn-lg  pull-right">Actualizar</a>
             </div>
           </div>
         </div>
       </div>
 
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.inicio', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

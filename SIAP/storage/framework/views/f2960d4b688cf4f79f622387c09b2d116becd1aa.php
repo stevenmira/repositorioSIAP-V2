@@ -1,9 +1,8 @@
-@extends ('layouts.inicio')
-@section('contenido')
+<?php $__env->startSection('contenido'); ?>
 <section class="content-header">
   <ol class="breadcrumb">
-    <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
-    <li><a href="{{URL::action('ClienteController@index')}}"> Cliente</a></li>
+    <li><a href="<?php echo e(url('home')); ?>"><i class="fa fa-dashboard"></i> Inicio</a></li>
+    <li><a href="<?php echo e(URL::action('ClienteController@index')); ?>"> Cliente</a></li>
     <li class="active">Perfil</li>
   </ol>
 </section>
@@ -213,18 +212,18 @@
               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 coralbg2 no-pad">
                   <div class="user-pad">
                       <h3 class="text-uppercase">Perfil de cliente</h3>
-                      <h4 class="white"><i class="fa fa-user"></i> {{$cliente->nombre}} {{$cliente->apellido}}</h4>
-                      <h4 class="white"><i class="fa fa-briefcase"></i> {{$cliente->profesion}}</h4>
-                      <h4 class="white"><i class="fa fa-calendar"></i> {{$cliente->fechanacimiento}} ({{$edad}} años)</h4>
-                      <h4 class="white"><i class="fa fa-map-marker"></i>   {{$cliente->direccion}} </h4>
-                      <h4 class="white"><i class="fa fa-list-alt"></i> DUI y NIT: {{$cliente->dui}} / {{$cliente->nit}}</h4>
-                      <h4 class="white"><i class="fa fa-check-circle-o"></i> Lugar y Fecha de Expedición: {{$cliente->lugarexpedicion}}, {{$cliente->fechaexpedicion}}</h4>
-                      <h4 class="white"><i class="fa fa-map-marker"></i> Domicilio: {{$cliente->domicilio}}</h4>
-                      <h4 class="white"><i class="fa fa-phone"></i> Teléfonos: {{$cliente->telefonofijo}}, {{$cliente->telefonocel}}</h4>
-                      <a type="button" class="btn btn-labeled btn-primary" href="{{URL::action('ClienteController@edit',$cliente->idcliente)}}">
+                      <h4 class="white"><i class="fa fa-user"></i> <?php echo e($cliente->nombre); ?> <?php echo e($cliente->apellido); ?></h4>
+                      <h4 class="white"><i class="fa fa-briefcase"></i> <?php echo e($cliente->profesion); ?></h4>
+                      <h4 class="white"><i class="fa fa-calendar"></i> <?php echo e($cliente->fechanacimiento); ?> (<?php echo e($edad); ?> años)</h4>
+                      <h4 class="white"><i class="fa fa-map-marker"></i>   <?php echo e($cliente->direccion); ?> </h4>
+                      <h4 class="white"><i class="fa fa-list-alt"></i> DUI y NIT: <?php echo e($cliente->dui); ?> / <?php echo e($cliente->nit); ?></h4>
+                      <h4 class="white"><i class="fa fa-check-circle-o"></i> Lugar y Fecha de Expedición: <?php echo e($cliente->lugarexpedicion); ?>, <?php echo e($cliente->fechaexpedicion); ?></h4>
+                      <h4 class="white"><i class="fa fa-map-marker"></i> Domicilio: <?php echo e($cliente->domicilio); ?></h4>
+                      <h4 class="white"><i class="fa fa-phone"></i> Teléfonos: <?php echo e($cliente->telefonofijo); ?>, <?php echo e($cliente->telefonocel); ?></h4>
+                      <a type="button" class="btn btn-labeled btn-primary" href="<?php echo e(URL::action('ClienteController@edit',$cliente->idcliente)); ?>">
                           <span class="btn-label"><i class="fa fa-pencil"></i></span>Actualizar</a>
 
-                      <a type="button" class="btn btn-labeled btn-danger pull-right" href="{{URL::action('ClienteController@perfilClientePDF', $cliente->idcliente)}}">
+                      <a type="button" class="btn btn-labeled btn-danger pull-right" href="<?php echo e(URL::action('ClienteController@perfilClientePDF', $cliente->idcliente)); ?>">
                           <span class="btn-label"><i class="fa fa-print"></i></span>Imprimir</a>
                   </div>
               </div>
@@ -233,15 +232,15 @@
           <div class="row overview">
               <div class="col-md-4 user-pad text-center">
                   <h3>CARTERA</h3>
-                  <h4 class="text-uppercase">{{$cartera->nombre}}</h4>
+                  <h4 class="text-uppercase"><?php echo e($cartera->nombre); ?></h4>
               </div>
               <div class="col-md-4 user-pad text-center">
                   <h3>CATEGORIA</h3>
-                  <h4 class="text-uppercase">{{$categoria->letra}}</h4>
+                  <h4 class="text-uppercase"><?php echo e($categoria->letra); ?></h4>
               </div>
               <div class="col-md-4 user-pad text-center">
                   <h3>ESTADO</h3>
-                  <h4 class="text-uppercase">{{$cliente->estado}}</h4>
+                  <h4 class="text-uppercase"><?php echo e($cliente->estado); ?></h4>
               </div>
           </div>
       </div>
@@ -273,71 +272,71 @@
           </ul>
           <div class="tab-content">
             <div class="tab-pane active" id="tab_default_1">
-              @foreach ($negocios as $ma)
+              <?php foreach($negocios as $ma): ?>
               <div class="row profile-comments__item">
                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                   <div class="form-group">
                     <p class="tipografia">Nombre:</p>
-                    <p  class="text-muted" > {{ $ma->nombre }}</p>
+                    <p  class="text-muted" > <?php echo e($ma->nombre); ?></p>
                   </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                   <div class="form-group">
                     <p class="tipografia">Actividad Económica:</p>
-                    <p  class="text-muted"> {{ $ma->actividadeconomica }}</p>
+                    <p  class="text-muted"> <?php echo e($ma->actividadeconomica); ?></p>
                   </div>
                 </div>
                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                   <div class="form-group">
                     <p class="tipografia">Dirección:</p>
-                    <p class="text-muted"> {{ $ma->direccionnegocio }}</p>
+                    <p class="text-muted"> <?php echo e($ma->direccionnegocio); ?></p>
                  </div>
                 </div>
                 <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                   <div class="form-group">
                       <p class="tipografia">
-                        <a href="{{URL::action('NegocioController@edit',$ma->idnegocio)}}"><i > editar</i></a></p>
+                        <a href="<?php echo e(URL::action('NegocioController@edit',$ma->idnegocio)); ?>"><i > editar</i></a></p>
                       </p>
-                      <p class="text-muted"> <a href="{{URL::action('NegocioController@edit',$ma->idnegocio)}}"><i > eliminar</i></a></p>
+                      <p class="text-muted"> <a href="<?php echo e(URL::action('NegocioController@edit',$ma->idnegocio)); ?>"><i > eliminar</i></a></p>
                    </div>
                 </div>
               </div>
-              @endforeach
+              <?php endforeach; ?>
             </div>
 
             <div class="tab-pane" id="tab_default_2">
               <div class="tab-pane active" id="tab_default_1">
-              @foreach ($codeudores as $codeudor)
+              <?php foreach($codeudores as $codeudor): ?>
                 <div class="row profile-comments__item">
                   <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                     <div class="form-group">
                       <p class="tipografia">Nombre:</p>
-                      <p  class="text-muted" > {{ $codeudor->nombre }} {{ $codeudor->apellido }}</p>
+                      <p  class="text-muted" > <?php echo e($codeudor->nombre); ?> <?php echo e($codeudor->apellido); ?></p>
                     </div>
                   </div>
                   <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                     <div class="form-group">
                       <p class="tipografia">Profesion:</p>
-                      <p  class="text-muted"> {{ $codeudor->profesion }}</p>
+                      <p  class="text-muted"> <?php echo e($codeudor->profesion); ?></p>
                     </div>
                   </div>
                   <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
                     <div class="form-group">
                       <p class="tipografia">Teléfonos:</p>
-                      <p class="text-muted"> {{ $codeudor->telefonocel }}, {{ $codeudor->telefonofijo }}</p>
+                      <p class="text-muted"> <?php echo e($codeudor->telefonocel); ?>, <?php echo e($codeudor->telefonofijo); ?></p>
                    </div>
                   </div>
                   <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
                     <div class="form-group">
                       <p class="tipografia">
-                        <a href="{{URL::action('CodeudorController@show',$codeudor->idcodeudor)}}"><i> ver</i></a>
+                        <a href="<?php echo e(URL::action('CodeudorController@show',$codeudor->idcodeudor)); ?>"><i> ver</i></a>
                       </p>
-                      <p class="text-muted"> <a href="{{URL::action('CodeudorController@edit',$codeudor->idcodeudor)}}"><i> editar</i></a></p>
-                      <p class="text-muted"> <a href="{{URL::action('CodeudorController@edit',$codeudor->idcodeudor)}}"><i > eliminar</i></a></p>
+                      <p class="text-muted"> <a href="<?php echo e(URL::action('CodeudorController@edit',$codeudor->idcodeudor)); ?>"><i> editar</i></a></p>
+                      <p class="text-muted"> <a href="<?php echo e(URL::action('CodeudorController@edit',$codeudor->idcodeudor)); ?>"><i > eliminar</i></a></p>
                    </div>
                   </div>
                 </div>
-                @endforeach
+                <?php endforeach; ?>
               </div>
             </div>
             <div class="tab-pane" id="tab_default_3">
@@ -347,36 +346,36 @@
             </div>
 
              <div class="tab-pane" id="tab_default_4">
-              @foreach ($observaciones as $observacion)
+              <?php foreach($observaciones as $observacion): ?>
                 <div class="row profile-comments__item">
                   <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
                     <div class="form-group">
                       <p class="tipografia">Fecha:</p>
-                      <p  class="text-muted" > {{ $observacion->fecha }}</p>
+                      <p  class="text-muted" > <?php echo e($observacion->fecha); ?></p>
                     </div>
                   </div>
                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3">
                     <div class="form-group">
                       <p class="tipografia">Responsable:</p>
-                      <p  class="text-muted"> {{ $observacion->responsable }}</p>
+                      <p  class="text-muted"> <?php echo e($observacion->responsable); ?></p>
                     </div>
                   </div>
                   <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                     <div class="form-group">
                       <p class="tipografia">Comentario:</p>
-                      <p class="text-muted"> {{ $observacion->comentario }}</p>
+                      <p class="text-muted"> <?php echo e($observacion->comentario); ?></p>
                    </div>
                   </div>
                   <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
                     <div class="form-group">
                       <p class="tipografia">
-                        <a href="{{URL::action('ObservacionController@edit',$observacion->idobservacion)}}"><i> editar</i></a>
+                        <a href="<?php echo e(URL::action('ObservacionController@edit',$observacion->idobservacion)); ?>"><i> editar</i></a>
                       </p>
-                      <p class="text-muted"> <a href="{{URL::action('ObservacionController@edit',$observacion->idobservacion)}}"><i > eliminar</i></a></p>
+                      <p class="text-muted"> <a href="<?php echo e(URL::action('ObservacionController@edit',$observacion->idobservacion)); ?>"><i > eliminar</i></a></p>
                    </div>
                   </div>
                 </div>
-                @endforeach
+                <?php endforeach; ?>
             </div>
           </div>
         </div>
@@ -388,8 +387,9 @@
 <div class="row">
   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
       <h4 style="text-align:center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #1C2331; float: right;">
-      {{$fecha_actual}}</h4>
+      <?php echo e($fecha_actual); ?></h4>
   </div>
 </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.inicio', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

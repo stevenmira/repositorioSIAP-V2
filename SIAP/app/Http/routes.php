@@ -53,12 +53,16 @@ Route::get('cuenta/carteraRealPDF/{id}','LiquidacionController@carteraRealPDF');
 
 Route::get('lista/clientesPDF/{id}','CarteraClientController@carteraClientPDF');
 
+
 // Reportes adicionales
 Route::get('reportes/lista','ReportesController@lista');
 
 //Cartera de Pagos
 Route::get('reportes/cartera/pagos','ReportesController@carteraPagos');
 Route::post('reportes/cartera/pagos/review','ReportesController@carteraPagosReview');
+
+
+Route::get('clientes/perfilClientePDF/{id}','ClienteController@perfilClientePDF');
 
 
 //consulta a la base por jquery

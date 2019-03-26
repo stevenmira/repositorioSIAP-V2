@@ -93,7 +93,8 @@
 
                               <a class="btn btn-info azul" data-title="Editar Datos del Empleado" href="{{URL::action('EmpleadoController@edit',$ma->idempleado)}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
 
-                              <a class="btn btn-danger rojo" data-title="Inhabilitar Empleado" href="" data-target="#modal-delete-{{$ma->idempleado}}" data-toggle="modal"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                              <a class="btn btn-danger rojo" data-title="Borrar Empleado" href="" data-target="#modal-delete-{{$ma->idempleado}}" data-toggle="modal"><i class="fa fa-trash" aria-hidden="true"></i></a>
+
                           </td>
                       </tr>
                       @include('personal.empleado.modal')

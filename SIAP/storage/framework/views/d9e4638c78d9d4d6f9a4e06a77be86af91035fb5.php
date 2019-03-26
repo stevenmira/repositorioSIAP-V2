@@ -1,9 +1,8 @@
-@extends ('layouts.inicio')
-@section('contenido')
+<?php $__env->startSection('contenido'); ?>
 <section class="content-header">
   <ol class="breadcrumb">
-    <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
-    <li><a href="{{URL::action('SupervisorController@index')}}"> Ejecutivo</a></li>
+    <li><a href="<?php echo e(url('home')); ?>"><i class="fa fa-dashboard"></i> Inicio</a></li>
+    <li><a href="<?php echo e(URL::action('EjecutivoController@index')); ?>"> Ejecutivo</a></li>
     <li class="active">Perfil</li>
   </ol>
 </section>
@@ -13,7 +12,7 @@
 <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS</h4>
 <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">AFIMID, S.A DE C.V</h4>
 
-<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 40px 0px;"><b>PERFIL DEL SUPERVISOR</b></h4>
+<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 40px 0px;"><b>PERFIL DEL EJECUTIVO</b></h4>
 
 <section>
 
@@ -27,7 +26,7 @@
         <div class="panel-body">
           <div class="row">
             <div class="col-md-3 col-lg-3 " align="center"> 
-              <img alt="User Pic" src="{{asset('imagenes/supervisor/'.$supervisor->fotografia)}}" class="img-rounded img-responsive"> 
+              <img alt="User Pic" src="<?php echo e(asset('imagenes/ejecutivo/'.$ejecutivo->fotografia)); ?>" class="img-rounded img-responsive"> 
             </div>
 
             <div class=" col-md-9 col-lg-9 "> 
@@ -36,51 +35,52 @@
 
                   <tr>
                     <td>NOMBRES Y APELLIDOS:</td>
-                    <td>{{ $supervisor->nombre}} {{ $supervisor->apellido }}</td>
+                    <td><?php echo e($ejecutivo->nombre); ?> <?php echo e($ejecutivo->apellido); ?></td>
                   </tr>
 
                   <tr>
                     <td>DUI:</td>
-                    <td>{{ $supervisor->dui }}</td>
+                    <td><?php echo e($ejecutivo->dui); ?></td>
                   </tr>
 
                   <tr>
                     <td>FECHA DE NACIMIENTO:</td>
-                    <td>{{ $supervisor->fechanacimiento}} ({{ $edad }} años)</td>
+                    <td><?php echo e($ejecutivo->fechanacimiento); ?> (<?php echo e($edad); ?> años)</td>
                   </tr>
 
                   <tr>
                     <td>DIRECCIÓN:</td>
-                    <td>{{ $supervisor->direccion}}</td>
+                    <td><?php echo e($ejecutivo->direccion); ?></td>
                   </tr>
 
                   <tr>
                     <td>SEXO:</td>
-                    <td>{{ $supervisor->sexo }}</td>
+                    <td><?php echo e($ejecutivo->sexo); ?></td>
                   </tr>
 
                   <tr>
                     <td>NÚMERO TELEFONICO:</td>
-                    <td>{{ $supervisor->telefono}}</td>
+                    <td><?php echo e($ejecutivo->telefono); ?></td>
                   </tr>
 
                   <tr>
                     <td>CORREO:</td>
-                    <td>{{ $supervisor->correo}}</td>
+                    <td><?php echo e($ejecutivo->correo); ?></td>
                   </tr>
 
                   <tr>
                     <td>COMENTARIO:</td>
-                    <td>{{ $supervisor->comentario}}</td>
+                    <td><?php echo e($ejecutivo->comentario); ?></td>
                   </tr>
 
                 </tbody>
               </table>
-              <a href="{{URL::action('SupervisorController@edit',$supervisor->idsupervisor)}}" class="btn btn-primary btn-lg  pull-right">Actualizar</a>
+              <a href="<?php echo e(URL::action('EjecutivoController@edit',$ejecutivo->idejecutivo)); ?>" class="btn btn-primary btn-lg  pull-right">Actualizar</a>
             </div>
           </div>
         </div>
       </div>
 
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.inicio', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

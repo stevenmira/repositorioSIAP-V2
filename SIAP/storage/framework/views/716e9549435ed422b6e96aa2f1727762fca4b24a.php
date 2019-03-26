@@ -1,9 +1,8 @@
-@extends ('layouts.inicio')
-@section('contenido')
+<?php $__env->startSection('contenido'); ?>
 <section class="content-header">
   <ol class="breadcrumb">
-    <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
-    <li><a href="{{ URL::action('CategoriaController@index')}}"><i class="fa fa-dashboard"></i> Categoria</a></li>
+    <li><a href="<?php echo e(url('home')); ?>"><i class="fa fa-dashboard"></i> Inicio</a></li>
+    <li><a href="<?php echo e(URL::action('CategoriaController@index')); ?>"><i class="fa fa-dashboard"></i> Categoria</a></li>
   </ol>
 </section>
 
@@ -19,27 +18,27 @@
 <!-- Notificación -->
 <div class="container" style="text-align:center; font-family:'Trebuchet MS', Helvetica, sans-serif; color: #1C2331;">
 
-  @if (Session::has('create'))
+  <?php if(Session::has('create')): ?>
   <div class="alert  fade in" style="background:  #ccff90;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <P>La Categoria -- {{ Session::get('create')}} -- se ha guardado correctamente</P>
+    <P>La Categoria -- <?php echo e(Session::get('create')); ?> -- se ha guardado correctamente</P>
   </div>
-  @endif
+  <?php endif; ?>
 
 
-  @if (Session::has('update'))
+  <?php if(Session::has('update')): ?>
   <div class="alert  fade in" style="background:  #bbdefb;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <P> La Categoria  -- {{ Session::get('update')}} -- se ha actualizado correctamente</P>
+    <P> La Categoria  -- <?php echo e(Session::get('update')); ?> -- se ha actualizado correctamente</P>
   </div>
-  @endif
+  <?php endif; ?>
 
-  @if (Session::has('error'))
+  <?php if(Session::has('error')): ?>
   <div class="alert  fade in" style="background:  #ff8a80;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <P>   <b>{{ Session::get('error')}}</b>  </P>
+    <P>   <b><?php echo e(Session::get('error')); ?></b>  </P>
   </div>
-  @endif
+  <?php endif; ?>
  
 </div>
  <!-- Fin Notificación -->
@@ -53,7 +52,7 @@
                         <tr class="success">
                           <th colspan="12">
                               
-                              <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">LISTADO DE CATEGORIAS<a class="btn btn-success pull-right verde" data-title="Agregar Nuevo Ejecutivo" href="{{URL::action('CategoriaController@create')}}"><i class="fa fa-fw -square -circle fa-plus-square"></i></a></h4>
+                              <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">LISTADO DE CATEGORIAS<a class="btn btn-success pull-right verde" data-title="Agregar Nuevo Ejecutivo" href="<?php echo e(URL::action('CategoriaController@create')); ?>"><i class="fa fa-fw -square -circle fa-plus-square"></i></a></h4>
                           </th>
                       </tr>
                         <tr class="info">
@@ -63,23 +62,24 @@
                             <th>Opciones</th>
                         </tr>
                     </thead>
-                   @foreach ($categorias as $ma)
+                   <?php foreach($categorias as $ma): ?>
                       <tr>
-                          <td>{{ $ma->letra }}</td>
-                          <td>{{ $ma->calificacion }}</td>
-                          <td>{{ $ma->descripcion }}</td>
+                          <td><?php echo e($ma->letra); ?></td>
+                          <td><?php echo e($ma->calificacion); ?></td>
+                          <td><?php echo e($ma->descripcion); ?></td>
                           <td style="width: 230px;">
 
-                              @if($ma->letra != 'E')
+                              <?php if($ma->letra != 'E'): ?>
 
-                              <a class="btn btn-info azul" data-title="Editar Datos de la Categoria" href="{{URL::action('CategoriaController@edit',$ma->idcategoria)}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                            @endif
+                              <a class="btn btn-info azul" data-title="Editar Datos de la Categoria" href="<?php echo e(URL::action('CategoriaController@edit',$ma->idcategoria)); ?>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                            <?php endif; ?>
                           </td>
                       </tr>
-                  @endforeach
+                  <?php endforeach; ?>
                 </table>
             </div>
-            {{$categorias->render()}}
+            <?php echo e($categorias->render()); ?>
+
         </div>
 </div>
 
@@ -89,7 +89,7 @@
     <div class="smallfont" align="center">
       <strong></strong>
    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">   
-  <a href="{{URL::action('CategoriaController@index')}}" class="btn btn-danger btn-lg col-md-offset-2"><i class="fa fa-chevron-left" aria-hidden="true"></i> Atrás </a> 
+  <a href="<?php echo e(URL::action('CategoriaController@index')); ?>" class="btn btn-danger btn-lg col-md-offset-2"><i class="fa fa-chevron-left" aria-hidden="true"></i> Atrás </a> 
   </div>
     </div>
     </br>
@@ -100,10 +100,11 @@
 <div class="row">
   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
       <h4 style="text-align:center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #1C2331; float: right;">
-      {{$fecha_actual}}</h4>
+      <?php echo e($fecha_actual); ?></h4>
   </div>
 </div>
 
 
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.inicio', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

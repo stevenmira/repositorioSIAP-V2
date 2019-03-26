@@ -28,7 +28,7 @@
   @if (Session::has('create'))
   <div class="alert  fade in" style="background:  #ccff90;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <P>El ejecutivo -- {{ Session::get('create')}} -- se ha guardado correctamente</P>
+    <P>El supervisor -- {{ Session::get('create')}} -- se ha guardado correctamente</P>
   </div>
   @endif
 
