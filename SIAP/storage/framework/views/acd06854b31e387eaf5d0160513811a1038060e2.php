@@ -69,7 +69,6 @@
                 <th>Nombre</th>
                 <th>Ejecutivos</th>
                 <th>Supervisor</th>
-                <th>Clientes</th>
                 <th>Opciones</th>
             </tr>
         </thead>
@@ -79,9 +78,6 @@
               <td><?php echo e($cartera->nombre); ?></td>
               <td><?php echo e($cartera->nombreEjecutivo); ?></td>
               <td><?php echo e($cartera->nombreSupervisor); ?></td>
-            	<td style="width: 200px;">
-                <a class="btn btn-warning amarillo"  data-title="Ver Clientes de esta Cartera" href="<?php echo e(URL::action('CarteraClientController@show',$cartera->idcartera)); ?>"><i class="fa fa-check-square-o" aria-hidden="true"></i></a>
-            	</td>
             	<td style="width: 200px">
                 <a class="btn btn-info azul" data-title="Editar Nombre de la Cartera" href="<?php echo e(URL::action('CarteraController@edit',$cartera->idcartera)); ?>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
 

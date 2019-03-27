@@ -70,7 +70,6 @@
                 <th>Nombre</th>
                 <th>Ejecutivos</th>
                 <th>Supervisor</th>
-                <th>Clientes</th>
                 <th>Opciones</th>
             </tr>
         </thead>
@@ -80,9 +79,6 @@
               <td>{{ $cartera->nombre }}</td>
               <td>{{ $cartera->nombreEjecutivo }}</td>
               <td>{{ $cartera->nombreSupervisor }}</td>
-            	<td style="width: 200px;">
-                <a class="btn btn-warning amarillo"  data-title="Ver Clientes de esta Cartera" href="{{URL::action('CarteraClientController@show',$cartera->idcartera)}}"><i class="fa fa-check-square-o" aria-hidden="true"></i></a>
-            	</td>
             	<td style="width: 200px">
                 <a class="btn btn-info azul" data-title="Editar Nombre de la Cartera" href="{{URL::action('CarteraController@edit',$cartera->idcartera)}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
 
