@@ -9,16 +9,19 @@
 </style>
 
 <section class="content-header">
-  <h1 style="color: #333333; font-family: 'Times New Roman', Times, serif;">
-    Crear Nuevo Usuario
-  </h1>
   <ol class="breadcrumb">
     <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
-    <li><a href="{{URL::action('UsuarioController@index')}}">Usuarios</a></li>
+    <li><a href="{{URL::action('UsuarioController@index')}}">Usuario</a></li>
     <li class="active">Nuevo</li>
   </ol>
 </section>
 <br>
+<br>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS</h4>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">AFIMID, S.A DE C.V</h4>
+
+<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 40px 0px;"><b>NUEVO USUARIO</b></h4>
+
 {!!Form::open(array('url'=>'usuario','method'=>'POST','autocomplete'=>'off'))!!}
 
         
@@ -95,8 +98,8 @@
             <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12" id="guardar">
               <div class="form-group">
               
-                  <a href="{{URL::action('UsuarioController@index')}}" class="btn btn-danger btn-lg col-md-offset-2">Cancelar</a>
-                  <button class="btn btn-primary btn-lg col-md-offset-6" type="submit">Guardar</button>
+                  <a href="{{URL::action('UsuarioController@index')}}" class="btn btn-danger btn-lg col-md-offset-2"><i class="fa fa-times" aria-hidden="true"></i> Cancelar</a>
+                  <button class="btn btn-primary btn-lg col-md-offset-6" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Guardar</button>
                 </div>
             </div>
           </div>

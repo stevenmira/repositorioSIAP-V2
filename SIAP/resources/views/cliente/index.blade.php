@@ -15,7 +15,7 @@
   <ol class="breadcrumb">
     <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
     <li><a href="{{URL::action('ClienteController@index')}}"> Cliente </a></li>
-    <li><a href="{{URL::action('ClienteController@index')}}"> Activos </a></li>
+    <li class="active">Activos</li>
   </ol>
 </section>
 
@@ -126,7 +126,7 @@
 
                               <a class="btn btn-info azul" data-title="Editar Datos del Cliente" href="{{URL::action('ClienteController@edit',$ma->idcliente)}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
 
-                              <a class="btn btn-danger rojo" data-title="Inhabilitar Cliente" href="" data-target="#modal-delete-{{$ma->idcliente}}" data-toggle="modal"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                              <a class="btn btn-danger rojo" data-title="Inactivar Cliente" href="" data-target="#modal-delete-{{$ma->idcliente}}" data-toggle="modal"><i class="fa fa-trash" aria-hidden="true"></i></a>
                           </td>
                       </tr>
                       @include('cliente.modal')
@@ -138,7 +138,7 @@
 </div>
 
 <div class="row">
-  <a href="{{URL::action('ClienteController@index')}}" class="btn btn-danger btn-lg col-md-offset-2"><i class="fa fa-chevron-left" aria-hidden="true"></i> Atrás</a>
+  <a href="{{ url('home') }}" class="btn btn-danger btn-lg col-md-offset-2"><i class="fa fa-chevron-left" aria-hidden="true"></i> Atrás</a>
 </div>
 
 <div class="row">

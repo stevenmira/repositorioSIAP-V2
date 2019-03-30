@@ -1,19 +1,20 @@
-<div class="modal modal-danger fade modal-slide-in-right" aria-hidden="true"
+<div class="modal fade modal-slide-in-right" aria-hidden="true"
 role="dialog" tabindex="-1" id="modal-delete-{{$us->idusuario}}">
 	{{Form::Open(array('action'=>array('UsuarioController@destroy',$us->idusuario),'method'=>'delete'))}}
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<div class="modal-header">
+			<div class="modal-header" style="background: #b71c1c; color: #fff;">
 				<button type="button" class="close" data-dismiss="modal" 
 				aria-label="Close">
                      <span aria-hidden="true">×</span>
                 </button>
                 <h4 class="modal-title">Eliminar Usuario</h4>
 			</div>
-			<div class="modal-body">
-				<p>Confirme si desea Eliminar el Empleado <b>{{ $us->nombre }}</b> con usuario <b>{{$us->name}}</b></p>
+			<div class="modal-body" style="color: #000; background: #ff8a80; text-align: center; font-family:'Trebuchet MS', Helvetica, sans-serif;">
+
+				<p>Confirme si desea eliminar el Empleado <b>-- {{ $us->nombre }} --</b> con Usuario <b>-- {{$us->name}} --</b></p>
 			</div>
-			<div class="modal-footer">
+			<div class="modal-footer" style="background: #b71c1c; color: #fff;">
 			<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Cerrar</button>
 			<button type="submit" class="btn btn-outline">Confirmar</button></div>
 		</div>

@@ -29,7 +29,7 @@ class RefinanciamientoController extends Controller
         $usuarioactual = \Auth::user();
         $fecha_actual = Fecha::spanish();
         $clientes = DB::table('cliente')->where('estado','=','ACTIVO')->orderby('nombre', 'asc')->get();
-        $interesList = DB::table('tipo_credito')->orderby('tipo_credito.interes', 'asc')->get();
+        $interesList = DB::table('tipo_credito')->orderby('tipo_credito.interes', 'desc')->get();
 
         return view('tipoCredito.refinanciamiento.create', ["clientes" => $clientes, "interesList" => $interesList, "fecha_actual" => $fecha_actual, "usuarioactual" => $usuarioactual]);
 

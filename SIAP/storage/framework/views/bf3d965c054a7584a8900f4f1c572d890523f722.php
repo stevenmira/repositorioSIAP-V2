@@ -27,7 +27,7 @@
   <?php if(Session::has('create')): ?>
   <div class="alert  fade in" style="background:  #ccff90;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <P>El ejecutivo -- <?php echo e(Session::get('create')); ?> -- se ha guardado correctamente</P>
+    <P>El supervisor -- <?php echo e(Session::get('create')); ?> -- se ha guardado correctamente</P>
   </div>
   <?php endif; ?>
 

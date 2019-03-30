@@ -3,133 +3,123 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Sistema | Log in</title>
+    <title>SIAP</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <!-- Bootstrap 3.3.5 -->
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
-    <!-- iCheck -->
-    <link rel="stylesheet" href="plugins/iCheck/square/blue.css">
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <!-- Register -->
+    <link rel="stylesheet" href="<?php echo e(asset('css/register.css')); ?>">
   </head>
   
-  <body class="">
-    <div class="">
-      <div class="login-logo">
-        <a href="#"><b>AFIMID S.A. DE C.V.</b></a>
-      </div><!-- /.login-logo -->
-      <div class="row">
-	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-		
-		<br><br>
-		<?php if(Session::has('error')): ?>
-			<p class="alert alert-danger"><?php echo e(Session::get('error')); ?></p>
-		<?php endif; ?>
+<body>     
 
-		<?php if(Session::has('update')): ?>
-			<p class="alert alert-info"><?php echo e(Session::get('update')); ?></p>
-		<?php endif; ?>	
+  <div class="container" style="text-align:center; font-family:'Trebuchet MS', Helvetica, sans-serif; color: #1C2331;">
+    <br><br>
+    <?php if(Session::has('error')): ?>
+      <div class="alert  fade in" style="background:  #ff8a80;">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <P><?php echo e(Session::get('error')); ?></P>
+      </div>
+    <?php endif; ?> 
 
-		<?php if(Session::has('message')): ?>
-			<p class="alert alert-success"><?php echo e(Session::get('message')); ?></p>
-		<?php endif; ?>
+    <?php if(Session::has('update')): ?>
+      <div class="alert  fade in" style="background:  #bbdefb;">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <P><?php echo e(Session::get('update')); ?></P>
+      </div>
+    <?php endif; ?> 
 
-	</div>
-</div>
-      <div class="login-box-body">
-        <p class="login-box-msg">Registro para usuario administrador</p>
-       
-      <form action="register" method="post">
-      <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">   
-          
-      <div class="form-group col-md-12">
-      <div class="form-group col-md-4">
-                         
-                            <label for="nombre">Nombre de Empleado</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre"  placeholder="Nombre de Empleado" p required >
-                            
+    <?php if(Session::has('message')): ?>
+      <div class="alert  fade in" style="background:  #ccff90;">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <P><?php echo e(Session::get('message')); ?></P>
       </div>
-      <div class="form-group col-md-4">
-                         
-                            <label for="name">Nombre de Usuario</label>
-                            <input type="text" class="form-control" id="name" name="name"  placeholder="Nombre de Usuario" p required >
-                            
-      </div>
-      
-      
-      <div class="form-group col-md-3 col-xs-4">
-      
-                            <label for="idtipousuario">Tipo Usuario</label>
-                            <select id="idtipousuario" name="idtipousuario" class="form-control" >
-                            <?php  for($i=0;$i<=count($tiposusuario)-1;$i++){   ?>
-                            <option value="<?= $tiposusuario[$i]->idtipousuario  ?>" ><?= $tiposusuario[$i]->nombre ?> </option>
-                            <?php  } ?>
-                            </select>                 
-                         
-      </div>
-    
-     
-     
-      <div class="form-group col-md-4">
-      
-                            <label for="email">Email*</label>
-                            <input type="text" class="form-control" id="email" name="email" placeholder="email" p required>
-                            </div>
-                            </div>
-    <div class="form-group col-md-12">
-      <div class="form-group col-md-3">
-      
-                            <label for="email">password*</label>
-                            <input type="password" class="form-control" id="password" name="password" p required >
-                            </div>
-      </div>
- 
-            
+    <?php endif; ?> 
+  </div>
 
-            
- <div class=" form-group col-md-12 ">
-<div class="form-group col-md-3">
+
+  <div class="container">
+    <div class="row main">  
+      <div class="panel-heading">
+         <div class="panel-title text-center">
+            <h1 class="title"><a style="text-decoration: none; color: black;" href="<?php echo e(url('home')); ?>">AFIMID</a></h1>
+            <hr />
+          </div>
+      </div>
+      <div class="main-login main-center">   
+        <form class="form-horizontal"  action="register" method="post">
+          <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
+
+          <div class="form-group">
+            <p for="name" class="cols-sm-2 control-label" style="text-align: center;">
+              <b>Registro de Usuario Administrador</b>
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label for="name" class="cols-sm-2 control-label">Nombre de Empleado</label>
+            <div class="cols-sm-10">
+              <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                <input type="text" class="form-control" id="nombre" name="nombre"  placeholder="Nombre de Empleado" p required >
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="name" class="cols-sm-2 control-label">Username</label>
+            <div class="cols-sm-10">
+              <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                <input type="text" class="form-control" id="name" name="name"  placeholder="Nombre de Usuario" p required >
+              </div>
+            </div>
+          </div> 
+
+          <div class="form-group">
+            <label for="name" class="cols-sm-2 control-label">Tipo Usuario</label>
+            <div class="cols-sm-10">
+              <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+                <select id="idtipousuario" name="idtipousuario" class="form-control" >
+                <?php  for($i=0;$i<=count($tiposusuario)-1;$i++){   ?>
+                  <option value="<?= $tiposusuario[$i]->idtipousuario  ?>" ><?= $tiposusuario[$i]->nombre ?> </option>
+                <?php  } ?>
+              </select>  
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="name" class="cols-sm-2 control-label">Email</label>
+            <div class="cols-sm-10">
+              <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-pencil fa" aria-hidden="true"></i></span>
+                <input type="text" class="form-control" id="email" name="email" placeholder="Email" p required>
+              </div>
+            </div>
+          </div> 
+
+          <div class="form-group">
+            <label for="name" class="cols-sm-2 control-label">Contraseña</label>
+            <div class="cols-sm-10">
+              <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-pencil fa" aria-hidden="true"></i></span>
+                <input type="password" class="form-control" id="password" name="password" p required >
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
               <button type="submit" class="btn btn-primary btn-block btn-flat">Registrar</button>
-            </div><!-- /.col -->
           </div>
         </form>
-
-     
-       
-      </div><!-- /.login-box-body -->
-    </div><!-- /.login-box -->
-
-    <!-- jQuery 2.1.4 -->
-    <script src="../../plugins/jQuery/jQuery-2.1.4.min.js"></script>
-    <!-- Bootstrap 3.3.5 -->
-    <script src="../../bootstrap/js/bootstrap.min.js"></script>
-    <!-- iCheck -->
-    <script src="../../plugins/iCheck/icheck.min.js"></script>
-   
-
-    <script>
-      
-      $(function () {
-        $('input').iCheck({
-          checkboxClass: 'icheckbox_square-blue',
-          radioClass: 'iradio_square-blue',
-          increaseArea: '20%' // optional
-        });
-      });
-    </script>
-
-    
-  </body>
+      </div>
+    </div>  
+  </div>
+</body>
 </html>

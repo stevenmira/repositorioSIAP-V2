@@ -1,15 +1,18 @@
 @extends ('layouts.inicio')
 @section('contenido')
 <section class="content-header">
-  <h1 style="color: #333333; font-family: 'Times New Roman', Times, serif;">
-     TASAS DE INTERÉS DISPONIBLES
-  </h1>
   <ol class="breadcrumb">
     <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
     <li class="active">Tasas de interés</li>
     <li class="active">Disponibles</li>
   </ol>
 </section>
+
+<br>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS</h4>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">AFIMID, S.A DE C.V</h4>
+
+<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 40px 0px;"><b>GESTIÓN  DE TASAS DE INTERÉS</b></h4>
 
 <section class="content">
 
@@ -58,11 +61,7 @@
 
   <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-      <div class="alert  fade in" style="background:  rgba(255, 235, 59, 0.7);">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <font face="Comic Sans MS,arial,verdana">Puedes realizar tus búsquedas por la <b>tasa de interés</b> de tu elección</font>
-      </div>
-      @include('tasaInteres.search')
+          @include('tasaInteres.search')
     </div>
   </div>
 
@@ -74,7 +73,7 @@
                         <tr class="success">
                           <th colspan="12">
                               
-                              <h3 style="text-align: center;font-family:  Times New Roman, sans-serif; color: #1C2331;"><b>LISTADO DE TASAS DE INTERÉS DISPONIBLES</b><a class="btn btn-success pull-right verde" data-title="Agregar Nueva Tasa" href="{{URL::action('TasaInteresController@create')}}"><i class="fa fa-fw -square -circle fa-plus-square"></i></a></h3>
+                              <h4 style="text-align: center;font-family:  Times New Roman, sans-serif; color: #1C2331;">LISTADO DE TASAS DE INTERÉS DISPONIBLES<a class="btn btn-success pull-right verde" data-title="Agregar Nueva Tasa" href="{{URL::action('TasaInteresController@create')}}"><i class="fa fa-fw -square -circle fa-plus-square"></i></a></h4>
                               
                           </th>
                       </tr>
@@ -114,7 +113,8 @@
 
 <div class="row">
   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-      <h3 style="text-align:center; font-family:  Times New Roman, sans-serif; color: #1C2331; float: right;"><b>{{$fecha_actual}}</b></h3>
+      <h4 style="text-align:center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #1C2331; float: right;">
+      {{$fecha_actual}}</h4>
   </div>
 </div>
 

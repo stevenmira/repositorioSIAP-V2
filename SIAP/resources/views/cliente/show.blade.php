@@ -224,7 +224,7 @@
                       <a type="button" class="btn btn-labeled btn-primary" href="{{URL::action('ClienteController@edit',$cliente->idcliente)}}">
                           <span class="btn-label"><i class="fa fa-pencil"></i></span>Actualizar</a>
 
-                      <a type="button" class="btn btn-labeled btn-danger pull-right" href="{{URL::action('ClienteController@perfilClientePDF', $cliente->idcliente)}}">
+                      <a type="button" target="_blank" class="btn btn-labeled btn-danger pull-right" href="{{URL::action('ClienteController@perfilClientePDF', $cliente->idcliente)}}">
                           <span class="btn-label"><i class="fa fa-print"></i></span>Imprimir</a>
                   </div>
               </div>
@@ -298,7 +298,6 @@
                       <p class="tipografia">
                         <a href="{{URL::action('NegocioController@edit',$ma->idnegocio)}}"><i > editar</i></a></p>
                       </p>
-                      <p class="text-muted"> <a href="{{URL::action('NegocioController@edit',$ma->idnegocio)}}"><i > eliminar</i></a></p>
                    </div>
                 </div>
               </div>
@@ -333,7 +332,6 @@
                         <a href="{{URL::action('CodeudorController@show',$codeudor->idcodeudor)}}"><i> ver</i></a>
                       </p>
                       <p class="text-muted"> <a href="{{URL::action('CodeudorController@edit',$codeudor->idcodeudor)}}"><i> editar</i></a></p>
-                      <p class="text-muted"> <a href="{{URL::action('CodeudorController@edit',$codeudor->idcodeudor)}}"><i > eliminar</i></a></p>
                    </div>
                   </div>
                 </div>
@@ -341,9 +339,50 @@
               </div>
             </div>
             <div class="tab-pane" id="tab_default_3">
-              <p>
-                Family Details
-              </p>
+              @foreach ($creditos as $cred)
+                <div class="row profile-comments__item">
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <div class="form-group">
+                      <p class="tipografia">Crédito:</p>
+                      <p class="text-muted">{{ $cred->estado }}</p>
+                   </div>
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <div class="form-group">
+                      <p class="tipografia">Fecha:</p>
+                      <p  class="text-muted" > {{ $cred->fecha }}</p>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <div class="form-group">
+                      <p class="tipografia">Monto:</p>
+                      <p  class="text-muted"> $ {{ $cred->monto }}</p>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <div class="form-group">
+                      <p class="tipografia">Interés:</p>
+                      <p  class="text-muted"> $ {{ $cred->interes }}</p>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <div class="form-group">
+                      <p class="tipografia">Cuota:</p>
+                      <p class="text-muted"> $ {{ $cred->cuotadiaria }}</p>
+                   </div>
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <div class="form-group">
+                      <p class="tipografia">
+                        <a href="{{ url('cliente/credito/garantias', ['id' => $cred->idprestamo]) }}"><i> ver garantías</i></a>
+                      </p>
+                      <p class="tipografia">
+                        <a href="{{URL::action('CuentaController@show',$cred->idcuenta)}}"><i> ver cuenta</i></a>
+                      </p>
+                   </div>
+                  </div>
+                </div>
+                @endforeach
             </div>
 
              <div class="tab-pane" id="tab_default_4">
@@ -372,7 +411,6 @@
                       <p class="tipografia">
                         <a href="{{URL::action('ObservacionController@edit',$observacion->idobservacion)}}"><i> editar</i></a>
                       </p>
-                      <p class="text-muted"> <a href="{{URL::action('ObservacionController@edit',$observacion->idobservacion)}}"><i > eliminar</i></a></p>
                    </div>
                   </div>
                 </div>

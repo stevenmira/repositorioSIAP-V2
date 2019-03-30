@@ -16,16 +16,14 @@
                 <i class="fa fa-info-circle pull-right"></i>
               </a>
             </li>
-            <li>
-              <a href="{{URL::action('UsuarioController@download')}}">
-                <i class="fa fa-plus-square"></i> 
-                <span>Ayuda</span>
-                <small class="label pull-right bg-red">PDF</small>
+            <li class="treeview">
+              <a href="{{URL::action('UsuarioController@index')}}">
+                <i class="fa fa-users"></i> 
+                <span>Gestión de Usuarios</span>
+                <i class="fa fa-angle-left pull-right"></i>
               </a>
               <ul class="treeview-menu">
-
-                <li><a  href="{{URL::action('UsuarioController@download')}}"><i class="fa fa-circle-o"></i> Manual de Usuario</a></li>
-
+                <li><a href="{{URL::action('UsuarioController@index')}}"><i class="fa fa-circle-o"></i> Lista usuarios</a></li>
               </ul>
             </li>
             <li>

@@ -10,6 +10,21 @@
 		body{
 			line-height: 22px;
 		}
+
+		.padd{
+		    padding: 0px 25px 0px 25px;
+		  }
+
+		  .padd2{
+		    padding: 0px 10px 0px 10px;
+		    font-size: 15px;
+		  }
+
+		  .spn{
+		  	display: block; 
+		  	float: right; 
+		  	padding: 0px 110px 0px 0px;
+		  }
 	</style>
 </head>
 <body>
@@ -29,81 +44,135 @@
 		</table>
 	</div>
 	<br>
-	<div style="width: 100%">
-		<table style="width: 100%">
-			<tr>				
-				<td align="right">
-					{{ $prestamo->created_at->format('d/m/Y') }}
-				</td>
-			</tr>
-		</table>
+
+	<div style="padding: 0px 10px 0px 10px;">
+	  <p align="right">{{ $prestamo->fecha->format('d/m/Y') }}</p>
+	  <p>Detalle de desembolso aprobado</p>
 	</div>
+
 	<br>
-	<div>Detalle de desembolso aprobado</div>
-	<br><br>
-	<div>
-		<table align="center" style="width: 90%; border-collapse: collapse;">
-			<tr>
-				<th style="border: 1px solid #333; width: 30px" align="center">N</th>
-				<th style="border: 1px solid #333" align="center" colspan="2">MONTO</th>
-			</tr>
-			<tr>
-				<td style="border: 1px solid #333" align="right">{{$cuenta->numeroprestamo}}</td>
-				<td style="border: 1px solid #333; border-right: 0px; width: 300px">$ </td>
-				<td style="border: 1px solid #333; border-left: 0px; width: 40px" align="right">{{ number_format($prestamo->monto, 2) }}</td>
-			</tr>
-		</table>
+
+	<div class="padd">
+	  <table  style="width: 100%; border-collapse: collapse;">
+	    <thead>
+		    <tr>
+				<th style="border: 1px solid #333; text-align: center; width: 5%">N</th>
+				<th style="border: 1px solid #333; text-align: center; width: 50%">MONTO</th>
+				<th style="border: 0px solid #fff; width: 20%;"></th>
+				@if($prestamo->idtipodesembolso == 1)
+				<th style="border: 1px solid #333; width: 30%; text-align: center;">EFECTIVO</th>
+				@else
+				<th style="border: 1px solid #333; width: 30%; text-align: center;">CHEQUE</th>
+				@endif
+		    </tr>
+	    </thead>
+	    <tbody>
+	      <tr>
+	        <td style="border: 1px solid #333" align="right">{{$cuenta->numeroprestamo}}</td>
+	        <td style="border: 1px solid #333; text-align: right;">
+	        	<span style="display: block; float: left;" >$ </span> 
+	        	<span style="display: block; float: right">{{ number_format($prestamo->monto, 2) }}</span> 
+	        </td>
+	        <td style="border: 0px solid #fff;"></td>
+	        @if($prestamo->idtipodesembolso == 2)
+	          <td style="border: 1px solid #333; text-align: center;">{{$prestamo->numerocheque}} </td>
+	        @else
+	        	<td></td>
+	        @endif
+	      </tr>
+	    </tbody>
+	  </table>
 	</div>
-	<br>
-	<br>
-	<br>
-	<div>
-		<table align="center" style="width: 80%; border-collapse: collapse;">
-			<tr>
-				<th>Desembolso</th>
-				<th>$ &nbsp;&nbsp;{{ number_format($prestamo->monto, 2)}}</th>
-			</tr>
-			<tr>
-				<td>( - Desc. De $4.50 de cada $100.00 por desembolso)</td>
-				<td>$&nbsp;&nbsp;<u> &nbsp;&nbsp;&nbsp;{{ number_format($costo, 2) }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></td>
-			</tr>
-			<tr>
-				<td>EFECTIVO A RECIBIR</td>
-				<td>$ &nbsp;&nbsp;{{number_format($montoreal, 2)}}</td>
-			</tr>
-		</table>
+
+	<br><br><br><br>
+	<div class="padd">
+	  <table style="width: 100%; border-collapse: collapse;">
+	  	<tr>
+			<td style="width: 70%;"><b>Desembolso</b></td>
+			<td style="font-weight: bold;">
+				$ 
+				<span class="spn">{{ number_format($prestamo->monto, 2) }}</span>
+			</td>
+		</tr>
+		<tr>
+			<td>( - Desc. De $4.50 de cada $100.00 por desembolso)</td>
+			<td>
+				$ 
+				<span class="spn">{{ number_format($costo, 2) }}</span>
+			</td>
+		</tr>
+		<tr>
+	      	<td></td>
+	      	<td>
+				<p style="padding: -30px 110px -10px 0px;">___________</p>	
+			</td>
+	    </tr>
+	    <tr>
+	      <td>EFECTIVO A RECIBIR</td>
+	      <td>
+				$ 	
+				<span class="spn">{{ number_format($montoreal, 2) }}</span>	
+			</td>
+	    </tr>
+	  </table>
 	</div>
-	<br>
-	<br>
-	<div>
-		<table align="center" style="width: 80%;" cellpadding="0" cellspacing="0">
-			<tr>
-				<td colspan="2">F: <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></td>
-			</tr>
-		</table>
-	</div>
-	<div>
-		<table align="center" style="width: 80%;" cellpadding="0" cellspacing="0">
-			<tr>
-				<td style="width: 15%;">NOMBRE:</td>
-				<td>{{ $cliente->nombre}} {{ $cliente->apellido }}</td>
-			</tr>
-			<tr>
-				<td>DUI: </td>
-				<td>{{ $cliente->dui }}</td>
-			</tr>
-			<tr>
-				<td>NIT: </td>
-				<td>{{ $cliente->nit }}</td>
-			</tr>
-		</table>
-	</div>
-	<div>
-		<table align="center" style="width: 80%;" cellpadding="0" cellspacing="0">
-			<tr>
-				<td align="center">DEUDOR/A RECIBI CONFORME</td>
-			</tr>
-		</table>
+
+	<br><br><br>
+	<div class="padd2" style="width: 100%;">
+		<aside style="width: 50%; float: left;">
+			<table style="width: 100%" cellpadding="0" cellspacing="0">
+			  <tr>
+			    <td colspan="2">F: <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></td>
+			  </tr>
+			</table>
+			<table style="width: 100%" cellpadding="0" cellspacing="0">
+			  <tr>
+			    <td style="width: 23%;">NOMBRE:</td>
+			    <td>{{ $cliente->nombre}} {{ $cliente->apellido }}</td>
+			  </tr>
+			  <tr>
+			    <td>DUI: </td>
+			    <td>{{ $cliente->dui }}</td>
+			  </tr>
+			  <tr>
+			    <td>NIT: </td>
+			    <td>{{ $cliente->nit }}</td>
+			  </tr>
+			</table>
+			<table style="width: 100%"  cellpadding="0" cellspacing="0">
+			  <tr>
+			    <td colspan="2">DEUDOR/A RECIBI CONFORME</td>
+			  </tr>
+			</table>
+		</aside>
+	  @if($codeudor != null)
+	  	<aside style="width: 50%; float: right;">
+			<table style="width: 100%" cellpadding="0" cellspacing="0">
+			  <tr>
+			    <td colspan="2">F: <u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></td>
+			  </tr>
+			</table>
+			<table style="width: 100%" cellpadding="0" cellspacing="0">
+			  <tr>
+			    <td style="width: 23%;">NOMBRE:</td>
+			    <td>{{ $codeudor->nombre }} {{ $codeudor->apellido }}</td>
+			  </tr>
+			  <tr>
+			    <td>DUI: </td>
+			    <td>{{ $codeudor->dui }}</td>
+			  </tr>
+			  <tr>
+			    <td>NIT: </td>
+			    <td>{{ $codeudor->nit }}</td>
+			  </tr>
+			</table>
+			<table style="width: 100%"  cellpadding="0" cellspacing="0">
+			  <tr>
+			    <td colspan="2">CODEUDOR/A RECIBI CONFORME</td>
+			  </tr>
+			</table>
+	  	</aside>
+	  @endif
 	</div>
 </body>
 </html>

@@ -1,18 +1,23 @@
 @extends ('layouts.inicio')
 @section('contenido')
 <section class="content-header">
-  <h1 style="color: #333333; font-family: 'Times New Roman', Times, serif;">
-    Gestión Usuarios
-  </h1>
   <ol class="breadcrumb">
     <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
-    <li class="active">Usuarios</li>
+    <li class="active">Usuario</li>
   </ol>
 </section>
 
+<br><br>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS</h4>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">AFIMID, S.A DE C.V</h4>
+
+<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 40px 0px;"><b>GESTIÓN DE USUARIOS</b></h4>
+
 <section class="content">
 
-  <!-- Notificación -->
+<!-- Notificación -->
+<div class="container" style="text-align:center; font-family:'Trebuchet MS', Helvetica, sans-serif; color: #1C2331;">
+  
   @if (Session::has('create'))
   <div class="alert  fade in" style="background:  #ccff90;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -54,11 +59,6 @@
   </div>
   @endif
   <!-- Fin Notificación -->
-
-  <div class="row">
-    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
-      
-    </div>
   </div>
 
 <div class="row">

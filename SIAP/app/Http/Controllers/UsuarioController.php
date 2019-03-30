@@ -95,16 +95,4 @@ class UsuarioController extends Controller
 
     }
     
-
-    public function download(){
-       
-        $filename = 'manual.pdf';
-        $tempImage = tempnam(sys_get_temp_dir(), $filename);
-        copy('./img/manual.pdf', $tempImage);
-        
-        return response()->download($tempImage, $filename);
-        
-    }
-
-
 }

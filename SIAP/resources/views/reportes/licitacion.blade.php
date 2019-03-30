@@ -17,7 +17,7 @@
 </head>
 <body>
 	<div align=center><b>AFIMID S.A. de C.V.</b></div>
-	<div align=center>ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{$prestamo->created_at->format('d/m/y')}}</div>
+	<div align=center>ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{$prestamo->fecha->format('d/m/y')}}</div>
 
 	<table style="border-collapse: collapse;">
 		<tbody>
@@ -230,6 +230,38 @@
 				<td></td>
 			</tr>
 		</tbody>
+		<br>
 	</table>
+	@if($codeudor != null)
+	<table>
+		<tbody>
+			<tr>
+				<th>
+					<span>F:&nbsp;&nbsp;<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u></span>
+				</th>
+			</tr>
+		</tbody>
+	</table>
+	<table>
+		<tbody>
+			<tr>
+				<th><span>NOMBRE:</span></th>
+				<td style="width: 220px"><span>&nbsp;{{strtoupper($codeudor->nombre)}} {{strtoupper($codeudor->apellido)}}&nbsp;</td>
+			</tr>
+			<tr>
+				<th><span>DUI:</span></th>
+				<td><span>&nbsp;{{strtoupper($codeudor->dui)}}&nbsp;</td>
+			</tr>
+			<tr>
+				<th><span>NIT:</span></th>
+				<td><span>&nbsp;{{strtoupper($codeudor->nit)}}&nbsp;</td>
+			</tr>
+			<tr>
+				<th><span>CODEUDOR/A&nbsp;&nbsp;</span></th>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+	@endif
 </body>
 </html>
