@@ -25,7 +25,7 @@
 
 
 <div class="container">
-  <p class="a"> <span><i class="fa fa-user" style="padding: 0px 13px 0px 13px;"> Juan Antonio Perez Gomez</i></span> </p>
+  <p class="a"> <span><i class="fa fa-user" style="padding: 0px 13px 0px 13px;"> <?php echo e($cliente->nombre); ?> <?php echo e($cliente->apellido); ?></i></span> </p>
 </div>
 
 <?php echo Form::open(array('url'=>'negocio','method'=>'POST','autocomplete'=>'off', 'onsubmit'=> 'return checkSubmit();')); ?>

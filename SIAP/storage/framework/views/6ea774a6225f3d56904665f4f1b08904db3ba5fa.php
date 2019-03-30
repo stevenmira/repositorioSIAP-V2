@@ -137,7 +137,7 @@
         <div class="pull-right hidden-xs">
           <b>Versión</b> 2.0
         </div>
-        <strong>Sistema de Administración de Préstamos Financieros &copy; <a href="#"> SIAP</a></strong>.  Todos los derechos reservados.
+        <strong>Sistema Informático de Administración de Préstamos Financieros &copy; <a href="#"> SIAP</a></strong>.  Todos los derechos reservados.
       </footer>
 
     <!-- Contenido JS -->

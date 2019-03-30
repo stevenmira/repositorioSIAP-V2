@@ -7,7 +7,7 @@ role="dialog" tabindex="-1" id="modal-help">
 				aria-label="Close">
                      <span aria-hidden="true">×</span>
                 </button>
-                <h4 class="modal-title">NUEVO REFINANCIAMIENTO</h4>
+                <h4 class="modal-title">NUEVO CRÉDITO COMPLETO</h4>
 			</div>
 			<div class="modal-body">
 				<p style="font-family:  Times New Roman, sans-serif; color: black; text-align: center;"> 

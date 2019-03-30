@@ -101,12 +101,12 @@
                 <div class="input-group-addon">
                   <i class="fa fa-pencil" aria-hidden="true"></i>
                 </div>
-                @if ($supervisor->sexo == "Femenino" )
+                @if ($supervisor->sexo == "Masculino['select'=>'on']" )
                   <label>{!! Form::radio('sexo',true) !!} Femenino</label>
-                  <label>{!! Form::radio('sexo',true) !!} Masculino</label>
+                  <label>{!! Form::radio('sexo',false) !!} Masculino</label>
                 @else
                   <label>{!! Form::radio('sexo',false) !!} Femenino</label>
-                  <label>{!! Form::radio('sexo',false) !!} Masculino</label>
+                  <label>{!! Form::radio('sexo',true) !!} Masculino</label>
                 @endif
               </div>
             </div>

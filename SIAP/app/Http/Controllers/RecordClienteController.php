@@ -15,6 +15,9 @@ use siap\TipoCredito;
 use siap\Recibo;
 use siap\DetalleLiquidacion;
 use siap\Fecha;
+use siap\Garantia;
+use siap\Codeudor;
+use Carbon\Carbon; //Para la zona fecha horaria
 
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -67,6 +70,11 @@ class RecordClienteController extends Controller
         $prestamo = Prestamo::where('idprestamo',$cuenta->idprestamo)->first();
         $tipo = TipoCredito::where('idtipocredito',$cuenta->idtipocredito)->first();
 
+        $garantiaDeudor = Garantia::where('idprestamo','=',$prestamo->idprestamo)
+        ->where('tipogarante','=','Deudor')
+        ->get();
+
+
         $entero = (string)$prestamo->monto+0.00001;
 
         $separ = explode(".", $entero);
@@ -118,6 +126,17 @@ class RecordClienteController extends Controller
         $fechanac = '1969-09-03';
         $anios = $this -> CalculaEdad($fechanac);
         $edad = strtolower(\NumeroALetras::convertir((int)$anios));
+
+        //fecha del prestamo
+        $fech =Carbon::parse($prestamo->fecha)->format('d-m-Y');
+
+        #$fech = date("d-MM-Y");
+        $fepre = explode("-", $fech);
+        $aniopre = strtolower(\NumeroALetras::convertir($fepre[2]));
+
+        setlocale(LC_TIME, "spanish");
+        $mesfech = ucfirst(strftime("%B"));
+        $diafech = \NumeroALetras::convertir($fepre[0]);
 
         $hoy = date("d-MM-Y");
 
@@ -223,14 +242,69 @@ class RecordClienteController extends Controller
         $exxxx = substr($explo[1],-5,2);
         $cuo2 = \NumeroALetras::convertir($exxxx);
 
+        //Se verifica si existe codeudor
 
-        return $this -> crearPDF($vistaurl,$name,$nombre,$monto,$decimales,$dos,$cuenta,$n,$prestamo,$total,$anioaux,$mesaux,$diaaux,$nuevomes,$edad,$aniohoy,$meshoy,$diahoy,$tipo,$fechaex,$du1,$du2,$ni1,$ni2,$ni3,$ni4,$newdui,$newnit,$rest,$dui,$nit,$soncen,$cent,$porcenta1,$porcenta2,$por,$n1,$n2,$exculet,$longi,$excuota2,$extoe,$logto,$extota2,$diaaus,$nuevomess,$anius,$extota1,$sepa1,$sepa,$explo,$cuo2,$exxxx,$cuo1);
+        $codeudor = Codeudor::where('idcodeudor',$prestamo->idcodeudor)->first();
+
+        if($codeudor != null){
+
+            $nombreCodeudor = $codeudor->nombre;
+            $apellidoCodeudor = $codeudor->apellido;
+            $profesionCodeudor = $codeudor->profesion;
+            $domicilioCodeudor = $codeudor->domicilio;
+            $lugarCodeudor = $codeudor->lugarexpedicion;
+            $duiCodeudor = $codeudor->dui;
+            $nitCodeudor = $codeudor->nit;
+
+
+            $garantiaCodeudor = Garantia::where('idprestamo','=',$prestamo->idprestamo)
+            ->where('tipogarante','=','Codeudor')
+            ->get();
+
+            $duic = $codeudor->dui;
+            $newduic = explode("-", $duic);
+            $du1c = \NumeroALetras::convertir($newduic[0]);
+            $du2c = \NumeroALetras::convertir($newduic[1]);
+
+            $nitc = $codeudor->nit;
+            $newnitc = explode("-", $nitc);
+            $ni1c = \NumeroALetras::convertir($newnitc[0]);
+            $ni2c = \NumeroALetras::convertir($newnitc[1]);
+            $ni3c = \NumeroALetras::convertir($newnitc[2]);
+            $ni4c = \NumeroALetras::convertir($newnitc[3]);
+
+            $restc = substr($duic, -10, 1);
+
+            $centc = explode(".",  (string) $entero);
+            try {
+                $soncen = $cent[1];
+            } catch (\Exception $e) {
+                $soncen = 0;   
+            }
+
+
+            $vistaurl = "reportes/pagare2";
+            return $this -> crearPDF2($vistaurl,$name,$nombre,$monto,$decimales,$dos,$cuenta,$n,$prestamo,$total,$anioaux,$mesaux,$diaaux,$nuevomes,$edad,$aniohoy,$meshoy,$diahoy,$tipo,$fechaex,$du1,$du2,$ni1,$ni2,$ni3,$ni4,$newdui,$newnit,$rest,$dui,$nit,$soncen,$cent,$porcenta1,$porcenta2,$por,$n1,$n2,$exculet,$longi,$excuota2,$extoe,$logto,$extota2,$diaaus,$nuevomess,$anius,$extota1,$sepa1,$sepa,$explo,$cuo2,$exxxx,$cuo1,$garantiaDeudor,$garantiaCodeudor, $nombreCodeudor,$codeudor,$profesionCodeudor,$domicilioCodeudor,$duic,$newduic,$du1c,$du2c,$nitc,$newnitc,$ni1c,$ni2c,$ni3c,$ni4c,$restc,$centc,$apellidoCodeudor,$nitCodeudor,$duiCodeudor,$lugarCodeudor,$fech,$fepre,$aniopre,$mesfech,$diafech);
+        }else{
+            // sino hay codeudor
+            $vistaurl = "reportes/pagare";
+            return $this -> crearPDF($vistaurl,$name,$nombre,$monto,$decimales,$dos,$cuenta,$n,$prestamo,$total,$anioaux,$mesaux,$diaaux,$nuevomes,$edad,$aniohoy,$meshoy,$diahoy,$tipo,$fechaex,$du1,$du2,$ni1,$ni2,$ni3,$ni4,$newdui,$newnit,$rest,$dui,$nit,$soncen,$cent,$porcenta1,$porcenta2,$por,$n1,$n2,$exculet,$longi,$excuota2,$extoe,$logto,$extota2,$diaaus,$nuevomess,$anius,$extota1,$sepa1,$sepa,$explo,$cuo2,$exxxx,$cuo1,$garantiaDeudor,$fech,$fepre,$aniopre,$mesfech,$diafech);
+        }
     }
 
-    public function crearPDF($vistaurl,$name,$nombre,$monto,$decimales,$dos,$cuenta,$n,$prestamo,$total,$anioaux,$mesaux,$diaaux,$nuevomes,$edad,$aniohoy,$meshoy,$diahoy,$tipo,$fechaex,$du1,$du2,$ni1,$ni2,$ni3,$ni4,$newdui,$newnit,$rest,$dui,$nit,$soncen,$cent,$porcenta1,$porcenta2,$por,$n1,$n2,$exculet,$longi,$excuota2,$extoe,$logto,$extota2,$diaaus,$nuevomess,$anius,$extota1,$sepa1,$sepa,$explo,$cuo2,$exxxx,$cuo1)
+    public function crearPDF($vistaurl,$name,$nombre,$monto,$decimales,$dos,$cuenta,$n,$prestamo,$total,$anioaux,$mesaux,$diaaux,$nuevomes,$edad,$aniohoy,$meshoy,$diahoy,$tipo,$fechaex,$du1,$du2,$ni1,$ni2,$ni3,$ni4,$newdui,$newnit,$rest,$dui,$nit,$soncen,$cent,$porcenta1,$porcenta2,$por,$n1,$n2,$exculet,$longi,$excuota2,$extoe,$logto,$extota2,$diaaus,$nuevomess,$anius,$extota1,$sepa1,$sepa,$explo,$cuo2,$exxxx,$cuo1,$garantiaDeudor,$fech,$fepre,$aniopre,$mesfech,$diafech)
     {
 
-        $view=\View::make($vistaurl,compact('nombre','monto','decimales','dos','cuenta','n','prestamo','total','anioaux','mesaux','diaaux','nuevomes','edad','aniohoy','meshoy','diahoy','tipo','fechaex','du1','du2','ni1','ni2','ni3','ni4','newdui','newnit','rest','dui','nit','soncen','cent','porcenta1','porcenta2','por','n1','n2','excu2','excuota2','exculet','longi','excuota2','extoe','logto','extota2','diaaus','nuevomess','anius','extota1','sepa1','sepa','explo','cuo2','exxxx','cuo1'))->render();
+        $view=\View::make($vistaurl,compact('nombre','monto','decimales','dos','cuenta','n','prestamo','total','anioaux','mesaux','diaaux','nuevomes','edad','aniohoy','meshoy','diahoy','tipo','fechaex','du1','du2','ni1','ni2','ni3','ni4','newdui','newnit','rest','dui','nit','soncen','cent','porcenta1','porcenta2','por','n1','n2','excu2','excuota2','exculet','longi','excuota2','extoe','logto','extota2','diaaus','nuevomess','anius','extota1','sepa1','sepa','explo','cuo2','exxxx','cuo1','garantiaDeudor','fech','fepre','aniopre','mesfech','diafech'))->render();
+        $pdf =\App::make('dompdf.wrapper');
+
+        $pdf->loadHTML($view);
+        return $pdf->stream($name);
+    }
+    public function crearPDF2($vistaurl,$name,$nombre,$monto,$decimales,$dos,$cuenta,$n,$prestamo,$total,$anioaux,$mesaux,$diaaux,$nuevomes,$edad,$aniohoy,$meshoy,$diahoy,$tipo,$fechaex,$du1,$du2,$ni1,$ni2,$ni3,$ni4,$newdui,$newnit,$rest,$dui,$nit,$soncen,$cent,$porcenta1,$porcenta2,$por,$n1,$n2,$exculet,$longi,$excuota2,$extoe,$logto,$extota2,$diaaus,$nuevomess,$anius,$extota1,$sepa1,$sepa,$explo,$cuo2,$exxxx,$cuo1,$garantiaDeudor,$garantiaCodeudor,$nombreCodeudor,$codeudor,$profesionCodeudor,$domicilioCodeudor,$duic,$newduic,$du1c,$du2c,$nitc,$newnitc,$ni1c,$ni2c,$ni3c,$ni4c,$restc,$centc,$apellidoCodeudor,$nitCodeudor,$duiCodeudor,$lugarCodeudor,$fech,$fepre,$aniopre,$mesfech,$diafech)
+    {
+
+        $view=\View::make($vistaurl,compact('nombre','monto','decimales','dos','cuenta','n','prestamo','total','anioaux','mesaux','diaaux','nuevomes','edad','aniohoy','meshoy','diahoy','tipo','fechaex','du1','du2','ni1','ni2','ni3','ni4','newdui','newnit','rest','dui','nit','soncen','cent','porcenta1','porcenta2','por','n1','n2','excu2','excuota2','exculet','longi','excuota2','extoe','logto','extota2','diaaus','nuevomess','anius','extota1','sepa1','sepa','explo','cuo2','exxxx','cuo1','garantiaDeudor','garantiaCodeudor','nombreCodeudor','codeudor','profesionCodeudor','domicilioCodeudor','duic','newduic','du1c','du2c','nitc','newnitc','ni1c','ni2c','ni3c','ni4c','restc','centc','apellidoCodeudor','nitCodeudor','duiCodeudor','lugarCodeudor','fech','fepre','aniopre','mesfech','diafech'))->render();
         $pdf =\App::make('dompdf.wrapper');
 
         $pdf->loadHTML($view);
