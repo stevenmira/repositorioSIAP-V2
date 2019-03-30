@@ -47,6 +47,15 @@
       </div>
     @endif
 
+    @if($usuarioactual->idtipousuario==1)
+      <div class="col-md-3" align="center">
+        <a href="{{URL::action('ReportesController@estadoCreditos')}}">
+          <span class="fa fa-file fa-3x"></span><i class="fab fa-cuttlefish"></i>
+          <h3>Estado de Créditos</h3>
+        </a>
+      </div>
+    @endif
+
   </div>
 </div>
 <br><br>

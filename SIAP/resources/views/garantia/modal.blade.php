@@ -8,25 +8,25 @@ role="dialog" tabindex="-1" id="modal-delete-{{$ma->idgarantia}}">
 				aria-label="Close">
                      <span aria-hidden="true">×</span>
                 </button>
-                <h4 class="modal-title">Eliminar Garantiía</h4>
+                <h4 class="modal-title">ELIMINAR &nbsp; GARANTÍA</h4>
 			</div>
 			<div class="modal-body" style="color: #000; background: #ff8a80; font-family:'Trebuchet MS', Helvetica, sans-serif;">
 
-				<h4 style="padding: 0px 25px 15px 10px; text-align: center;">
-					Confirme si desea eliminar la garantía
-				</h4>
+				<p style="padding: 0px 25px 15px 10px; text-align: center;">
+					confirme si desea eliminar la garantía
+				</p>
 
-				<p style="font-size: 14px;">
+				<p>
 					Marca: <span style="padding: 10px 25px 0px 10px;">{{ $ma->marca }}</span>
 				</p>
-				<p style="font-size: 14px;">
+				<p>
 					Serie: <span style="padding: 10px 25px 0px 10px;">{{ $ma->serie }}</span>
 				</p>
-				<p style="font-size: 14px;">
+				<p>
 					Valor: <span style="padding: 10px 25px 0px 10px;">{{ $ma->valor }}</span>
 				</p>
 
-				<p style="font-size: 14px;">
+				<p>
 					 Descripción: 
 				</p><span style="padding: 5px 0px 0px 0px;">{{ $ma->descripcion }}</span>
 

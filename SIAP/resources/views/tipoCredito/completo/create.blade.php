@@ -160,7 +160,7 @@
     </div>
 
     <div style="text-align: center;" class="row">
-      <a data-target="#modal-help" data-toggle="modal">
+      <a data-target="#modal-help" data-toggle="modal" style="cursor: pointer;">
         <i class="fa fa-info-circle" aria-hidden="true">¿Ayuda sobre las tasas aplicables?</i>
       </a>
       @include('tipoCredito.completo.modalAyuda')

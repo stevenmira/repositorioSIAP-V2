@@ -33,7 +33,10 @@
   <div class="row">
     <p class="col-md-3 col-lg-3 col-sm-3  "><b>Cartera:</b>&nbsp;&nbsp;&nbsp; <?php echo e($nombreCartera); ?></p>
     <p class="col-md-3 col-lg-3 col-sm-3"><b>Fecha de inicio:</b>&nbsp;&nbsp;&nbsp; <?php echo e($desde); ?></p>
-    <p class="col-md-3 col-lg-3 col-sm-3"><b>Fecha Fin:</b>&nbsp;&nbsp;&nbsp; <?php echo e($hasta); ?></p>
+    <p class="col-md-2 col-lg-2 col-sm-2"><b>Fecha Fin:</b>&nbsp;&nbsp;&nbsp; <?php echo e($hasta); ?></p>
+    <p class="col-md-3 col-lg-3 col-sm-3"><a style="cursor: pointer;" data-target="#modal-delete-2" data-toggle="modal"> Gráfico de distribución del desembolso <i class="fa fa-question"></i></a></p>
+    <?php echo $__env->make('reportes.estrategicos.controlCreditos.modalGrafico', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+    <p class="col-md-1 col-lg-1 col-sm-1"><a style="cursor: pointer;"> Imprimir&nbsp;&nbsp;&nbsp;<i class="fa fa-print"></i></a></p>
   </div>
 
 <div class="row">

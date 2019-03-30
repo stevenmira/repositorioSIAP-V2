@@ -58,7 +58,7 @@ class ClienteController extends Controller
         $fecha_actual = Fecha::spanish();
 
         $carteras = Cartera::where('estado','=','ACTIVO')->orderBy('cartera.nombre','asc');
-        $categorias = Categoria::orderBy('letra','asc');
+        $categorias = Categoria::orderBy('letra','asc')->get();
 
     	return view('cliente.create',["carteras"=>$carteras, "categorias"=>$categorias, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);
     }
@@ -141,7 +141,17 @@ class ClienteController extends Controller
         ->orderBy('idobservacion','des')
         ->get();
 
-        return view('cliente.show',["cliente"=>$cliente, "edad"=>$edad, "negocios"=>$negocios, "codeudores"=>$codeudores,"observaciones"=>$observaciones, "cartera"=>$cartera,"categoria"=>$categoria, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);   
+        $creditos = DB::table('cuenta as cuenta')
+            ->select('prestamo.idprestamo', 'cliente.nombre', 'cliente.apellido', 'prestamo.estado', 'prestamo.fecha', 'prestamo.monto', 'prestamo.cuotadiaria', 'prestamo.estado as estadoPrestamo', 'negocio.nombre as nombreNegocio', 'negocio.actividadeconomica', 'tipo_credito.interes','cuenta.idcuenta')
+            ->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
+            ->join('tipo_credito as tipo_credito','cuenta.idtipocredito','=','tipo_credito.idtipocredito')
+            ->join('negocio as negocio','cuenta.idnegocio','=','negocio.idnegocio')
+            ->join('cliente as cliente','negocio.idcliente','=','cliente.idcliente')
+            ->where('negocio.idcliente','=',$cliente->idcliente)
+            ->orderBy('cuenta.idcuenta','desc')
+            ->get();
+
+        return view('cliente.show',["cliente"=>$cliente, "edad"=>$edad, "negocios"=>$negocios, "codeudores"=>$codeudores,"observaciones"=>$observaciones, "creditos"=>$creditos, "cartera"=>$cartera,"categoria"=>$categoria, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);   
     }
 
     public function edit($id)

@@ -262,7 +262,8 @@ class ReportesController extends Controller
 	            	'cartera.nombre as nombreCartera',
 	            	'ejecutivo.nombre as nombreEjecutivo',
 	            	'tipo_desembolso.nombre as nombreDesembolso',
-	            	'prestamo.numerocheque'
+	            	'prestamo.numerocheque',
+                    'prestamo.estado'
 	            )
 	            ->where('prestamo.fecha','>=', $desde)
 	            ->where('prestamo.fecha','<=', $hasta)
@@ -293,7 +294,8 @@ class ReportesController extends Controller
 	            	'cartera.nombre as nombreCartera',
 	            	'ejecutivo.nombre as nombreEjecutivo',
 	            	'tipo_desembolso.nombre as nombreDesembolso',
-	            	'prestamo.numerocheque'
+	            	'prestamo.numerocheque',
+                    'prestamo.estado'
 	            )
 	            ->where('cartera.idcartera','=', $idcartera)
 	            ->where('prestamo.fecha','>=', $desde)
@@ -307,16 +309,165 @@ class ReportesController extends Controller
         $sumMonto = 0;
         $sumComision = 0;
         $sumMontooriginal = 0;
+        $sumMontoCompleto = 0;
+        $sumMontoRefinanciamiento = 0;
+        $c1 = 0;
+        $c2 = 0;
         foreach ($consulta as $con) {
         	$sumMonto = $sumMonto + $con->monto;
         	$sumComision = $sumComision + $con->comision;
         	$sumMontooriginal = $sumMontooriginal + $con->montooriginal;
+
+            if ($con->estado == 'COMPLETO') {
+                $c1 = $c1 + 1;
+                $sumMontoCompleto = $sumMontoCompleto + $con->monto;
+            }else {
+                $sumMontoRefinanciamiento = $sumMontoRefinanciamiento + $con->monto;
+                $c2 = $c2 + 1;
+            }
         }
+
+        // Se previene la division por cero
+        try{
+            $p1 = round($sumMontoCompleto / ($sumMontoCompleto + $sumMontoRefinanciamiento) * 100,0);
+            $p2 = round($sumMontoRefinanciamiento / ($sumMontoCompleto + $sumMontoRefinanciamiento) * 100,0);
+        } catch(\Exception $e)
+        {
+            $p1 = 0;
+            $p2 = 0;
+        }
+        
 
 
         $desde = Carbon::parse($desde)->format('d-m-Y');
     	$hasta = Carbon::parse($hasta)->format('d-m-Y');
 
-        return view('reportes.estrategicos.controlCreditos.controlCreditosReview',["consulta"=>$consulta,"nombreCartera"=>$nombreCartera,"desde"=>$desde,"hasta"=>$hasta,"fecha_actual"=>$fecha_actual,"sumMonto"=>$sumMonto,"sumComision"=>$sumComision,"sumMontooriginal"=>$sumMontooriginal, "usuarioactual"=>$usuarioactual]);
+        return view('reportes.estrategicos.controlCreditos.controlCreditosReview',["consulta"=>$consulta,"nombreCartera"=>$nombreCartera,"desde"=>$desde,"hasta"=>$hasta,"fecha_actual"=>$fecha_actual,"sumMonto"=>$sumMonto,"sumComision"=>$sumComision,"sumMontooriginal"=>$sumMontooriginal,"sumMontoCompleto"=>$sumMontoCompleto,"sumMontoRefinanciamiento"=>$sumMontoRefinanciamiento,"c1"=>$c1,"c2"=>$c2, "p1"=>$p1,"p2"=>$p2,"usuarioactual"=>$usuarioactual]);
+    }
+
+    public function estadoCreditos(){
+        $usuarioactual=\Auth::user();
+
+        $fecha_actual = Carbon::now()->format('d-m-Y');
+        $carteras = DB::table('cartera')->orderby('cartera.nombre','asc')->get();
+
+        return view('reportes.tacticos.estadoCreditos.estadoCreditosForm',["fecha_actual"=>$fecha_actual,"carteras"=>$carteras, "usuarioactual"=>$usuarioactual]);
+    }
+
+    public function estadoCreditosReview(Request $request){
+        $usuarioactual=\Auth::user();
+        $fecha_actual = Carbon::now()->format('d-m-Y');
+        
+        $idcartera = $request->get('idcartera');
+        $desde = $request->get('desde');
+        $hasta = $request->get('hasta');
+        $estado = $request->get('estado');
+
+
+        if ($desde > $hasta) {
+
+            $carteras = DB::table('cartera')->orderby('cartera.nombre','asc')->get();
+
+            Session::flash('msj',"El valor del campo -- FECHA INICIO -- debe ser menor o igual que el valor del campo -- FECHA FIN --");
+
+            return view('reportes.tacticos.estadoCreditos.estadoCreditosForm',["fecha_actual"=>$fecha_actual,"carteras"=>$carteras, "usuarioactual"=>$usuarioactual]);
+        }
+
+        if ($idcartera == 'TODAS') 
+        {
+            $nombreCartera = 'TODAS LAS CARTERAS';
+
+            $consulta = DB::table('cartera as cartera')
+                ->join('ejecutivo as ejecutivo','cartera.idejecutivo','=','ejecutivo.idejecutivo')
+                ->join('cliente as cliente','cartera.idcartera','=','cliente.idcartera')
+                ->join('negocio as negocio','cliente.idcliente','=','negocio.idcliente')
+                ->join('cuenta as cuenta','negocio.idnegocio','=','cuenta.idnegocio')
+                ->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
+                ->join('tipo_desembolso as tipo_desembolso','prestamo.idtipodesembolso','=','tipo_desembolso.idtipodesembolso')
+                ->select(
+                    'cliente.nombre',
+                    'cliente.apellido',
+                    'negocio.nombre as nombreNegocio',
+                    'prestamo.fecha',
+                    'prestamo.monto',
+                    'cartera.nombre as nombreCartera',
+                    'ejecutivo.nombre as nombreEjecutivo',
+                    'tipo_desembolso.nombre as nombreDesembolso',
+                    'prestamo.numerocheque',
+                    'prestamo.estado',
+                    'prestamo.estadodos'
+                )
+                ->where('prestamo.fecha','>=', $desde)
+                ->where('prestamo.fecha','<=', $hasta)
+                ->where('prestamo.estadodos', $estado)
+                ->orderby('prestamo.fecha','asc')
+                ->get();
+        }
+        else
+        {
+            $carteraX = Cartera::where('idcartera',$idcartera)->first();
+            $nombreCartera = $carteraX->nombre;
+
+            $consulta = DB::table('cartera as cartera')
+                ->join('ejecutivo as ejecutivo','cartera.idejecutivo','=','ejecutivo.idejecutivo')
+                ->join('cliente as cliente','cartera.idcartera','=','cliente.idcartera')
+                ->join('negocio as negocio','cliente.idcliente','=','negocio.idcliente')
+                ->join('cuenta as cuenta','negocio.idnegocio','=','cuenta.idnegocio')
+                ->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
+                ->join('tipo_desembolso as tipo_desembolso','prestamo.idtipodesembolso','=','tipo_desembolso.idtipodesembolso')
+                ->select(
+                    'cliente.nombre',
+                    'cliente.apellido',
+                    'negocio.nombre as nombreNegocio',
+                    'prestamo.fecha',
+                    'prestamo.monto',
+                    'cartera.nombre as nombreCartera',
+                    'ejecutivo.nombre as nombreEjecutivo',
+                    'tipo_desembolso.nombre as nombreDesembolso',
+                    'prestamo.numerocheque',
+                    'prestamo.estado',
+                    'prestamo.estadodos'
+                )
+                ->where('cartera.idcartera','=', $idcartera)
+                ->where('prestamo.fecha','>=', $desde)
+                ->where('prestamo.fecha','<=', $hasta)
+                ->where('prestamo.estadodos', $estado)
+                ->orderby('prestamo.fecha','asc')
+                ->get();
+        }
+
+        // Se procede a realizar la sumatoria
+
+        $sumMonto = 0;
+        $sumMontoCompleto = 0;
+        $sumMontoRefinanciamiento = 0;
+        $c1 = 0;
+        $c2 = 0;
+        foreach ($consulta as $con) {
+            $sumMonto = $sumMonto + $con->monto;
+
+            if ($con->estado == 'COMPLETO') {
+                $c1 = $c1 + 1;
+                $sumMontoCompleto = $sumMontoCompleto + $con->monto;
+            }else {
+                $sumMontoRefinanciamiento = $sumMontoRefinanciamiento + $con->monto;
+                $c2 = $c2 + 1;
+            }
+        }
+
+        // Se previene la division por cero
+        try{
+            $p1 = round($sumMontoCompleto / ($sumMontoCompleto + $sumMontoRefinanciamiento) * 100,0);
+            $p2 = round($sumMontoRefinanciamiento / ($sumMontoCompleto + $sumMontoRefinanciamiento) * 100,0);
+        } catch(\Exception $e)
+        {
+            $p1 = 0;
+            $p2 = 0;
+        }
+
+        $desde = Carbon::parse($desde)->format('d-m-Y');
+        $hasta = Carbon::parse($hasta)->format('d-m-Y');
+
+        return view('reportes.tacticos.estadoCreditos.estadoCreditosReview',["consulta"=>$consulta,"nombreCartera"=>$nombreCartera,"desde"=>$desde,"hasta"=>$hasta,"estado"=>$estado,"fecha_actual"=>$fecha_actual,"sumMonto"=>$sumMonto,"sumMontoCompleto"=>$sumMontoCompleto,"sumMontoRefinanciamiento"=>$sumMontoRefinanciamiento,"c1"=>$c1,"c2"=>$c2, "p1"=>$p1,"p2"=>$p2,"usuarioactual"=>$usuarioactual]);
     }
 }

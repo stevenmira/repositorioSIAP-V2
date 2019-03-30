@@ -63,10 +63,10 @@
                           <td>{{ $ma->fecha }}</td>
                           <td>{{ $ma->estadoPrestamo }}</td>
                           <td>{{ $ma->nombreNegocio }}</td>
-                          <td>{{ $ma->monto }}</td>
+                          <td>$ {{ $ma->monto }}</td>
                           <?php $tasa = $ma->interes * 100; ?> 
                           <td>{{ $tasa }} %</td>
-                          <td>{{ $ma->cuotadiaria }}</td>
+                          <td>$ {{ $ma->cuotadiaria }}</td>
                           <td style="width: 150px;">
                             <a class="btn btn-warning amarillo"  data-title="Ver Garantias" href="{{ url('cliente/credito/garantias', ['id' => $ma->idprestamo]) }}" ><i class="fa fa-eye" aria-hidden="true"></i></a>
                           </td>

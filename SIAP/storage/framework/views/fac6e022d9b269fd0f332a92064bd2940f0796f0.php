@@ -62,10 +62,10 @@
                           <td><?php echo e($ma->fecha); ?></td>
                           <td><?php echo e($ma->estadoPrestamo); ?></td>
                           <td><?php echo e($ma->nombreNegocio); ?></td>
-                          <td><?php echo e($ma->monto); ?></td>
+                          <td>$ <?php echo e($ma->monto); ?></td>
                           <?php $tasa = $ma->interes * 100; ?> 
                           <td><?php echo e($tasa); ?> %</td>
-                          <td><?php echo e($ma->cuotadiaria); ?></td>
+                          <td>$ <?php echo e($ma->cuotadiaria); ?></td>
                           <td style="width: 150px;">
                             <a class="btn btn-warning amarillo"  data-title="Ver Garantias" href="<?php echo e(url('cliente/credito/garantias', ['id' => $ma->idprestamo])); ?>" ><i class="fa fa-eye" aria-hidden="true"></i></a>
                           </td>

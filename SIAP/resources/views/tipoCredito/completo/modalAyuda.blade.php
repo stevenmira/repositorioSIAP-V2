@@ -33,36 +33,19 @@ role="dialog" tabindex="-1" id="modal-help">
 			                            <th style="text-align: center;">INTERÉS</th>
 			                        </tr>
 			                    </thead>
+			                      @foreach($interesList as $interes)
 			                      <tr>
-			                      	  <td>Normal</td>
-			                          <td>Menor o Igual a</td>
-			                          <td>$80</td>
-			                          <td>1.7%</td>
+			                      	  	<td>{{$interes->nombre}}</td>
+			                          	<td>{{$interes->condicion}}</td>
+			                          @if($interes->monto!=0)
+			                          	<td>{{$interes->monto}}</td>
+			                          @else
+			                          	<td>No Aplica</td>
+			                          @endif
+			                          <?php  $interex = $interes->interes * 100;?>
+			                          	<td>{{$interex}}%</td>
 			                      </tr>
-			                      <tr>
-			                      	  <td>Normal</td>
-			                          <td>Menor o Igual a</td>
-			                          <td>$105</td>
-			                          <td>1.1%</td>
-			                      </tr>
-			                      <tr>
-			                      	  <td>Normal</td>
-			                          <td>Mayor a</td>
-			                          <td>$105</td>
-			                          <td>1%</td>
-			                      </tr>
-			                      <tr>
-			                          <td>Preferencial</td>
-			                          <td>No Aplica</td>
-			                          <td>No Aplica</td>
-			                          <td>0.8%</td>
-			                      </tr>
-			                      <tr>
-			                          <td>Oro</td>
-			                          <td>No Aplica</td>
-			                          <td>No Aplica</td>
-			                          <td>0.7%</td>
-			                      </tr>
+			                    @endforeach
 			                </table>
 			            </div>
 			        </div>
@@ -81,7 +64,7 @@ role="dialog" tabindex="-1" id="modal-help">
 				</p>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-outline" data-dismiss="modal">OK</button>
+				<button type="button" class="btn btn-outline" data-dismiss="modal">Aceptar</button>
 			</div>
 		</div>
 	</div>

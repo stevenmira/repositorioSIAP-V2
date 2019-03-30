@@ -168,7 +168,7 @@
     </div>
 
     <div style="text-align: center;" class="row">
-      <a data-target="#modal-help" data-toggle="modal">
+      <a data-target="#modal-help" data-toggle="modal" style="cursor: pointer;">
         <i class="fa fa-info-circle" aria-hidden="true">¿Ayuda sobre las tasas aplicables?</i>
       </a>
       <?php echo $__env->make('tipoCredito.refinanciamiento.modalAyuda', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -230,7 +230,7 @@
 
 <div class="row">
   <div class="col-lg-12 col-sm-12 col-md-12 col-xs-12" id="guardar">
-    <a href="<?php echo e(URL::action('ClienteController@index')); ?>" class="btn btn-danger btn-lg pull-left"><i class="fa fa-times" aria-hidden="true"></i>   Cancelar</a>
+    <a href="<?php echo e(url('home')); ?>" class="btn btn-danger btn-lg pull-left"><i class="fa fa-times" aria-hidden="true"></i>   Cancelar</a>
     <div class="form-group btn-md-2 pull-right">
         <a class="btn btn-success btn-lg pull-right" data-target="#modal-verificar" data-toggle="modal" id="bt_add">Siguiente</a>
         <?php echo $__env->make('tipoCredito.refinanciamiento.modal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -64,6 +64,10 @@ Route::post('reportes/cartera/pagos/review','ReportesController@carteraPagosRevi
 Route::get('reportes/control/creditos','ReportesController@controlCreditos');
 Route::post('reportes/control/creditos/review','ReportesController@controlCreditosReview');
 
+//Estado de Creditos
+Route::get('reportes/estado/creditos','ReportesController@estadoCreditos');
+Route::post('reportes/estado/creditos/review','ReportesController@estadoCreditosReview');
+
 
 Route::get('clientes/perfilClientePDF/{id}','ClienteController@perfilClientePDF');
 

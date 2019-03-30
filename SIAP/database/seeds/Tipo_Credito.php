@@ -22,7 +22,7 @@ class Tipo_Credito extends Seeder
 
         DB::table('tipo_credito')->insert([
             'nombre' => 'Normal',
-            'condicion' => 'Mayor a $80 y Menor o Igual a',
+            'condicion' => 'Menor o Igual a',
             'monto' => 105,
             'interes' => 0.011,
             'estado' => 'DISPONIBLE',

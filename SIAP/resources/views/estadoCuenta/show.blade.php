@@ -1,19 +1,25 @@
 @extends ('layouts.inicio')
 @section('contenido')
 <section class="content-header">
-  <h1 style="color: #333333; font-family: 'Times New Roman', Times, serif;">
-   Cliente: <b>{{$cliente->nombre}}</b></br>
-   
-  </h1>
   <ol class="breadcrumb">
     <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
     <li class="active">Estado de Cuenta</li>
   </ol>
 </section>
 
-<section class="content">
+<br>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS</h4>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">AFIMID, S.A DE C.V</h4>
 
+<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 5px 0px;"><b>ESTADO DE CUENTA</b></h4>
+
+<br><br>
+<div class="row">
+  <p class="col-md-3 col-lg-3 col-sm-3"><b>Cliente:</b>&nbsp;&nbsp;&nbsp; {{$cliente->nombre}} {{$cliente->apellido}}</p>
+  <p class="col-md-3 col-lg-3 col-sm-3"><b>Cartera:</b>&nbsp;&nbsp;&nbsp; {{$cliente->nombeCartera}}</p>
+</div>
   <!-- Notificación -->
+<div class="container" style="text-align:center; font-family:'Trebuchet MS', Helvetica, sans-serif; color: #1C2331;">
   @if (Session::has('create'))
   <div class="alert  fade in" style="background:  #ccff90;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -51,16 +57,14 @@
   @if (Session::has('error'))
   <div class="alert  fade in" style="background:  #ff8a80;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4>   <b>{{ Session::get('error')}}</b>  </h4>
+    <P>   <b>{{ Session::get('error')}}</b>  </P>
   </div>
   @endif
-  <!-- Fin Notificación -->
+</div>
+<!-- Fin Notificación -->
 
-  <div class="row">
-    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
-      
-    </div>
-  </div>
+
+
 
 <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -69,9 +73,7 @@
                     <thead>
                         <tr class="success">
                           <th colspan="12">
-                              
-                              <h3 style="text-align: center;"><b>Estados de Cuenta</b><a class="btn btn-success pull-right verde" data-title="Crear Nuevo Estado" href="{{URL::action('ComprobanteController@nuevoestado',$cliente->idcuenta)}}"><i class="fa fa-fw -square -circle fa-plus-square"></i></a></h3>
-                              
+                              <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ESTADOS DE CUENTA<a class="btn btn-success pull-right verde" data-title="Agregar Nuevo Estado" href="{{URL::action('ComprobanteController@nuevoestado',$cliente->idcuenta)}}"><i class="fa fa-fw -square -circle fa-plus-square"></i></a></h4>
                           </th>
                       </tr>
                         <tr class="info">
