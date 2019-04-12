@@ -29,33 +29,44 @@
 </section>
 <br>
 
-@if (Session::has('inactivo'))
-  <div class="alert  fade in" style="background:  #ffff8d;">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4> La cuenta ha sido modificada al estado <b>{{ Session::get('inactivo')}}</b>.</h4>
-  </div>
-@endif
+<!-- Notificación -->
+<div class="container" style="text-align:center; font-family:'Trebuchet MS', Helvetica, sans-serif; color: #1C2331;">
 
-@if (Session::has('activo'))
-  <div class="alert  fade in" style="background:  #ccff90;">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4> La cuenta ha sido modificada al estado <b>{{ Session::get('activo')}}</b>.</h4>
-  </div>
-@endif
+  @if (Session::has('inactivo'))
+    <div class="alert  fade in" style="background:  #ffff8d;">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4> La cuenta ha sido modificada al estado <b>{{ Session::get('inactivo')}}</b>.</h4>
+    </div>
+  @endif
 
-@if (Session::has('inactivoP'))
-  <div class="alert  fade in" style="background:  #ffff8d;">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4> El Prestamo ha sido modificado al estado <b>{{ Session::get('inactivoP')}}</b>.</h4>
-  </div>
-@endif
+  @if (Session::has('activo'))
+    <div class="alert  fade in" style="background:  #ccff90;">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4> La cuenta ha sido modificada al estado <b>{{ Session::get('activo')}}</b>.</h4>
+    </div>
+  @endif
 
-@if (Session::has('activoP'))
-  <div class="alert  fade in" style="background:  #ccff90;">
+  @if (Session::has('inactivoP'))
+    <div class="alert  fade in" style="background:  #ffff8d;">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4> El Prestamo ha sido modificado al estado <b>{{ Session::get('inactivoP')}}</b>.</h4>
+    </div>
+  @endif
+
+  @if (Session::has('activoP'))
+    <div class="alert  fade in" style="background:  #ccff90;">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4> El prestamo ha sido modificado al estado <b>{{ Session::get('activoP')}}</b>.</h4>
+    </div>
+  @endif
+
+  @if (Session::has('exito'))
+  <div class="alert  fade in" style="background:  #bbdefb;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4> El prestamo ha sido modificado al estado <b>{{ Session::get('activoP')}}</b>.</h4>
+    <P> {{ Session::get('exito')}} </P>
   </div>
-@endif
+  @endif
+</div>
     
 <section class="posts col-md-9">
 
@@ -63,7 +74,14 @@
     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 toppad" >
       <div class="panel panel-info">
         <div class="panel-heading">
-          <h3 class="panel-title">CLIENTE</h3>
+          <h3 class="panel-title">
+            CLIENTE
+            @if($usuarioactual->idtipousuario==1)
+            <a href="{{URL::action('ClienteController@show',$cliente->idcliente)}}">
+              <span class="pull-right"> ver perfil <i class="fa fa-user"></i></span> 
+            </a>
+            @endif
+          </h3>
         </div>
         <div class="panel-body">
           <div class="row">
@@ -72,49 +90,21 @@
               <table class="table table-user-information">
                 <tbody>
                   <tr>
-                    <td>CARTERA:</td>
+                    <td>CARTERA CLIENTE:</td>
                     <td>{{ $cartera->nombre}}</td>
                   </tr>
 
                   <tr>
-                    <td>NOMBRE:</td>
-                    <td>{{ $cliente->nombre}} {{ $cliente->apellido }}</td>
+                    <td>NOMBRE CLIENTE:</td>
+                    <td>{{ $cliente->nombre}} {{ $cliente->apellido }} ({{$edad}} años)</td>
                   </tr>
 
                   <tr>
-                    <td>DUI:</td>
+                    <td>DUI CLIENTE:</td>
                     <td>{{ $cliente->dui }}</td>
-                  </tr>
-
-                  <tr>
-                    <td>NIT:</td>
-                    <td>{{ $cliente->nit }}</td>
-                  </tr>
-
-                  <tr>
-                    <td>EDAD:</td>
-                    <td>{{ $cliente->edad }}</td>
-                  </tr>
-
-                  <tr>
-                    <td>TELÉFONO FIJO:</td>
-                    <td>{{ $cliente->telefonofijo}}</td>
-                  </tr>
-
-                  <tr>
-                    <td>TELÉFONO CELULAR:</td>
-                    <td>{{ $cliente->telefonocel}}</td>
-                  </tr>
-
-                  <tr>
-                    <td>DIRECCIÓN CLIENTE:</td>
-                    <td>{{ $cliente->direccion}}</td>
                   </tr>
                 </tbody>
               </table>
-              @if($usuarioactual->idtipousuario==1) 
-              <a href="{{URL::action('ClienteController@edit',$cliente->idcliente)}}" class="btn btn-primary  pull-right">Actualizar</a>
-           @endif
            </div>
           </div>
         </div>
@@ -122,44 +112,22 @@
     </div>
 
     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 toppad" >
-      <div class="panel panel-danger">
-
+      <div class="panel panel-info">
         <div class="panel-heading">
-          <h3 class="panel-title">CRÉDITO - NEGOCIO</h3>
+          <h3 class="panel-title">
+            NEGOCIO 
+            @if($usuarioactual->idtipousuario==1)
+            <a href="{{URL::action('NegocioController@edit',$negocio->idnegocio)}}">
+              <span class="pull-right">editar <i class="fa fa-info-circle"></i></span> 
+            </a>
+            @endif
+          </h3>
         </div>
         <div class="panel-body">
           <div class="row">
             <div class=" col-md-12 col-lg-12 "> 
               <table class="table table-user-information">
                 <tbody>
-                  <tr>
-                    <td>CRÉDITO:</td>
-                    <td>{{ $prestamo->estado}}</td>
-                  </tr>
-
-                  <tr>
-                    <td>FECHA:</td>
-                    <td>{{ $prestamo->fecha->format('l j  F Y ') }}</td>
-                  </tr>
-
-
-                  <tr>
-                    <td>MONTO</td>
-                    <td> {{ $prestamo->monto }}</td>
-                  </tr>
-
-                  <?php $interes = $tipo_credito->interes * 100;  ?>
-
-                  <tr>
-                    <td>INTERÉS</td>
-                    <td>{{ $interes }} %</td>
-                  </tr>
-
-                  <tr>
-                    <td>CUOTA DIARIA</td>
-                    <td> {{ $prestamo->cuotadiaria }}</td>
-                  </tr>
-
                   <tr>
                     <td>NOMBRE NEGOCIO:</td>
                     <td>{{ $negocio->nombre}}</td>
@@ -170,17 +138,72 @@
                     <td>{{ $negocio->actividadeconomica}}</td>
                   </tr>
 
-
                   <tr>
                     <td>DIRECCIÓN NEGOCIO:</td>
                     <td>{{ $negocio->direccionnegocio }}</td>
                   </tr>
+                </tbody>
+              </table>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 toppad" >
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            CRÉDITO
+            @if($usuarioactual->idtipousuario==1)
+            <a data-target="#modalCredito-delete-{{$prestamo->idprestamo}}" data-toggle="modal" style="cursor: pointer;">
+              <span class="pull-right"> editar <i class="fa fa-info-circle"></i></span> 
+            </a>
+            @include('cuenta.modalCredito')
+            @endif
+          </h3>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class=" col-md-12 col-lg-12 "> 
+              <table class="table table-user-information">
+                <tbody>
+                  <tr>
+                    <td>CRÉDITO:</td>
+                    <td>{{ $prestamo->estado}}</td>
+                    <td>FECHA:</td>
+                    <td>{{ $prestamo->fecha->format('l j  F Y ') }}</td>
+                    <td>DESEMBOLSO:</td>
+                    @if($prestamo->idtipodesembolso == 1)
+                      <td> {{ $tipo_desembolso->nombre }}</td>
+                    @else
+                      <td>{{ $prestamo->numerocheque }}</td>
+                    @endif
+                  </tr>
+
+                  <tr>
+                    <td>MONTO:</td>
+                    <td>$ {{ $prestamo->monto }}</td>
+                    <?php $interes = $tipo_credito->interes * 100;  ?>
+                    <td>INTERÉS:</td>
+                    <td>{{ $interes }} %</td>
+                    <td>CUOTA DIARIA:</td>
+                    <td>$ {{ $prestamo->cuotadiaria }}</td>
+                  </tr>
+                  
+                  @if($prestamo->estadodos == 'CERRADO')
+                  <tr style="background:rgba(244, 67, 54, 0.1);">
+                    <td>SALDO CAPITAL:</td>
+                    <td>{{$cuenta->capitalanterior}}</td>
+                    <td>CUOTAS ATRASADAS:</td>
+                    <td>{{$cuenta->cuotaatrasada}}</td>
+                    <td>MORA:</td>
+                    <td>{{$cuenta->mora}}</td>
+                  </tr>
+                  @endif
 
                 </tbody>
               </table>
-              @if($usuarioactual->idtipousuario==1) 
-              <a href="{{URL::action('NegocioController@edit',$negocio->idnegocio)}}" class="btn btn-primary  pull-right">Actualizar</a>
-             @endif
               </div>
           </div>
         </div>

@@ -181,6 +181,7 @@ Route::get('cartera/inactiva', 'CarteraController@inactivos');
 Route::get('record','RecordClienteController@index');
 Route::resource('cuenta','CuentaController');
 Route::get('cuenta/desembolso/{idcuenta}', ['as' => 'idcuenta', 'uses' => 'CuentaController@desembolso']);
+Route::post('cuenta/credito/update', 'CuentaController@updateCredito');
 
 //Nuevo Financiamiento
 Route::resource('credito','TipoCreditoController');

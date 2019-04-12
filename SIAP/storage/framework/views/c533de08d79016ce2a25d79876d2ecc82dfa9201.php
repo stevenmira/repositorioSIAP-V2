@@ -209,8 +209,35 @@
 			Para todos los efectos de esta obligación mercantil, fijo como domicilio especial la ciudad de Santa Tecla, departamento de La Libertad, y en caso de acción judicial, renuncio al Derecho de apelar del Decreto de embargo, de la sentencia de remate y de otra providencia apelable, que se dictare en el juicio mercantil ejecutivo o en sus incidencias, siendo a mi cargo cualquier gasto que la empresa <b>ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS SOCIEDAD ANÓNIMA DE CAPITAL VARIABLE,</b> y que puede abreviarse <b>AFIMID, S.A. DE C.V.</b> de generales antes relacionadas hicieren en el cobro de este PAGARE, inclusive los llamados personales y aún cuando por regla general no hubiere condenación en costas y faculto a <b>ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS SOCIEDAD ANÓNIMA DE CAPITAL VARIABLE,</b> y que puede abreviarse <b>AFIMID, S.A. DE C.V.</b> Para que designe la persona depositaria de los bienes que se embarguen, a quienes relevo de la obligación de rendir fianza y cuentas. 
 		</div>
 	</table>
+	<?php if($garantiaDeudor != null): ?>
+	<?php foreach( $garantiaDeudor as $garantia): ?>
 
-	<div align="center">En la ciudad de Tepecoyo a los <?php echo e($diahoy); ?> <?php if($diahoy=='UN '): ?> dia <?php else: ?> días <?php endif; ?> del mes de <?php echo e(strtoupper($meshoy)); ?> de <?php echo e($aniohoy); ?>.</div><br>
+	<p>Dejando en garantia: en caso de vencimiento de pagare sin protesto,o incumplimiento de las condiciones del crédito, los siguientes.</p>
+
+		<TABLE style="width: 100%; border-collapse: collapse;">
+			<TR>
+				<TD style="width: 13%;"><b> - Descripción:</b></TD>
+				<TD style="width: 27%; border-bottom: 1px solid #333333;">&nbsp;&nbsp;&nbsp;<?php echo e($garantia->descripcion); ?></TD>
+				<TD style="width: 8%;">&nbsp;&nbsp;<b>Marca:</b></TD>
+				<TD style="width: 22%; border-bottom: 1px solid #333333;">&nbsp;&nbsp;&nbsp;<?php echo e($garantia->marca); ?></TD> 
+				<TD style="width: 8%;">&nbsp;&nbsp;<b>Serie:</b></TD>
+				<TD style="width: 22%; border-bottom: 1px solid #333333;">&nbsp;&nbsp;&nbsp;<?php echo e($garantia->serie); ?></TD> >
+			</TR>
+		</TABLE>
+		<TABLE style="width: 100%; border-collapse: collapse;">
+			<TR>
+				<TD style="width: 22%; "><b> Otras Especificaciones : </b></TD>
+				<TD style="width: 50%; border-bottom: 1px solid #333333;"><?php echo e($garantia->otros); ?></TD>
+				<TD style="width: 8%"><b> Valor : </b></TD>
+				<TD style="width: 22%;border-bottom: 1px solid #333333;">&nbsp;&nbsp;&nbsp;$ <?php echo e($garantia->valor); ?></TD>
+			</TR>
+
+		</TABLE>
+		<?php endforeach; ?>	
+		<?php endif; ?>
+	<br>
+
+	<div align="center">En la ciudad de Tepecoyo a los <?php echo e($diafech); ?> <?php if($diafech=='UN '): ?> dia <?php else: ?> días <?php endif; ?> del mes de <?php echo e(strtoupper($mesfech)); ?> de <?php echo e($aniopre); ?>.</div><br>
 	<div>CONDICIONES DEL CREDITO:</div>
 	<div>1) Sera para inversión de negocio; Compra de Mobiliario y Equipo de trabajo, mercadería. </div>
 	<div>2) Por falta de pago de dos cuota autorizo se me asigne un ejecutivo de cobro para que cobre la venta diaria de mi negocio.</div>

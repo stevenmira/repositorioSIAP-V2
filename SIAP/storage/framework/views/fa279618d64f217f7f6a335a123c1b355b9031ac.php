@@ -28,33 +28,44 @@
 </section>
 <br>
 
-<?php if(Session::has('inactivo')): ?>
-  <div class="alert  fade in" style="background:  #ffff8d;">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4> La cuenta ha sido modificada al estado <b><?php echo e(Session::get('inactivo')); ?></b>.</h4>
-  </div>
-<?php endif; ?>
+<!-- Notificación -->
+<div class="container" style="text-align:center; font-family:'Trebuchet MS', Helvetica, sans-serif; color: #1C2331;">
 
-<?php if(Session::has('activo')): ?>
-  <div class="alert  fade in" style="background:  #ccff90;">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4> La cuenta ha sido modificada al estado <b><?php echo e(Session::get('activo')); ?></b>.</h4>
-  </div>
-<?php endif; ?>
+  <?php if(Session::has('inactivo')): ?>
+    <div class="alert  fade in" style="background:  #ffff8d;">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4> La cuenta ha sido modificada al estado <b><?php echo e(Session::get('inactivo')); ?></b>.</h4>
+    </div>
+  <?php endif; ?>
 
-<?php if(Session::has('inactivoP')): ?>
-  <div class="alert  fade in" style="background:  #ffff8d;">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4> El Prestamo ha sido modificado al estado <b><?php echo e(Session::get('inactivoP')); ?></b>.</h4>
-  </div>
-<?php endif; ?>
+  <?php if(Session::has('activo')): ?>
+    <div class="alert  fade in" style="background:  #ccff90;">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4> La cuenta ha sido modificada al estado <b><?php echo e(Session::get('activo')); ?></b>.</h4>
+    </div>
+  <?php endif; ?>
 
-<?php if(Session::has('activoP')): ?>
-  <div class="alert  fade in" style="background:  #ccff90;">
+  <?php if(Session::has('inactivoP')): ?>
+    <div class="alert  fade in" style="background:  #ffff8d;">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4> El Prestamo ha sido modificado al estado <b><?php echo e(Session::get('inactivoP')); ?></b>.</h4>
+    </div>
+  <?php endif; ?>
+
+  <?php if(Session::has('activoP')): ?>
+    <div class="alert  fade in" style="background:  #ccff90;">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <h4> El prestamo ha sido modificado al estado <b><?php echo e(Session::get('activoP')); ?></b>.</h4>
+    </div>
+  <?php endif; ?>
+
+  <?php if(Session::has('exito')): ?>
+  <div class="alert  fade in" style="background:  #bbdefb;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4> El prestamo ha sido modificado al estado <b><?php echo e(Session::get('activoP')); ?></b>.</h4>
+    <P> <?php echo e(Session::get('exito')); ?> </P>
   </div>
-<?php endif; ?>
+  <?php endif; ?>
+</div>
     
 <section class="posts col-md-9">
 
@@ -62,7 +73,14 @@
     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 toppad" >
       <div class="panel panel-info">
         <div class="panel-heading">
-          <h3 class="panel-title">CLIENTE</h3>
+          <h3 class="panel-title">
+            CLIENTE
+            <?php if($usuarioactual->idtipousuario==1): ?>
+            <a href="<?php echo e(URL::action('ClienteController@show',$cliente->idcliente)); ?>">
+              <span class="pull-right"> ver perfil <i class="fa fa-user"></i></span> 
+            </a>
+            <?php endif; ?>
+          </h3>
         </div>
         <div class="panel-body">
           <div class="row">
@@ -71,49 +89,21 @@
               <table class="table table-user-information">
                 <tbody>
                   <tr>
-                    <td>CARTERA:</td>
+                    <td>CARTERA CLIENTE:</td>
                     <td><?php echo e($cartera->nombre); ?></td>
                   </tr>
 
                   <tr>
-                    <td>NOMBRE:</td>
-                    <td><?php echo e($cliente->nombre); ?> <?php echo e($cliente->apellido); ?></td>
+                    <td>NOMBRE CLIENTE:</td>
+                    <td><?php echo e($cliente->nombre); ?> <?php echo e($cliente->apellido); ?> (<?php echo e($edad); ?> años)</td>
                   </tr>
 
                   <tr>
-                    <td>DUI:</td>
+                    <td>DUI CLIENTE:</td>
                     <td><?php echo e($cliente->dui); ?></td>
-                  </tr>
-
-                  <tr>
-                    <td>NIT:</td>
-                    <td><?php echo e($cliente->nit); ?></td>
-                  </tr>
-
-                  <tr>
-                    <td>EDAD:</td>
-                    <td><?php echo e($cliente->edad); ?></td>
-                  </tr>
-
-                  <tr>
-                    <td>TELÉFONO FIJO:</td>
-                    <td><?php echo e($cliente->telefonofijo); ?></td>
-                  </tr>
-
-                  <tr>
-                    <td>TELÉFONO CELULAR:</td>
-                    <td><?php echo e($cliente->telefonocel); ?></td>
-                  </tr>
-
-                  <tr>
-                    <td>DIRECCIÓN CLIENTE:</td>
-                    <td><?php echo e($cliente->direccion); ?></td>
                   </tr>
                 </tbody>
               </table>
-              <?php if($usuarioactual->idtipousuario==1): ?> 
-              <a href="<?php echo e(URL::action('ClienteController@edit',$cliente->idcliente)); ?>" class="btn btn-primary  pull-right">Actualizar</a>
-           <?php endif; ?>
            </div>
           </div>
         </div>
@@ -121,44 +111,22 @@
     </div>
 
     <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 toppad" >
-      <div class="panel panel-danger">
-
+      <div class="panel panel-info">
         <div class="panel-heading">
-          <h3 class="panel-title">CRÉDITO - NEGOCIO</h3>
+          <h3 class="panel-title">
+            NEGOCIO 
+            <?php if($usuarioactual->idtipousuario==1): ?>
+            <a href="<?php echo e(URL::action('NegocioController@edit',$negocio->idnegocio)); ?>">
+              <span class="pull-right">editar <i class="fa fa-info-circle"></i></span> 
+            </a>
+            <?php endif; ?>
+          </h3>
         </div>
         <div class="panel-body">
           <div class="row">
             <div class=" col-md-12 col-lg-12 "> 
               <table class="table table-user-information">
                 <tbody>
-                  <tr>
-                    <td>CRÉDITO:</td>
-                    <td><?php echo e($prestamo->estado); ?></td>
-                  </tr>
-
-                  <tr>
-                    <td>FECHA:</td>
-                    <td><?php echo e($prestamo->fecha->format('l j  F Y ')); ?></td>
-                  </tr>
-
-
-                  <tr>
-                    <td>MONTO</td>
-                    <td> <?php echo e($prestamo->monto); ?></td>
-                  </tr>
-
-                  <?php $interes = $tipo_credito->interes * 100;  ?>
-
-                  <tr>
-                    <td>INTERÉS</td>
-                    <td><?php echo e($interes); ?> %</td>
-                  </tr>
-
-                  <tr>
-                    <td>CUOTA DIARIA</td>
-                    <td> <?php echo e($prestamo->cuotadiaria); ?></td>
-                  </tr>
-
                   <tr>
                     <td>NOMBRE NEGOCIO:</td>
                     <td><?php echo e($negocio->nombre); ?></td>
@@ -169,17 +137,72 @@
                     <td><?php echo e($negocio->actividadeconomica); ?></td>
                   </tr>
 
-
                   <tr>
                     <td>DIRECCIÓN NEGOCIO:</td>
                     <td><?php echo e($negocio->direccionnegocio); ?></td>
                   </tr>
+                </tbody>
+              </table>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 toppad" >
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            CRÉDITO
+            <?php if($usuarioactual->idtipousuario==1): ?>
+            <a data-target="#modalCredito-delete-<?php echo e($prestamo->idprestamo); ?>" data-toggle="modal" style="cursor: pointer;">
+              <span class="pull-right"> editar <i class="fa fa-info-circle"></i></span> 
+            </a>
+            <?php echo $__env->make('cuenta.modalCredito', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+            <?php endif; ?>
+          </h3>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class=" col-md-12 col-lg-12 "> 
+              <table class="table table-user-information">
+                <tbody>
+                  <tr>
+                    <td>CRÉDITO:</td>
+                    <td><?php echo e($prestamo->estado); ?></td>
+                    <td>FECHA:</td>
+                    <td><?php echo e($prestamo->fecha->format('l j  F Y ')); ?></td>
+                    <td>DESEMBOLSO:</td>
+                    <?php if($prestamo->idtipodesembolso == 1): ?>
+                      <td> <?php echo e($tipo_desembolso->nombre); ?></td>
+                    <?php else: ?>
+                      <td><?php echo e($prestamo->numerocheque); ?></td>
+                    <?php endif; ?>
+                  </tr>
+
+                  <tr>
+                    <td>MONTO:</td>
+                    <td>$ <?php echo e($prestamo->monto); ?></td>
+                    <?php $interes = $tipo_credito->interes * 100;  ?>
+                    <td>INTERÉS:</td>
+                    <td><?php echo e($interes); ?> %</td>
+                    <td>CUOTA DIARIA:</td>
+                    <td>$ <?php echo e($prestamo->cuotadiaria); ?></td>
+                  </tr>
+                  
+                  <?php if($prestamo->estadodos == 'CERRADO'): ?>
+                  <tr style="background:rgba(244, 67, 54, 0.1);">
+                    <td>SALDO CAPITAL:</td>
+                    <td><?php echo e($cuenta->capitalanterior); ?></td>
+                    <td>CUOTAS ATRASADAS:</td>
+                    <td><?php echo e($cuenta->cuotaatrasada); ?></td>
+                    <td>MORA:</td>
+                    <td><?php echo e($cuenta->mora); ?></td>
+                  </tr>
+                  <?php endif; ?>
 
                 </tbody>
               </table>
-              <?php if($usuarioactual->idtipousuario==1): ?> 
-              <a href="<?php echo e(URL::action('NegocioController@edit',$negocio->idnegocio)); ?>" class="btn btn-primary  pull-right">Actualizar</a>
-             <?php endif; ?>
               </div>
           </div>
         </div>
