@@ -1,20 +1,20 @@
-<div class="modal modal-primary fade modal-slide-in-right" aria-hidden="true"
-role="dialog" tabindex="-1" id="modal-delete-{{$ma->idsupervisor}}">
+<div class="modal  fade modal-slide-in-right" aria-hidden="true"
+role="dialog" tabindex="-1" id="modal-delete-{{$ma->idejecutivo}}">
 	{{Form::Open(array('action'=>array('SupervisorController@destroy',$ma->idsupervisor),'method'=>'delete'))}}
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<div class="modal-header">
+			<div class="modal-header" style="background: #3F729B; color: #fff;">
 				<button type="button" class="close" data-dismiss="modal" 
 				aria-label="Close">
                      <span aria-hidden="true">×</span>
                 </button>
-                <h4 class="modal-title">Habilitar Registro</h4>
+                <h4 class="modal-title">ACTIVAR &nbsp; SUPERVISOR</h4>
 			</div>
-			<div class="modal-body">
-				<h4 style="font-family: bold;">Confirme si desea cambiar al estado <b>ACTIVO</b> al supervisor: </h4>
-				<h2 style="font-family:  Times New Roman, sans-serif; color: #e3f2fd;  text-align: center;"><b>{{ $ma->nombre }} {{$ma->apellido}}</b></h2>
+			<div class="modal-body" style="color: #000; background: #fff; text-align: center; font-family:'Trebuchet MS', Helvetica, sans-serif;">
+				<p>confirme si desea activar al supervisor</p>
+				<p style="text-align: center;">-- {{ $ma->nombre }} {{$ma->apellido}} --</p>
 			</div>
-			<div class="modal-footer">
+			<div class="modal-footer" style="background: #3F729B; color: #fff;">
 				<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Cerrar</button>
 				<button type="submit" class="btn btn-outline">Confirmar</button>
 			</div>

@@ -1,41 +1,37 @@
 <?php $__env->startSection('contenido'); ?>
 <section class="content-header">
-  <h1 style="color: #333333; font-family: 'Times New Roman', Times, serif;">
-    CLIENTES ACTIVOS
-  </h1>
   <ol class="breadcrumb">
     <li><a href="<?php echo e(URL::action('ClienteController@index')); ?>"><i class="fa fa-dashboard"></i> Inicio</a></li>
-    <li class="active"><a href="<?php echo e(URL::action('ClienteController@index')); ?>"> Clientes</a></li>
+    <li><a href="<?php echo e(URL::action('ClienteController@index')); ?>"> Clientes</a></li>
     <li class="active">Inactivos </li>
   </ol>
 </section>
 
-<section class="content">
+<br>
+<br>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS</h4>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">AFIMID, S.A DE C.V</h4>
 
-  <!-- Notificación -->
-
-  <?php if(Session::has('inactivo')): ?>
-  <div class="alert  fade in" style="background:  #f0f4c3;">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4> El cliente  <b><?php echo e(Session::get('inactivo')); ?></b>  ha sido modificado al estado <b> ACTIVO </b>  nuevamente. </h4>
-  </div>
-  <?php endif; ?>
-
-  <!-- Fin Notificación -->
-
-  <!-- Criterios de búsquedas -->
-  
-  <!-- /.row -->
+<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 40px 0px;"><b>GESTIÓN DE CLIENTES</b></h4>
 
   <div class="row">
-    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-      <div class="alert  fade in" style="background:  rgba(255, 235, 59, 0.7);">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <font face="Comic Sans MS,arial,verdana">Puedes realizar tus búsquedas por el  <b>Número de DUI</b> ó bien por el <b style="color: black;"> Nombre</b> ó <b style="color: black;"> Apellido</b> <b style="color: black;">Completo </b> ó <b style="color: black;"> Parcial </b> del cliente</font>
-      </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
       <?php echo $__env->make('cliente.inactivo.search', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
     </div>
   </div>
+
+  <!-- Notificación -->
+
+  <div class="container" style="text-align:center; font-family:'Trebuchet MS', Helvetica, sans-serif; color: #1C2331;">
+    <?php if(Session::has('inactivo')): ?>
+    <div class="alert  fade in" style="background:  #f0f4c3;">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <p> El cliente -- <?php echo e(Session::get('inactivo')); ?> -- se ha dado de alta correctamente</p>
+    </div>
+    <?php endif; ?>
+  </div>
+
+  <!-- Fin Notificación -->
 
 <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -45,7 +41,7 @@
                         <tr class="success">
                           <th colspan="12">
                               
-                              <h3 style="text-align: center; font-family:  Times New Roman, sans-serif; color: #1C2331;"><b>LISTADO DE CLIENTES</b> <b style="color: red;">INACTIVOS</b></h3>
+                              <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">LISTADO DE CLIENTES INACTIVOS</h4>
                               
                           </th>
                       </tr>
@@ -65,7 +61,7 @@
                           <td><?php echo e($ma->dui); ?></td>
                           <td style="width: 200px;">
 
-                              <a class="btn btn-primary azul" data-title="Habilitar Cliente" href="" data-target="#modal-delete-<?php echo e($ma->idcliente); ?>" data-toggle="modal"><i class="fa fa-check" aria-hidden="true"></i></a>
+                              <a class="btn btn-primary azul" data-title="Activar Cliente" href="" data-target="#modal-delete-<?php echo e($ma->idcliente); ?>" data-toggle="modal"><i class="fa fa-check" aria-hidden="true"></i></a>
 
 
                           </td>
@@ -85,12 +81,10 @@
 
 <div class="row">
   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-      <h3 style="text-align:center; font-family:  Times New Roman, sans-serif; color: #1C2331; float: right;"><b><?php echo e($fecha_actual); ?></b></h3>
+      <h4 style="text-align:center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #1C2331; float: right;">
+      <?php echo e($fecha_actual); ?></h4>
   </div>
 </div>
-
-</section>
-
 
 
 <?php $__env->stopSection(); ?>

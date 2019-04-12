@@ -4,7 +4,7 @@
   <ol class="breadcrumb">
     <li><a href="<?php echo e(url('home')); ?>"><i class="fa fa-dashboard"></i> Inicio</a></li>
     <li><a href="<?php echo e(URL::action('CarteraController@index')); ?>"> Carteras</a></li>
-    <li><a href="<?php echo e(URL::action('CarteraController@index')); ?>"> Activas</a></li>
+    <li class="active"> Activas </li>
   </ol>
 </section>
 
@@ -60,16 +60,15 @@
         <thead>
             <tr class="success">
               <th colspan="12">
-                  
-                  <h3 style="text-align: center; font-family:  Times New Roman, sans-serif; color: #1C2331;"><b>LISTA DE CARTERAS ACTIVAS</b><a class="btn btn-success pull-right verde" data-title="Agregar Nueva Cartera" href="<?php echo e(URL::action('CarteraController@create')); ?>"><i class="fa fa-fw -square -circle fa-plus-square"></i></a></h3>
-                  
+
+                <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">LISTA DE CARTERAS ACTIVAS<a class="btn btn-success pull-right verde" data-title="Agregar Nueva Cartera" href="<?php echo e(URL::action('CarteraController@create')); ?>"><i class="fa fa-fw -square -circle fa-plus-square"></i></a></h4>
+                      
               </th>
             </tr>
             <tr class="info">
                 <th>Nombre</th>
                 <th>Ejecutivos</th>
                 <th>Supervisor</th>
-                <th>Clientes</th>
                 <th>Opciones</th>
             </tr>
         </thead>
@@ -79,13 +78,10 @@
               <td><?php echo e($cartera->nombre); ?></td>
               <td><?php echo e($cartera->nombreEjecutivo); ?></td>
               <td><?php echo e($cartera->nombreSupervisor); ?></td>
-            	<td style="width: 200px;">
-                <a class="btn btn-warning amarillo"  data-title="Ver Clientes de esta Cartera" href="<?php echo e(URL::action('CarteraClientController@show',$cartera->idcartera)); ?>"><i class="fa fa-check-square-o" aria-hidden="true"></i></a>
-            	</td>
             	<td style="width: 200px">
-                <a class="btn btn-info azul" data-title="Editar Nombre de la Cartera" href="<?php echo e(URL::action('CarteraController@edit',$cartera->idcartera)); ?>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                <a class="btn btn-info azul" data-title="Editar Cartera" href="<?php echo e(URL::action('CarteraController@edit',$cartera->idcartera)); ?>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
 
-                <a class="btn btn-danger rojo" data-title="Eliminar Cartera" href="" data-target="#modal-delete-<?php echo e($cartera->idcartera); ?>" data-toggle="modal"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                <a class="btn btn-danger rojo" data-title="Inactivar Cartera" href="" data-target="#modal-delete-<?php echo e($cartera->idcartera); ?>" data-toggle="modal"><i class="fa fa-trash" aria-hidden="true"></i></a>
               </td>
             </tr>
             <?php echo $__env->make('carteras.modal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
@@ -96,6 +92,7 @@
 
   </div>
 </div>
+
 
 <div class="row">
   <a href="<?php echo e(url('home')); ?>" class="btn btn-danger btn-lg col-md-offset-2"><i class="fa fa-chevron-left" aria-hidden="true"></i> Atrás</a>

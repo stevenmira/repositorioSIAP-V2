@@ -16,8 +16,6 @@
 
 <section class="content">
 
-   <!-- Notificación -->
-
   <?php if(Session::has('inactivo')): ?>
   <div class="alert  fade in" style="background:  #f0f4c3;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -25,20 +23,25 @@
   </div>
   <?php endif; ?>
 
-  <!-- Fin Notificación -->
+<section class="content">
 
-  <!-- Criterios de búsquedas -->
-  
-  <!-- /.row -->
+   <!-- Notificación -->
+   <?php if(Session::has('inactivo')): ?>
+  <div class="alert  fade in" style="background:  #f0f4c3;">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <h4> El Supervisor <b><?php echo e(Session::get('inactivo')); ?></b>  ha sido modificado al estado <b> ACTIVO </b>  nuevamente. </h4>
+  </div>
+  <?php endif; ?>
 
   <div class="row">
     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-      <div class="alert  fade in" style="background:  rgba(255, 235, 59, 0.7);">
+      <div>
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
       </div>
       <?php echo $__env->make('personal.supervisor.inactivo.search', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
     </div>
   </div>
+
 
 <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

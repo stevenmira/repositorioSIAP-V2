@@ -88,7 +88,7 @@
                 <div class="input-group-addon">
                   <i class="fa fa-calendar" aria-hidden="true"></i>
                 </div>
-                {!! Form::date('fechanacimiento', $ejecutivo->fechanacimiento, ['class' => 'form-control']) !!}
+                {!! Form::date('fechanacimiento', $ejecutivo->fechanacimiento, null, ['class' => 'form-control']) !!}
               </div>
             </div>
 

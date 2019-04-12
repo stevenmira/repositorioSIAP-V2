@@ -49,6 +49,9 @@
                 <span>Gestión de Usuarios</span>
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
+              <ul class="treeview-menu">
+                <li><a href="<?php echo e(URL::action('UsuarioController@index')); ?>"><i class="fa fa-circle-o"></i> Lista usuarios</a></li>
+              </ul>
             </li>
 
             <li class="treeview">
@@ -65,16 +68,11 @@
             </li>
 
              <li>
-              <a href="<?php echo e(URL::action('UsuarioController@download')); ?>">
+              <a href="#">
                 <i class="fa fa-plus-square"></i> 
                 <span>Ayuda</span>
                 <small class="label pull-right bg-red">PDF</small>
               </a>
-              <ul class="treeview-menu">
-
-                <li><a  href="<?php echo e(URL::action('UsuarioController@download')); ?>"><i class="fa fa-circle-o"></i> Manual de Usuario</a></li>
-
-              </ul>
             </li>
             <li>
               <a href="#">

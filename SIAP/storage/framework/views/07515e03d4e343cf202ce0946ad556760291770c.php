@@ -4,7 +4,7 @@
   <ol class="breadcrumb">
     <li><a href="<?php echo e(url('home')); ?>"><i class="fa fa-dashboard"></i> Inicio</a></li>
     <li><a href="<?php echo e(URL::action('CarteraController@index')); ?>"> Carteras</a></li>
-    <li><a href="<?php echo e(URL::action('CarteraController@inactivos')); ?>"> Inactivas</a></li>
+    <li class="active"> Inactivas</li>
   </ol>
 </section>
 
@@ -13,7 +13,7 @@
 <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS</h4>
 <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">AFIMID, S.A DE C.V</h4>
 
-<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 5px 0px;"><b>CARTERAS INACTIVAS</b></h4>
+<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 5px 0px;"><b>GESTIÓN DE CARTERAS</b></h4>
 
   <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -38,7 +38,7 @@
           <thead>
             <tr class="success">
               <th colspan="12">
-                  <h3 style="text-align: center; font-family:  Times New Roman, sans-serif; color: #1C2331;"><b>LISTADO DE CARTERAS</b> <b style="color: red;">INACTIVAS</b></h3>
+                  <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">LISTADO DE CARTERAS INACTIVAS</h4>
               </th>
             </tr>
             <tr class="info">
@@ -53,7 +53,7 @@
                   <td><?php echo e($cartera->nombre); ?></td>
                   <td><?php echo e($cartera->nombreEjecutivo); ?></td>
                   <td><?php echo e($cartera->nombreSupervisor); ?></td>
-                  <td>  <a class="btn btn-primary azul" data-title="Habilitar Cartera" href="" data-target="#modal-delete-<?php echo e($cartera->idcartera); ?>" data-toggle="modal"><i class="fa fa-check" aria-hidden="true"></i></a>
+                  <td>  <a class="btn btn-primary azul" data-title="Activar Cartera" href="" data-target="#modal-delete-<?php echo e($cartera->idcartera); ?>" data-toggle="modal"><i class="fa fa-check" aria-hidden="true"></i></a>
                     
                   </td>
                   
@@ -69,7 +69,7 @@
 </div>
  
 <div class="row">
-  <a href="<?php echo e(url('home')); ?>" class="btn btn-danger btn-lg col-md-offset-2"><i class="fa fa-chevron-left" aria-hidden="true"></i> Atrás</a>
+  <a href="<?php echo e(URL::action('CarteraController@index')); ?>" class="btn btn-danger btn-lg col-md-offset-2"><i class="fa fa-chevron-left" aria-hidden="true"></i> Atrás</a>
 </div>
 
 <div class="row">
