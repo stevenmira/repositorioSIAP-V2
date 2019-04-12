@@ -1,25 +1,26 @@
-<div class="modal modal-danger fade modal-slide-in-right" aria-hidden="true"
+<div class="modal fade modal-slide-in-right" aria-hidden="true"
 role="dialog" tabindex="-1" id="modal-deleteP-{{$cuenta->idcuenta}}">
 	{{Form::Open(array('action'=>array('PrestamoController@destroy',$cuenta->idcuenta),'method'=>'delete'))}}
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<div class="modal-header">
+			<div class="modal-header"  style="background: #b71c1c; color: #fff;">
 				<button type="button" class="close" data-dismiss="modal" 
 				aria-label="Close">
                      <span aria-hidden="true">×</span>
                 </button>
-                <h4 class="modal-title">Configuración de Prestamo</h4>
+                <h4 class="modal-title">CONFIGURACIÓN &nbsp; DE &nbsp; PRÉSTAMO</h4>
 			</div>
-			<div class="modal-body">
-				<h5 style=" font-family: 'Times New Roman', Times, serif;">
-                </h5>
-                <h4 style="font-family: bold;">Confirme si desea cambiar el estado del Prestamo del cliente</h4>
-                <h3 style="font-family:  Times New Roman, sans-serif; color: #e3f2fd;  text-align: center;"><b>{{ $cliente->nombre }} {{$cliente->apellido}}</b></h3>
+			<div class="modal-body" style="color: #000; background: #ff8a80; text-align: center; font-family:'Trebuchet MS', Helvetica, sans-serif;">
 
-                <h4 style="font-family: bold;">Asociada al negocio:</h4>
-                <h3 style="font-family:  Times New Roman, sans-serif; color: #e3f2fd;  text-align: center;"><b>{{ $negocio->nombre }}</b></h3>
+                <p>confirme si desea cambiar el estado del préstamo del cliente</p>
+                <p style="text-align: center;">-- {{ $cliente->nombre }} {{$cliente->apellido}} --</p>
 
-                <h4 style="font-family: bold;">El Estado del Prestamo Actual es: </h4>
+                <p>asociada al negocio</p>
+                <p style="text-align: center;">-- {{ $negocio->nombre }} --</p>
+
+                <br>
+
+                <p>el estado del préstamo actual es</p>
                 @if($prestamo->estadodos == "ACTIVO")
                 <h2 style="font-family:  Times New Roman, sans-serif; color: #e3f2fd;  text-align: center;"><b>ACTIVO</b></h2>
                 @endif
@@ -30,8 +31,7 @@ role="dialog" tabindex="-1" id="modal-deleteP-{{$cuenta->idcuenta}}">
 				<h2 style="font-family:  Times New Roman, sans-serif; color: #e3f2fd;  text-align: center;"><b>CERRADO</b></h2>
                 @endif
                 
-
-                <h4 style=" font-family: 'Times New Roman', Times, serif;">Seleccione el nuevo estado</h4>
+                <p>seleccione el nuevo estado</p>
 
                 @if($prestamo->estadodos == "ACTIVO")
                 {{Form::radio('state','CERRADO',true)}}<i> CERRADO</i><br>
@@ -51,7 +51,7 @@ role="dialog" tabindex="-1" id="modal-deleteP-{{$cuenta->idcuenta}}">
 
                         
 			</div>
-			<div class="modal-footer">
+			<div class="modal-footer" style="background: #b71c1c;">
 				<button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Cerrar</button>
 				<button type="submit" class="btn btn-outline">Confirmar</button>
 			</div>

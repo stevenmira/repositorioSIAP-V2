@@ -16,14 +16,15 @@
 <br><br>
 <div class="row">
   <p class="col-md-3 col-lg-3 col-sm-3"><b>Cliente:</b>&nbsp;&nbsp;&nbsp; {{$cliente->nombre}} {{$cliente->apellido}}</p>
-  <p class="col-md-3 col-lg-3 col-sm-3"><b>Cartera:</b>&nbsp;&nbsp;&nbsp; {{$cliente->nombeCartera}}</p>
+  <p class="col-md-3 col-lg-3 col-sm-3"><b>Cartera:</b>&nbsp;&nbsp;&nbsp; {{$cliente->nombreCartera}}</p>
 </div>
   <!-- Notificación -->
 <div class="container" style="text-align:center; font-family:'Trebuchet MS', Helvetica, sans-serif; color: #1C2331;">
+
   @if (Session::has('create'))
   <div class="alert  fade in" style="background:  #ccff90;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4><b>{{ Session::get('create')}}</b>.</h4>
+    <P> {{ Session::get('create')}}  </P>
   </div>
   @endif
 

@@ -14,6 +14,10 @@ use siap\Prestamo;
 use siap\TipoCredito;
 use siap\DetalleLiquidacion;
 use siap\Codeudor;
+use siap\Fecha;
+use siap\TipoDesembolso;
+
+use Carbon\Carbon;
 
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
@@ -40,11 +44,37 @@ class CuentaController extends Controller
         $cartera = Cartera::findOrFail($cliente->idcartera);
         $prestamo = Prestamo::findOrFail($cuenta->idprestamo);
         $tipo_credito = TipoCredito::findOrFail($cuenta->idtipocredito);
+        $tipo_desembolso = TipoDesembolso::findOrFail($prestamo->idtipodesembolso);
 
-    	return view('cuenta.show',["cuenta"=>$cuenta, "negocio"=>$negocio, "cliente"=>$cliente, "prestamo"=>$prestamo, "tipo_credito"=>$tipo_credito, "cartera"=>$cartera, "usuarioactual"=>$usuarioactual]);
+        // Metodo para calcular edad
+        $edad = Fecha::calcularEdad($cliente->fechanacimiento);
+
+        //Parceo de fecha
+        #$cliente->fechanacimiento = \Carbon\Carbon::parse($cliente->fechanacimiento)->format('d-m-Y');}
+        $cliente->fechanacimiento = \Carbon\Carbon::parse($cliente->fechanacimiento)->format('d-m-Y');
+
+    	return view('cuenta.show',["cuenta"=>$cuenta, "negocio"=>$negocio, "cliente"=>$cliente, "prestamo"=>$prestamo, "tipo_credito"=>$tipo_credito, "cartera"=>$cartera, "edad"=>$edad, "tipo_desembolso"=>$tipo_desembolso, "usuarioactual"=>$usuarioactual]);
     }
 
 
+    public function updateCredito(Request $request){
+        $usuarioactual=\Auth::user();
+
+        $prestamo = Prestamo::where('idprestamo',$request->get('idprestamo'))->first();
+        $prestamo->numerocheque = $request->get('numerocheque');
+        $prestamo->update();
+
+        $cuenta = Cuenta::where('idprestamo',$prestamo->idprestamo)->first();
+        $cuenta->capitalanterior = $request->get('saldo');
+        $cuenta->cuotaatrasada = $request->get('cuotas');
+        $cuenta->mora = $request->get('mora');
+        $cuenta->update();
+
+        Session::flash('exito','Los datos del credito se han actualizado correctamente');
+
+        return Redirect::to('cuenta/'.$cuenta->idcuenta);
+
+    }
 
 
     //Éste metodo funciona para ambos casos de estado ACTIVO o INACTIVO

@@ -71,25 +71,31 @@
               <table class="table table-user-information">
                 <tbody>
                   <tr>
+                    <td>FECHA:</td>
+                    <td>
+                      {!! Form::date('fechaactual', \Carbon\Carbon::now(), ['class' => 'form-control', 'required' => 'required','autofocus'=>'on']) !!}
+                    </td>
+                  </tr>
+                  <tr>
                     <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
                       CUOTAS ATRASADAS DE <b>$ <span id="cuota">{{$cliente->cuotadiaria}}</span> </b>
                     </td>
                     <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
                       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                         <b>
-                          {!! Form::number('cuotasatrasadas',$cuotasatrasadas, ['id'=>'cuotasatrasadas','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','autofocus'=>'on','maxlength'=>'3']) !!}
+                          {!! Form::number('cuotasatrasadas',$cuotasatrasadas, ['id'=>'cuotasatrasadas','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'1']) !!}
                         </b>
                       </div>
                       <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                         <b>
-                          {!! Form::number('totalcuotas',$totalcuotas, [ 'id'=>'totalcuotas','class' => 'form-control','readonly'=>'readonly', 'autofocus'=>'on','maxlength'=>'6']) !!}
+                          {!! Form::number('totalcuotas',$totalcuotas, [ 'id'=>'totalcuotas','class' => 'form-control','readonly'=>'readonly']) !!}
                         </b>
                       </div>
                     </td>
                   </tr>
                   <tr>
                     <td>MONTO SIN INTERES:</td>
-                    <td>{!! Form::number('monto', $liquidacion->monto, ['id'=>'monto','class' => 'form-control' ,'onkeyup'=>'Sumar()', 'required' => 'required', 'autofocus'=>'on', 'maxlength'=>'6']) !!}</td>
+                    <td>{!! Form::number('monto', $saldoLiqui->monto, ['id'=>'monto','class' => 'form-control' ,'onkeyup'=>'Sumar()', 'required' => 'required', 'step'=>'0.01']) !!}</td>
                
                   </tr>
                   <tr>
@@ -102,7 +108,7 @@
                   </tr>
                   <tr>
                     <td><b style="color:red">TOTAL A CANCELAR</b></td>
-                    <td><b>{!! Form::text('total', null, [ 'id'=>'total','class' => 'form-control' ,'readonly'=>'readonly', 'autofocus'=>'on', 'maxlength'=>'6']) !!}</b></td>
+                    <td><b>{!! Form::text('total', $subtotal, [ 'id'=>'total','class' => 'form-control' ,'readonly'=>'readonly', 'autofocus'=>'on', 'maxlength'=>'6']) !!}</b></td>
                    
                   </tr>
                 </tbody>

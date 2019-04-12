@@ -20,10 +20,6 @@ use siap\Http\Requests;
 
 class ComprobanteController extends Controller
 {
-    public function index(Request $request)
-    {
-        
-    }
 
     /*
     Nombre: show
@@ -44,28 +40,28 @@ class ComprobanteController extends Controller
         ->paginate(10);
 
         $cliente = DB::table('cuenta')
-        ->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
-        ->join('negocio as negocio','cuenta.idnegocio','=','negocio.idnegocio')
-        ->join('cliente as cliente','negocio.idcliente','=','cliente.idcliente')
-        ->join('cartera as cartera','cliente.idcartera','=','cartera.idcartera')
-        ->where('cuenta.idcuenta','=',$id)
-        ->select(
-            'cuenta.idcuenta',
-            'cuenta.interes',
-            'negocio.nombre as nnegocio',
-            'cliente.nombre',
-            'cartera.nombre as nombeCartera', 
-            'cliente.apellido',
-            'cliente.dui',
-            'cliente.nit',
-            'cliente.direccion',
-            'cuenta.estado',
-            'prestamo.cuotadiaria',
-            'prestamo.estadodos')
-        ->first();
+            ->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
+            ->join('negocio as negocio','cuenta.idnegocio','=','negocio.idnegocio')
+            ->join('cliente as cliente','negocio.idcliente','=','cliente.idcliente')
+            ->join('cartera as cartera','cliente.idcartera','=','cartera.idcartera')
+            ->where('cuenta.idcuenta','=',$id)
+            ->select(
+                'cuenta.idcuenta',
+                'cuenta.interes',
+                'negocio.nombre as nnegocio',
+                'cliente.nombre',
+                'cartera.nombre as nombreCartera', 
+                'cliente.apellido',
+                'cliente.dui',
+                'cliente.nit',
+                'cliente.direccion',
+                'cuenta.estado',
+                'prestamo.cuotadiaria',
+                'prestamo.estadodos')
+            ->first();
             
         return view('estadoCuenta.show',["estados"=>$estados,"usuarioactual"=>$usuarioactual,"cliente"=>$cliente]);
-     }
+    }
 
      public function mostrar(Request $request,$id)
      {
@@ -90,6 +86,16 @@ class ComprobanteController extends Controller
          }
      }
  
+
+    /*
+    Nombre: nuevoestado
+    Objetivo: Formulario para guardar estado de cuenta
+    Autor: Oscar
+    Fecha creación: 02-02-2018, 00:00
+    Fecha modificacion: 18-03-2019, 10:10
+    Parámetros de entrada: idcuenta
+    Parámetros de salida: saldo capital, cuotas atrasadas, subtotal
+     */
     public function nuevoestado($id){
 
         $usuarioactual=\Auth::user();
@@ -121,30 +127,14 @@ class ComprobanteController extends Controller
             Session::flash('error',"El Préstamo esta en el estado -- ". $cliente->estadodos. " -- , no se puede agregar más estados de cuenta");
             return back();
         }
-
-        //Obtenemos la fecha de hoy
-        $fechaactual = Carbon::now();
-        $fechaactual = $fechaactual->format('d-m-Y'); 
-        $dias = array("Domingo","Lunes","Martes","Miercoles","Jueves","Viernes","Sábado");
-        $meses = array("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
         
-        $fechaactual =  $dias[date('w')]." ".date('d')." de ".$meses[date('n')-1]. " del ".date('Y');
-        
-        $liquidacio=DB::table('detalle_liquidacion')->where([
-            ['idcuenta','=',$id],
-            ['monto','!=',null],])
-            ->orderBy('monto','asc')->first();
-
         //<-----CALCULOS PARA ESTADOS DE CUENTA NORMALES ------>
-
-            //SE BUSCA EL DETALLE LIQUIDACION QUE PERTENECE A LA CUENTA
-            $liquidacion = DetalleLiquidacion::where('idcuenta',$id)->where('abonocapital','pivote')->first();
-            /*$liquidacion=DB::table('detalle_liquidacion')->where([
-                ['idcuenta','=',$id],
-                ['monto','!=',null],])
-                ->orderBy('monto','asc')->first();*/
+        if ($cliente->estadodos == "ACTIVO") {
             
-            //SE CALCULAN EL NUMERO DE CUOTAS ATRASADAS
+            //SE BUSCA EL SALDO CAPITAL EN QUE QUEDO LA CUENTA
+            $saldoLiqui = DetalleLiquidacion::where('idcuenta',$id)->where('abonocapital','pivote')->first();
+            
+            //SE CUENTA EL NUMERO DE CUOTAS ATRASADAS
             $cuotasatrasadas = DB::table('detalle_liquidacion')->where([
                 ['estado', '=', 'ATRASO'],
                 ['idcuenta', '=', $id],
@@ -153,112 +143,134 @@ class ComprobanteController extends Controller
            //SE CALCULA EL VALOR MONETARIO DE LAS COUTAS ATRASADAS
            $totalcuotas = $cuotasatrasadas * $cliente->cuotadiaria;
            $totalcuotas=round($totalcuotas,2);
-        //<-------------------FINALIZA CALCULOS ESTADO NORMAL-------->
-    
+        
 
+            $subtotal=$totalcuotas+$saldoLiqui->monto;
+            return view('estadoCuenta.create',["cliente"=>$cliente, "saldoLiqui"=>$saldoLiqui,"cuotasatrasadas"=>$cuotasatrasadas,"totalcuotas"=>$totalcuotas,"subtotal"=>$subtotal,"usuarioactual"=>$usuarioactual]);
+        }
+        //<-------------------FINALIZA CALCULOS ESTADO NORMAL-------->
+        elseif ($cliente->estadodos=="VENCIDO") 
+        {
+
+            //SE BUSCA SI HAY ABONO EN LA CUENTA
+            $abonoLiqui = DetalleLiquidacion::where('idcuenta',$id)->where('estado','ABONO')->first();
+            if ($abonoLiqui != null ) {
+                $diaspendx = 1;
+                $totalpendx = $cliente->cuotadiaria - $abonoLiqui->totaldiario;
+            }else{
+                $diaspendx = 0;
+                $totalpendx = 0;
+            }
+
+            //SE CUENTA EL NUMERO DE CUOTAS ATRASADAS
+            $cuotasatrasadas = DB::table('detalle_liquidacion')->where([
+                ['estado', '=', 'ATRASO'],
+                ['idcuenta', '=', $id],
+                ])->count();         
+
+            //SE CALCULA EL VALOR MONETARIO DE LAS COUTAS ATRASADAS
+            $totalcuotas = $cuotasatrasadas * $cliente->cuotadiaria;
+            $totalcuotas = round($totalcuotas,2);
+               
+            //Se CALCULAN EL NUMERO DE CUOTAS PENDIENTES DEL PRESTAMO
+            $cuotasatrax = DetalleLiquidacion::where('idcuenta',$id)->where('estado','ATRASO')->count();
+            $cuotaspendx = DetalleLiquidacion::where('idcuenta',$id)->where('estado','PENDIENTE')->count();
+
+
+            /*while ($liquidacion->monto > $cliente->cuotadiaria) {
+                
+                $cuotaCapital = $cliente->cuotadiaria - $interesDiario;
+                $liquidacion->monto = ($liquidacion->monto - $cuotaCapital);
+                $interesDiario = $liquidacion->monto * $cliente->interes;
+                $liquidacion->monto=round($liquidacion->monto,2);
+            }*/
+
+            return view('estadoCuenta.vencido.create',["cliente"=>$cliente, "diaspendx"=>$diaspendx, "totalpendx"=>$totalpendx, "cuotasatrasadas"=>$cuotasatrasadas,"totalcuotas"=>$totalcuotas,"usuarioactual"=>$usuarioactual]);
+        }
 
         //<------CALCULOS PARA ESTADO DE CUENTA VENCIDOS---------->
 
-           //SE OBTIENEN EL NUMERO DE CUOTAS 
-           $cuotaspendientes = DB::table('detalle_liquidacion')->where([
-            ['estado', '=', 'ABONO'],
-            ['idcuenta', '=', $id],
-            ])->count();
-
-            $cpendiente = DB::table('detalle_liquidacion')->where([
-                ['estado', '=', 'ABONO'],
-                ['idcuenta', '=', $id],
-                ])->first();
-
-            if($cpendiente!=null){
-               $tcuotaspendientes=$cuotaspendientes*($cliente->cuotadiaria-$cpendiente->totaldiario);
-            }else{
-                $tcuotaspendientes=$cuotaspendientes;
-            }    
-         
-           //Se CALCULAN EL NUMERO DE CUOTAS PENDIENTES DEL PRESTAMO
-           $tcuotascanceladas=DB::table('detalle_liquidacion')->where([
-            ['estado', '=', 'ATRASO'],
-            ['idcuenta', '=', $id],
-            ])->count();
-            
-            if($tcuotascanceladas==0){
-                $tcuotascanceladas=DB::table('detalle_liquidacion')->where([
-                    ['estado', '=', 'PENDIENTE'],
-                    ['idcuenta', '=', $id],
-                    ])->count();
-                    $tcuotascanceladas=$tcuotascanceladas-1;
-                    $totalcancelado=$tcuotascanceladas*$cliente->cuotadiaria;
-                }else{
-            $tcuotascanceladas=$tcuotascanceladas-1;
-            $totalcancelado=$tcuotascanceladas*$cliente->cuotadiaria;
-            }
-           
-           
-
-            
-           
-            //SE OBTIENE LA ULTIMA CUOTA
-            $ultimacuota=1;
-           // $totalultima=$liquidacion->monto-$totalcancelado;
-
-            //CAlCULO DE MONTO ULTIMA CUOTA
-          
-            
-            $liquida=DetalleLiquidacion::where('idcuenta','=',$id)->orderBy('iddetalleliquidacion','DESC')->take(1)->first();
-            $fechaidealpago=$liquida->fechadiaria;
-
-           if($fechaidealpago>=Carbon::now()){
-            $diasatrasados=0;
-           }else{
-            $diasatrasados = $fechaidealpago->diffInDays(Carbon::now());
-           }
-            
-           $mora=$liquidacion->monto*$cliente->interes*$diasatrasados;
-           $mora=round($mora,2);
         //<-------------------FEINALIZA CALCULO ESTADO DE CUENTA VENCIDO---------->
        
 
         //SI LA LIQUIDACION ESTA VENCIDA SE MUESTRA ESTADO DE CUENTA VENCIDO
-        if($cliente->estadodos=="VENCIDO"){
-
-            $interesDiario = $liquidacion->monto * $cliente->interes;
-            $cuotaCapital = $liquidacion->monto;
-           
-
-        while ($liquidacion->monto > $cliente->cuotadiaria) {
-            
-            $cuotaCapital = $cliente->cuotadiaria - $interesDiario;
-            $liquidacion->monto = ($liquidacion->monto - $cuotaCapital);
-            $interesDiario = $liquidacion->monto * $cliente->interes;
-            $liquidacion->monto=round($liquidacion->monto,2);
-        }
-
-        $subtotal= $liquidacion->monto+$totalcancelado+$tcuotaspendientes+$mora;
-           $subtotal=round($subtotal,2);
-            return view('estadoCuenta.vencido.create',[ "liquidacio"=>$liquidacio,"cuotaCapital"=>$cuotaCapital,"mora"=>$mora,"diasatrasados"=>$diasatrasados,"cuotaspendientes"=>$cuotaspendientes,"tcuotaspendientes"=>$tcuotaspendientes,"totalcancelado"=>$totalcancelado, "ultimacuota"=>$ultimacuota, "tcuotascanceladas"=>$tcuotascanceladas,"fechaactual"=>$fechaactual,"usuarioactual"=>$usuarioactual,"cliente"=>$cliente,"subtotal"=>$subtotal,"liquidacion"=>$liquidacion,"cuotasatrasadas"=>$cuotasatrasadas,"totalcuotas"=>$totalcuotas]);
-        }
-        else{
-            $subtotal=$totalcuotas+$liquidacion->monto;
-            return view('estadoCuenta.create',["cliente"=>$cliente, "liquidacion"=>$liquidacion,"cuotasatrasadas"=>$cuotasatrasadas,"totalcuotas"=>$totalcuotas,"subtotal"=>$subtotal, "fechaactual"=>$fechaactual,"usuarioactual"=>$usuarioactual]);
-          }
+        
       
     }
 
+
+    /*
+    Nombre: agregarestado
+    Objetivo: Metodo para guardar los datos del estado de cuenta
+    Autor: Oscar
+    Fecha creación: 02-02-2018, 04:00
+    Fecha modificacion: 11-04-2019, 10:10
+    Parámetros de entrada: idcuenta
+    Parámetros de salida: saldo capital, cuotas atrasadas, subtotal
+     */
     public function agregarestado(Request $request,$id){
         $usuarioactual=\Auth::user();
 
-        $data = $request;
-        
-        $cliente = DB::table('cuenta')
-        ->select('cuenta.idcuenta','cuenta.interes','negocio.nombre as nnegocio','cliente.nombre','cliente.apellido','cliente.dui','cliente.nit','cliente.direccion','cuenta.estado','prestamo.estadodos','prestamo.cuotadiaria')
-        ->join('negocio as negocio','cuenta.idnegocio','=','negocio.idnegocio')
-        ->join('cliente as cliente','negocio.idcliente','=','cliente.idcliente')
-        ->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
-        ->where('cuenta.idcuenta','=',$id)
-        ->first();
+        $date = Carbon::now();  
+        $date = $date->format('d-m-Y');
 
+        $cliente = DB::table('cuenta')
+            ->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
+            ->join('negocio as negocio','cuenta.idnegocio','=','negocio.idnegocio')
+            ->join('cliente as cliente','negocio.idcliente','=','cliente.idcliente')
+            ->join('cartera as cartera','cliente.idcartera','=','cartera.idcartera')
+            ->where('cuenta.idcuenta','=',$id)
+            ->select(
+                'cuenta.idcuenta',
+                'cuenta.interes',
+                'negocio.nombre as nombreNegocio',
+                'cliente.idcliente',
+                'cliente.nombre',
+                'cartera.nombre as nombreCartera', 
+                'cliente.apellido',
+                'cliente.dui',
+                'cliente.nit',
+                'cliente.direccion',
+                'cuenta.estado',
+                'prestamo.cuotadiaria',
+                'prestamo.estadodos')
+            ->first();
+
+        if($cliente->estadodos=="ACTIVO"){
+            #$subtotal=$totalcuotas+$liquidacion->monto;
+
+            $estado= new Comprobante;
+
+            $estado->idcuenta = $id;
+            $estado->gastosadmon =  $request->get('gastosadmon');
+            $estado->gastosnotariales = $request->get('gastosnoti');
+            $estado->mora = 0.00;
+            $estado->diasatrasados = $request->get('cuotasatrasadas');    // # cuotas atrasadas
+            $estado->totalcuotas = $request->get('totalcuotas');          // valor monetario de cuotas atrasadas
+            
+            $estado->diaspendientes=0;      //??
+            $estado->totalpendiente=0;      //??
+            $estado->cuotadeuda=0;          //??
+            $estado->totalcuotasdeuda=0;    //??
+            $estado->ultimacuota=0;         //??
+
+            $estado->montoactual = $request->get('monto');                // saldo capital
+            $estado->total = $request->get('total');                    // total
+            $estado->fechacomprobante = $request->get('fechaactual'); 
+         
+            $estado->estado='NORMAL';                                   // estado del comprobante
+            $estado->estadodos='--';                                    // otro estado de pago
+
+            $estado->save();
+
+            $estados=DB::table('comprobante')->where('idcuenta','=',$id)
+            ->orderBy('created_at','asc')
+            ->paginate(10);
         
+            Session::flash('create',"El estado de cuenta de tipo -- ". $estado->estado. " -- se ha guardado correctamente");
+            return view('estadoCuenta.show',["estados"=>$estados,"usuarioactual"=>$usuarioactual,"cliente"=>$cliente]);
+        }
+
         $liquidacion=DB::table('detalle_liquidacion')->where([
             ['idcuenta','=',$id],
             ['monto','!=',null],])
@@ -279,8 +291,7 @@ class ComprobanteController extends Controller
         $cuenta=Cuenta::where('idcuenta','=',$id)->first();
        
        
-        $date = Carbon::now();	
-        $date = $date->format('d-m-Y');
+        
           
         
  //<------CALCULOS PARA ESTADO DE CUENTA VENCIDOS---------->
