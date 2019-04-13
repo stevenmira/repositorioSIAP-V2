@@ -3,7 +3,7 @@
 <section class="content-header">
   <ol class="breadcrumb">
     <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
-    <li><a href="{{URL::action('SupervisorController@index')}}"> Ejecutivo</a></li>
+    <li><a href="{{URL::action('SupervisorController@index')}}"> Supervisor</a></li>
     <li class="active">Perfil</li>
   </ol>
 </section>

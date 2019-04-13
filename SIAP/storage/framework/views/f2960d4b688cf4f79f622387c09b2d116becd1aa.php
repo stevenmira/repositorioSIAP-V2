@@ -223,7 +223,7 @@
                       <a type="button" class="btn btn-labeled btn-primary" href="<?php echo e(URL::action('ClienteController@edit',$cliente->idcliente)); ?>">
                           <span class="btn-label"><i class="fa fa-pencil"></i></span>Actualizar</a>
 
-                      <a type="button" class="btn btn-labeled btn-danger pull-right" href="<?php echo e(URL::action('ClienteController@perfilClientePDF', $cliente->idcliente)); ?>">
+                      <a type="button" target="_blank" class="btn btn-labeled btn-danger pull-right" href="<?php echo e(URL::action('ClienteController@perfilClientePDF', $cliente->idcliente)); ?>">
                           <span class="btn-label"><i class="fa fa-print"></i></span>Imprimir</a>
                   </div>
               </div>
@@ -297,7 +297,6 @@
                       <p class="tipografia">
                         <a href="<?php echo e(URL::action('NegocioController@edit',$ma->idnegocio)); ?>"><i > editar</i></a></p>
                       </p>
-                      <p class="text-muted"> <a href="<?php echo e(URL::action('NegocioController@edit',$ma->idnegocio)); ?>"><i > eliminar</i></a></p>
                    </div>
                 </div>
               </div>
@@ -332,7 +331,6 @@
                         <a href="<?php echo e(URL::action('CodeudorController@show',$codeudor->idcodeudor)); ?>"><i> ver</i></a>
                       </p>
                       <p class="text-muted"> <a href="<?php echo e(URL::action('CodeudorController@edit',$codeudor->idcodeudor)); ?>"><i> editar</i></a></p>
-                      <p class="text-muted"> <a href="<?php echo e(URL::action('CodeudorController@edit',$codeudor->idcodeudor)); ?>"><i > eliminar</i></a></p>
                    </div>
                   </div>
                 </div>
@@ -340,9 +338,50 @@
               </div>
             </div>
             <div class="tab-pane" id="tab_default_3">
-              <p>
-                Family Details
-              </p>
+              <?php foreach($creditos as $cred): ?>
+                <div class="row profile-comments__item">
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <div class="form-group">
+                      <p class="tipografia">Crédito:</p>
+                      <p class="text-muted"><?php echo e($cred->estado); ?></p>
+                   </div>
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <div class="form-group">
+                      <p class="tipografia">Fecha:</p>
+                      <p  class="text-muted" > <?php echo e($cred->fecha); ?></p>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <div class="form-group">
+                      <p class="tipografia">Monto:</p>
+                      <p  class="text-muted"> $ <?php echo e($cred->monto); ?></p>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <div class="form-group">
+                      <p class="tipografia">Interés:</p>
+                      <p  class="text-muted"> $ <?php echo e($cred->interes); ?></p>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <div class="form-group">
+                      <p class="tipografia">Cuota:</p>
+                      <p class="text-muted"> $ <?php echo e($cred->cuotadiaria); ?></p>
+                   </div>
+                  </div>
+                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                    <div class="form-group">
+                      <p class="tipografia">
+                        <a href="<?php echo e(url('cliente/credito/garantias', ['id' => $cred->idprestamo])); ?>"><i> ver garantías</i></a>
+                      </p>
+                      <p class="tipografia">
+                        <a href="<?php echo e(URL::action('CuentaController@show',$cred->idcuenta)); ?>"><i> ver cuenta</i></a>
+                      </p>
+                   </div>
+                  </div>
+                </div>
+                <?php endforeach; ?>
             </div>
 
              <div class="tab-pane" id="tab_default_4">
@@ -371,7 +410,6 @@
                       <p class="tipografia">
                         <a href="<?php echo e(URL::action('ObservacionController@edit',$observacion->idobservacion)); ?>"><i> editar</i></a>
                       </p>
-                      <p class="text-muted"> <a href="<?php echo e(URL::action('ObservacionController@edit',$observacion->idobservacion)); ?>"><i > eliminar</i></a></p>
                    </div>
                   </div>
                 </div>

@@ -94,24 +94,22 @@
               </div>
             </div>
 
+          <div class="row">
             <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <label>Sexo</label>
               <div class="input-group">
                 <div class="input-group-addon">
                   <i class="fa fa-pencil" aria-hidden="true"></i>
                 </div>
-                <?php if($empleado->sexo == 'Masculino'): ?>
-                  <label><?php echo Form::radio('sexo',0,false); ?> Femenino</label>
-                  <label><?php echo Form::radio('sexo',0,true); ?> Masculino</label>
+               <?php if($empleado->sexo == "Masculino['select'=>'on']" ): ?>
+                  <label><?php echo Form::radio('sexo',true); ?> Femenino</label>
+                  <label><?php echo Form::radio('sexo',false); ?> Masculino</label>
                 <?php else: ?>
-                  <label><?php echo Form::radio('sexo',0,true); ?> Femenino</label>
-                  <label><?php echo Form::radio('sexo',0,false); ?> Masculino</label>
+                  <label><?php echo Form::radio('sexo',false); ?> Femenino</label>
+                  <label><?php echo Form::radio('sexo',true); ?> Masculino</label>
                 <?php endif; ?>
                 </div>
               </div>
-          </div>
-
-          <div class="row">
             <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <label for="direccion">Dirección</label>
               <div class="input-group">

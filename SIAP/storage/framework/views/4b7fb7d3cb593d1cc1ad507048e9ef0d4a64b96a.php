@@ -106,12 +106,12 @@
                 <div class="input-group-addon">
                   <i class="fa fa-pencil" aria-hidden="true"></i>
                 </div>
-                <?php if($supervisor->sexo == "Femenino" ): ?>
+                <?php if($supervisor->sexo == "Masculino['select'=>'on']" ): ?>
                   <label><?php echo Form::radio('sexo',true); ?> Femenino</label>
-                  <label><?php echo Form::radio('sexo',true); ?> Masculino</label>
+                  <label><?php echo Form::radio('sexo',false); ?> Masculino</label>
                 <?php else: ?>
                   <label><?php echo Form::radio('sexo',false); ?> Femenino</label>
-                  <label><?php echo Form::radio('sexo',false); ?> Masculino</label>
+                  <label><?php echo Form::radio('sexo',true); ?> Masculino</label>
                 <?php endif; ?>
               </div>
             </div>
@@ -175,7 +175,7 @@
                   <i class="fa fa-user" aria-hidden="true"></i>
                 </div>
                   <?php if(($supervisor->fotografia)!=""): ?>
-                        <img class="img-rounded" src="<?php echo e(asset('imagenes/ejecutivo/'.$supervisor->fotografia)); ?>" height="223px" width="250px">
+                        <img class="img-rounded" src="<?php echo e(asset('imagenes/supervisor/'.$supervisor->fotografia)); ?>" height="223px" width="250px">
                   <?php endif; ?>
                   <input type="file" name="fotografia" class="form-control" style="width: 250px;">
               </div>

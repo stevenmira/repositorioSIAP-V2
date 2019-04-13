@@ -166,7 +166,7 @@
                   <i class="fa fa-user" aria-hidden="true"></i>
                 </div>
                   @if(($supervisor->fotografia)!="")
-                        <img class="img-rounded" src="{{asset('imagenes/ejecutivo/'.$supervisor->fotografia)}}" height="223px" width="250px">
+                        <img class="img-rounded" src="{{asset('imagenes/supervisor/'.$supervisor->fotografia)}}" height="223px" width="250px">
                   @endif
                   <input type="file" name="fotografia" class="form-control" style="width: 250px;">
               </div>

@@ -20,18 +20,18 @@
 
 <div class="container" style="text-align:center; font-family:'Trebuchet MS', Helvetica, sans-serif; color: #1C2331;">
   <?php if(Session::has('create')): ?>
-  	<div class="alert  fade in" style="background:  #ccff90;">
-  	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-  	<p>El negocio -- <?php echo e(Session::get('create')); ?> -- se ha guardado correctamente</p>
-  	</div>
+    <div class="alert  fade in" style="background:  #ccff90;">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <p>El negocio -- <?php echo e(Session::get('create')); ?> -- se ha guardado correctamente</p>
+    </div>
   <?php endif; ?>
 
 
   <?php if(Session::has('update')): ?>
-  	<div class="alert  fade in" style="background:  #bbdefb;">
-  	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-  	<p> El negocio  -- <?php echo e(Session::get('update')); ?> --  se ha actualizado correctamente</p>
-  	</div>
+    <div class="alert  fade in" style="background:  #bbdefb;">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <p> El negocio  -- <?php echo e(Session::get('update')); ?> --  se ha actualizado correctamente</p>
+    </div>
   <?php endif; ?>
 
   <?php if(Session::has('activo')): ?>
@@ -89,9 +89,9 @@
                               <a class="btn btn-info azul" data-title="Editar Datos del Negocio" href="<?php echo e(URL::action('NegocioController@edit',$ma->idnegocio)); ?>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
 
                               <?php if($ma->estado == 'ACTIVO'): ?>
-                              <a class="btn btn-danger rojo" data-title="Inabilitar Negocio" href="" data-target="#modal-delete-<?php echo e($ma->idnegocio); ?>" data-toggle="modal"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                              <a class="btn btn-danger rojo" data-title="Inactivar Negocio" href="" data-target="#modal-delete-<?php echo e($ma->idnegocio); ?>" data-toggle="modal"><i class="fa fa-trash" aria-hidden="true"></i></a>
                               <?php else: ?>
-                              <a class="btn btn-primary azul" data-title="Habilitar Negocio" href="" data-target="#modal-delete-<?php echo e($ma->idnegocio); ?>" data-toggle="modal"><i class="fa fa-check" aria-hidden="true"></i></a>
+                              <a class="btn btn-primary azul" data-title="Activar Negocio" href="" data-target="#modal-delete-<?php echo e($ma->idnegocio); ?>" data-toggle="modal"><i class="fa fa-check" aria-hidden="true"></i></a>
                               <?php endif; ?>
                           </td>
                       </tr>

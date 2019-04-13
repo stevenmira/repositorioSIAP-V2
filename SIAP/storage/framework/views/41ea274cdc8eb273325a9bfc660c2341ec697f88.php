@@ -9,18 +9,18 @@ role="dialog" tabindex="-1" id="modal-delete-<?php echo e($ma->idobservacion); ?
 				aria-label="Close">
 	                 <span aria-hidden="true">×</span>
 	            </button>
-	            <h4 class="modal-title">Eliminar Comentario</h4>
+	            <h4 class="modal-title">ELIMINAR &nbsp; COMENTARIO</h4>
 			</div>
-			<div class="modal-body" style="color: #000; background: #ff8a80; font-family:'Trebuchet MS', Helvetica, sans-serif;text-shadow: 0 0 0.2em #cfd8dc;">
-				<h4 style="padding: 0px 25px 15px 10px; text-align: center;">
-					Confirme si desea eliminar el comentario
-				</h4>
+			<div class="modal-body" style="color: #000; background: #ff8a80; font-family:'Trebuchet MS', Helvetica, sans-serif;">
+				<p style="padding: 0px 25px 15px 10px; text-align: center;">
+					confirme si desea eliminar el comentario
+				</p>
 
-				<p style="font-size: 14px;">
+				<p>
 					Responsable: <span style="padding: 10px 25px 0px 10px;"><?php echo e($ma->responsable); ?></span>
 				</p>
 
-				<p style="font-size: 14px;">
+				<p>
 					 Comentario: 
 				</p><span style="padding: 5px 0px 0px 0px;"><?php echo e($ma->comentario); ?></span>
 

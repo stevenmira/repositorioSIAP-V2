@@ -309,7 +309,7 @@ class ClienteController extends Controller
             $hoy= $hoy->format('Y-m-d');
 
             //Obtenemos la fecha de hoy en español usando carbon y array
-            $fecha_actual = Fecha::spanish();
+            $fecha_actual = Carbon::now()->format('d-m-Y');
 
 
             $cliente = Cliente::findOrFail($id);

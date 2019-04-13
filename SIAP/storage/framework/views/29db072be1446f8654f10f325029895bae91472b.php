@@ -3,7 +3,7 @@
   <ol class="breadcrumb">
     <li><a href="<?php echo e(url('home')); ?>"><i class="fa fa-dashboard"></i> Inicio</a></li>
     <li><a href="<?php echo e(URL::action('EmpleadoController@indexPersonal')); ?>"><i class="fa fa-dashboard"></i> Personal</a></li>
-    <li><a href="<?php echo e(URL::action('SupervisorController@index')); ?>"> Ejecutivos </a></li>
+    <li><a href="<?php echo e(URL::action('SupervisorController@index')); ?>"> Supervisor </a></li>
   </ol>
 </section>
 
@@ -16,8 +16,6 @@
 
 <section class="content">
 
-   <!-- Notificación -->
-
   <?php if(Session::has('inactivo')): ?>
   <div class="alert  fade in" style="background:  #f0f4c3;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
@@ -25,20 +23,15 @@
   </div>
   <?php endif; ?>
 
-  <!-- Fin Notificación -->
-
-  <!-- Criterios de búsquedas -->
-  
-  <!-- /.row -->
-
   <div class="row">
     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-      <div class="alert  fade in" style="background:  rgba(255, 235, 59, 0.7);">
+      <div>
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
       </div>
       <?php echo $__env->make('personal.supervisor.inactivo.search', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
     </div>
   </div>
+
 
 <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
