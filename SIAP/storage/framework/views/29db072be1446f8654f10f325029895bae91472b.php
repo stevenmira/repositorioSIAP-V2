@@ -3,7 +3,7 @@
   <ol class="breadcrumb">
     <li><a href="<?php echo e(url('home')); ?>"><i class="fa fa-dashboard"></i> Inicio</a></li>
     <li><a href="<?php echo e(URL::action('EmpleadoController@indexPersonal')); ?>"><i class="fa fa-dashboard"></i> Personal</a></li>
-    <li><a href="<?php echo e(URL::action('SupervisorController@index')); ?>"> Ejecutivos </a></li>
+    <li><a href="<?php echo e(URL::action('SupervisorController@index')); ?>"> Supervisor </a></li>
   </ol>
 </section>
 
@@ -17,16 +17,6 @@
 <section class="content">
 
   <?php if(Session::has('inactivo')): ?>
-  <div class="alert  fade in" style="background:  #f0f4c3;">
-    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <h4> El Supervisor <b><?php echo e(Session::get('inactivo')); ?></b>  ha sido modificado al estado <b> ACTIVO </b>  nuevamente. </h4>
-  </div>
-  <?php endif; ?>
-
-<section class="content">
-
-   <!-- Notificación -->
-   <?php if(Session::has('inactivo')): ?>
   <div class="alert  fade in" style="background:  #f0f4c3;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
     <h4> El Supervisor <b><?php echo e(Session::get('inactivo')); ?></b>  ha sido modificado al estado <b> ACTIVO </b>  nuevamente. </h4>

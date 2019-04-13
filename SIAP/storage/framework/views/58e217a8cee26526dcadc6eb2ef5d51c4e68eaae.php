@@ -94,6 +94,7 @@
               </div>
             </div>
 
+          <div class="row">
             <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <label>Sexo</label>
               <div class="input-group">
@@ -109,9 +110,6 @@
                 <?php endif; ?>
                 </div>
               </div>
-          </div>
-
-          <div class="row">
             <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
               <label for="direccion">Dirección</label>
               <div class="input-group">

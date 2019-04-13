@@ -175,7 +175,7 @@
                   <i class="fa fa-user" aria-hidden="true"></i>
                 </div>
                   <?php if(($supervisor->fotografia)!=""): ?>
-                        <img class="img-rounded" src="<?php echo e(asset('imagenes/ejecutivo/'.$supervisor->fotografia)); ?>" height="223px" width="250px">
+                        <img class="img-rounded" src="<?php echo e(asset('imagenes/supervisor/'.$supervisor->fotografia)); ?>" height="223px" width="250px">
                   <?php endif; ?>
                   <input type="file" name="fotografia" class="form-control" style="width: 250px;">
               </div>

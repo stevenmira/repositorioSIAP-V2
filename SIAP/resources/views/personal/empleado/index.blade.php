@@ -40,11 +40,11 @@
   </div>
   @endif
 
-  @if (Session::has('activo'))
-  <div class="alert  fade in" style="background:  #f0f4c3;">
+  @if (Session::has('delete'))
+    <div class="alert  fade in" style="background:  #f0f4c3;">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-    <P> El empleado  -- {{ Session::get('activo')}} --  se ha dado de baja correctamente</P>
-  </div>
+    <p> El empleado de -- {{ Session::get('delete')}} --  se ha eliminado correctamente</p>
+    </div>
   @endif
 
   @if (Session::has('error'))
@@ -66,7 +66,7 @@
                         <tr class="success">
                           <th colspan="12">
                               
-                              <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">LISTADO DE EMPLEADOS<a class="btn btn-success pull-right verde" data-title="Agregar Nuevo Ejecutivo" href="{{URL::action('EmpleadoController@create')}}"><i class="fa fa-fw -square -circle fa-plus-square"></i></a></h4>
+                              <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">LISTADO DE EMPLEADOS<a class="btn btn-success pull-right verde" data-title="Agregar Nuevo Empleado" href="{{URL::action('EmpleadoController@create')}}"><i class="fa fa-fw -square -circle fa-plus-square"></i></a></h4>
                           </th>
                       </tr>
                         <tr class="info">
@@ -93,7 +93,7 @@
 
                               <a class="btn btn-info azul" data-title="Editar Datos del Empleado" href="{{URL::action('EmpleadoController@edit',$ma->idempleado)}}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
 
-                              <a class="btn btn-danger rojo" data-title="Borrar Empleado" href="" data-target="#modal-delete-{{$ma->idempleado}}" data-toggle="modal"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                              <a class="btn btn-danger rojo" data-title="Eliminar Empleado" href="" data-target="#modal-delete-{{$ma->idempleado}}" data-toggle="modal"><i class="fa fa-trash" aria-hidden="true"></i></a>
 
                           </td>
                       </tr>
