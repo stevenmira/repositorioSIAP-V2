@@ -28,6 +28,7 @@ class CreateComprobante extends Migration
             $table->float('totalpendiente');
             $table->integer('cuotadeuda');
             $table->float('totalcuotasdeuda');
+            $table->integer('diasexpirados');
             $table->float('ultimacuota');
             $table->float('montoactual')->required();
             $table->float('total')->required();

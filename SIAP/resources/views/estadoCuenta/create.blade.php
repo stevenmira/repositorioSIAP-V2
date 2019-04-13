@@ -100,15 +100,15 @@
                   </tr>
                   <tr>
                     <td>Gastos Administrativos por Gestión de Cobros:</td>
-                    <td>{!! Form::number('gastosadmon', null, ['id'=>'gastosadmon','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Gastos por Cobros. . .', 'autofocus'=>'on', 'maxlength'=>'6']) !!}</td>
+                    <td>{!! Form::number('gastosadmon', null, ['id'=>'gastosadmon','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Gastos por Cobros. . .', 'autofocus'=>'on', 'step'=>'0.01']) !!}</td>
                   </tr>
                   <tr>
                     <td>Gastos Administrativos por Notificación:</td>
-                    <td>{!! Form::number('gastosnoti', null, ['id'=>'gastosnoti','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Gastos por Notificación. . .', 'autofocus'=>'on', 'maxlength'=>'6']) !!}</td>
+                    <td>{!! Form::number('gastosnoti', null, ['id'=>'gastosnoti','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Gastos por Notificación. . .', 'autofocus'=>'on', 'step'=>'0.01']) !!}</td>
                   </tr>
                   <tr>
                     <td><b style="color:red">TOTAL A CANCELAR</b></td>
-                    <td><b>{!! Form::text('total', $subtotal, [ 'id'=>'total','class' => 'form-control' ,'readonly'=>'readonly', 'autofocus'=>'on', 'maxlength'=>'6']) !!}</b></td>
+                    <td><b>{!! Form::text('total', $subtotal, [ 'id'=>'total','class' => 'form-control' ,'readonly'=>'readonly', 'autofocus'=>'on', 'step'=>'0.01']) !!}</b></td>
                    
                   </tr>
                 </tbody>

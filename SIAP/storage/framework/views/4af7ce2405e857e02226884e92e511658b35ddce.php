@@ -75,7 +75,7 @@
                   <th>No.</th>
                   <th>FECHAS</th>
                   <th>DÍAS</th>
-                  <th>MONTOS</th>                
+                  <th>DETALLES</th>                
                 </thead>
                 <tbody>
                   <tr>
@@ -90,35 +90,87 @@
                   <tr>
                     <td>2</td>
                     <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
-                      Saldo pendiente de cuota: 
+                      Saldo pendiente de cuota
                     </td>                      
                     <td>
-                        <?php echo Form::number('diaspendiente',$diaspendx, ['id'=>'diaspendx','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'1']); ?>
+                        <?php echo Form::number('diaspendiente',$diaspendx, ['id'=>'diaspendiente','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'1']); ?>
 
                     </td>
                     <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
-                        <?php echo Form::number('totalpendiente',$totalpendx, ['id'=>'totalpendx','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'0.01']); ?>
+                        <?php echo Form::number('totalpendiente',$totalpendx, ['id'=>'totalpendiente','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'0.01']); ?>
 
                     </td>
                   </tr>
+                  <tr>
+                    <td>3</td>
+                    <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
+                      Cuotas atrasadas y/o pendientes de <b><span id="cuotax">$ <?php echo e(number_format($cliente->cuotadiaria,2)); ?></span></b>
+                    </td>                      
+                    <td>
+                        <?php echo Form::number('cuotadeuda',$cuotadeux, ['id'=>'cuotadeuda','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'1']); ?>
 
+                    </td>
+                    <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
+                        <?php echo Form::number('totalcuotadeuda',$totalcuotadeux, ['id'=>'totalcuotadeuda','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'0.01']); ?>
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
+                      Última cuota 
+                    </td>                      
+                    <td>
+                        <?php echo Form::number('ultimac',1, ['id'=>'ultimac','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'1']); ?>
+
+                    </td>
+                    <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
+                        <?php echo Form::number('ultimacuota',$totalultimacuox, ['class' => 'form-control' , 'required' => 'required','step'=>'0.01']); ?>
+
+                    </td>
+                  </tr>
                   <tr>
                     <td>5</td>
-                    <td>Gastos de Administración por gestion de cobros:</td>
-                    <td></td>
-                    <td><?php echo Form::number('gastosadmon', null, ['id'=>'gastosadmon','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca los gastos administrativos. . .', 'autofocus'=>'on', 'maxlength'=>'6']); ?></td>
+                    <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
+                      Mora por incumplimiento de contrato de un capital 
+                    </td>                      
+                    <td>
+                        <?php echo Form::number('diasexpirados',$diasexpix, ['id'=>'diasexpirados','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'1']); ?>
+
+                    </td>
+                    <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
+                        <?php echo Form::number('mora',$morx, ['id'=>'mora','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'0.01']); ?>
+
+                    </td>
                   </tr>
                   <tr>
                     <td>6</td>
+                    <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
+                      Saldo capital 
+                    </td>                      
+                    <td></td>
+                    <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
+                        <?php echo Form::number('monto',$monto, ['class' => 'form-control' , 'required' => 'required','step'=>'0.01']); ?>
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>7</td>
+                    <td>Gastos de Administración por gestion de cobros:</td>
+                    <td></td>
+                    <td><?php echo Form::number('gastosadmon', null, ['id'=>'gastosadmon','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca los gastos administrativos. . .', 'step'=>'0.01']); ?></td>
+                  </tr>
+                  <tr>
+                    <td>8</td>
                     <td>Gastos Administrativos por Notificación:</td>
                     <td></td>
-                    <td><?php echo Form::number('gastosnoti', null, ['id'=>'gastosnoti','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Gastos por Notificación. . .', 'autofocus'=>'on', 'maxlength'=>'6']); ?></td>
+                    <td><?php echo Form::number('gastosnoti', null, ['id'=>'gastosnoti','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca los gastos por notificación. . .', 'step'=>'0.01']); ?></td>
                   </tr>
                   <tr>
                     <td></td>
                     <td><b style="color:red">TOTAL A CANCELAR</b></td>
                     <td></td>
-                    <td><b><?php echo Form::number('total', null, [ 'id'=>'total','class' => 'form-control' , 'disabled' => 'disabled', 'autofocus'=>'on', 'maxlength'=>'6']); ?></b></td>
+                    <td><b><?php echo Form::number('total', $totalx, [ 'id'=>'total','class' => 'form-control', 'step'=>'0.01','required' => 'required']); ?></b></td>
                    
                   </tr>
                 </tbody>
@@ -138,42 +190,6 @@
 
 <?php $__env->startPush('scripts'); ?>
 
-
-<!-- InputMask -->
-<script src="<?php echo e(asset('js/inputmask/jquery3.js')); ?>"></script>  
-<script src="<?php echo e(asset('js/inputmask/input-mask.js')); ?>"></script>
-<script src="<?php echo e(asset('js/inputmask/input-mask-date.js')); ?>"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<script>
-  $(function () {
-    //Money Euro
-    $('[data-mask]').inputmask()
-
-  })
-</script>
-
-<!--Script para sumar el total del monto a pagar-->
-<script>
-function Sumar(){
- total=parseFloat(document.getElementById("monto").innerHTML);
- numero1 = parseFloat(document.getElementById("monto").innerHTML);
- numero2 = parseFloat(document.getElementById("gastosadmon").value);
- numero4 = parseFloat(document.getElementById("gastosnoti").value);
-
-
-if((isNaN(numero2)) && (isNaN(numero4))){
-  total=numero1;
-}else if(isNaN(numero2)){
-    total+=numero4;
-}else if(isNaN( numero4)){
-  total+=numero2;
-}
-else {
-   total=numero1 + numero2 + numero4;
-}
-document.getElementById("total").value = total.toFixed(2);
-}
-</script>
 
 
 

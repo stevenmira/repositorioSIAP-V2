@@ -67,58 +67,51 @@
 
 
 <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="table-responsive" style="padding: 4px 4px;">
-                <table class="table table-striped table-bordered table-condensed table-hover">
-                    <thead>
-                        <tr class="success">
-                          <th colspan="12">
-                              <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ESTADOS DE CUENTA<a class="btn btn-success pull-right verde" data-title="Agregar Nuevo Estado" href="<?php echo e(URL::action('ComprobanteController@nuevoestado',$cliente->idcuenta)); ?>"><i class="fa fa-fw -square -circle fa-plus-square"></i></a></h4>
-                          </th>
-                      </tr>
-                        <tr class="info">
-                            
-                            <th>Fecha Realizado</th>
-                            <th>Dias Atrasados</th>
-                            <th>Total</th>
-                            <th>Tipo</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                   <?php foreach($estados as $es): ?>
-                     
-                      <tr>
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="table-responsive" style="padding: 4px 4px;">
+          <table class="table table-striped table-bordered table-condensed table-hover">
+              <thead>
+                  <tr class="success">
+                    <th colspan="12">
+                        <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ESTADOS DE CUENTA<a class="btn btn-success pull-right verde" data-title="Agregar Nuevo Estado" href="<?php echo e(URL::action('ComprobanteController@nuevoestado',$cliente->idcuenta)); ?>"><i class="fa fa-fw -square -circle fa-plus-square"></i></a></h4>
+                    </th>
+                </tr>
+                  <tr class="info">
                       
-                         
-                          <td><?php echo e($es->fechacomprobante); ?></td>
-                          <td><?php echo e($es->diasatrasados); ?></td>
-                          <td><?php echo e($es->total); ?></td>
-                          <td><?php echo e($es->estado); ?></td>
-                          <td><?php echo e($es->estadodos); ?></td>
-                          <td style="width: 200px;">
+                      <th>Fecha Realizado</th>
+                      <th>Dias Atrasados</th>
+                      <th>Total</th>
+                      <th>Tipo</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                  </tr>
+              </thead>
+             <?php foreach($estados as $es): ?>     
+                <tr>
+                    <td><?php echo e($es->fechacomprobante); ?></td>
+                    <td><?php echo e($es->diasatrasados); ?></td>
+                    <td><?php echo e($es->total); ?></td>
+                    <td><?php echo e($es->estado); ?></td>
+                    <td><?php echo e($es->estadodos); ?></td>
+                    <td style="width: 200px;">
 
-                              <a class="btn btn-warning amarillo" data-title="Consultar datos" href="<?php echo e(URL::action('ComprobanteController@mostrar',$es->idcomprobante)); ?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                              <a class="btn btn-info azul" data-title="Editar datos" href="<?php echo e(URL::action('ComprobanteController@edit',$es->idcomprobante)); ?>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                              <a class="btn btn-danger rojo" data-title="Imprimir" href="<?php echo e(URL::action('ComprobanteController@estadoPDF',$es->idcomprobante)); ?>" data-toggle="modal" target="_blank"><i class="fa fa-print" aria-hidden="true"></i></a>
-                              <a class="btn btn-danger rojo" data-title="Eliminar" href="" data-target="#modal-delete-<?php echo e($es->idcomprobante); ?>" data-toggle="modal"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                        <a class="btn btn-warning amarillo" data-title="Consultar datos" href="<?php echo e(URL::action('ComprobanteController@mostrar',$es->idcomprobante)); ?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                        <a class="btn btn-info azul" data-title="Editar datos" href="<?php echo e(URL::action('ComprobanteController@edit',$es->idcomprobante)); ?>"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <a class="btn btn-danger rojo" data-title="Imprimir" href="<?php echo e(URL::action('ComprobanteController@estadoPDF',$es->idcomprobante)); ?>" data-toggle="modal" target="_blank"><i class="fa fa-print" aria-hidden="true"></i></a>
+                        <a class="btn btn-danger rojo" data-title="Eliminar" href="" data-target="#modal-delete-<?php echo e($es->idcomprobante); ?>" data-toggle="modal"><i class="fa fa-trash" aria-hidden="true"></i></a>
 
-                          </td>
-                      </tr>
-                      <?php echo $__env->make('estadoCuenta.modal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
-                  <?php endforeach; ?>
-                </table>
-            </div>
-            <?php echo e($estados->render()); ?>
-
+                    </td>
+                </tr>
+                <?php echo $__env->make('estadoCuenta.modal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+            <?php endforeach; ?>
+            </table>
         </div>
+        <?php echo e($estados->render()); ?>
+
     </div>
-
-<div class="row">
- 
-
- 
 </div>
+
+
 
 </section>
 

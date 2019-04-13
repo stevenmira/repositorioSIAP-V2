@@ -12,7 +12,7 @@ class Comprobante extends Model
     protected $primaryKey='idcomprobante';
 
     protected $fillable = [
-        'estadodos','gastosadmon','gastosnotariales','mora','total','fechacomprobante','estado',
+        'estadodos','gastosadmon','gastosnotariales','mora','total','fechacomprobante','estado','diasexpirados'
     ];
 
     /**

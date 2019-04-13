@@ -515,4 +515,72 @@ class DetalleLiquidacion extends Model
         return $cuenta->idcuenta;
     }
 
+    /*
+    Nombre: ultimaCuotaPago
+    Objetivo: Devuelve la ultima cuota de pago
+    Autor: Steven
+    Fecha creacion: 12-03-2019, 7:30
+    Fecha modificacion: 12-03-2019, 7:45
+    parámetros de entrada: idcuenta
+    parámetros de salida: ultimo pago efectivo a realizar
+     */
+    public static function ultimaCuotaPago($idcuenta){
+
+        $usuarioactual=\Auth::user();
+
+        //Encontramos la cuenta con sus repectivas relaciones
+        $cuenta = Cuenta::findOrFail($idcuenta);
+        $prestamo = Prestamo::findOrFail($cuenta->idprestamo);
+        $tipo_credito = TipoCredito::findOrFail($cuenta->idtipocredito);
+
+        $liquidaciones = DetalleLiquidacion::where('idcuenta','=',$cuenta->idcuenta)
+        ->orderby('iddetalleliquidacion', 'asc')
+        ->get();
+
+        $monto_capital = $prestamo->monto;          //  $313.50
+
+        foreach ($liquidaciones as $liq) {
+
+            if($liq->abonocapital == "NO") {
+
+              $liq->monto = round($monto_capital, 2);
+              $liq->interes = round($monto_capital * $tipo_credito->interes, 2);    // 3.14
+              $liq->totaldiario = round($liq->totaldiario, 2);                      // 10
+              $liq->cuotacapital = round($liq->totaldiario - $liq->interes,2);      // 6.86
+
+              $monto_capital = $liq->monto - $liq->cuotacapital;
+
+            }
+            elseif($liq->abonocapital == "SI"){
+
+                $liq->monto = round($monto_capital,2);
+
+                $monto_capital = $liq->monto - $liq->totaldiario;
+
+            }else{                                                                        // Modificamos la siguiente tupla
+
+                if ($monto_capital > $prestamo->cuotadiaria) {
+                    $liq->monto = round($monto_capital, 2);                               // 136.96
+                    $liq->interes = round($monto_capital * $tipo_credito->interes, 2);    // 1.37
+                    $liq->totaldiario = $prestamo->cuotadiaria;                           // 10
+                    $liq->cuotacapital = round($liq->totaldiario - $liq->interes,2);      // 8.63
+
+                    $monto_capital = $liq->monto - $liq->cuotacapital;                     // 128.33
+                }
+                elseif ($monto_capital <= $prestamo->cuotadiaria && $monto_capital > 0) {
+                    $liq->monto = round($monto_capital, 2);                                // 8.00
+                    $liq->interes = round($monto_capital * $tipo_credito->interes, 2);     // 0.08
+                    $liq->cuotacapital = $liq->monto;                                      // 8.00
+                    $liq->totaldiario = round($liq->interes + $liq->cuotacapital,2);       // 8.08
+
+                    #$monto_capital = $liq->monto - $liq->cuotacapital;                      // 0.00
+                    $monto_capital = $liq->totaldiario;
+                }
+            }  
+
+        }
+
+        return $monto_capital;
+    }
+
 }
