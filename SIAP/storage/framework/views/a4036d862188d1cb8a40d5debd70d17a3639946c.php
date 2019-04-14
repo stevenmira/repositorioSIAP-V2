@@ -237,7 +237,7 @@
 		<?php endif; ?>
 	<br>
 
-	<div align="center">En la ciudad de Tepecoyo a los <?php echo e($diahoy); ?> <?php if($diahoy=='UN '): ?> dia <?php else: ?> días <?php endif; ?> del mes de <?php echo e(strtoupper($meshoy)); ?> de <?php echo e($aniohoy); ?>.</div><br>
+	<div align="center">En la ciudad de Tepecoyo a los <?php echo e($diafech); ?> <?php if($diafech=='UN '): ?> dia <?php else: ?> días <?php endif; ?> del mes de <?php echo e(strtoupper($mesfech)); ?> de <?php echo e($aniopre); ?>.</div><br>
 	<div>CONDICIONES DEL CREDITO:</div>
 	<div>1) Sera para inversión de negocio; Compra de Mobiliario y Equipo de trabajo, mercadería. </div>
 	<div>2) Por falta de pago de dos cuota autorizo se me asigne un ejecutivo de cobro para que cobre la venta diaria de mi negocio.</div>
