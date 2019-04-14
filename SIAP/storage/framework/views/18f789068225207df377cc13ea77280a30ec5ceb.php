@@ -13,7 +13,7 @@
     <li><a href="<?php echo e(URL::action('RecordClienteController@index')); ?>"> Récord Cliente</a></li>
     <li><a href="<?php echo e(URL::action('CuentaController@show',$cliente->idcuenta)); ?>"> Cuenta</a></li>
     <li><a href="<?php echo e(URL::action('ComprobanteController@show',$cliente->idcuenta)); ?>"> Estados de Cuentas</a></li>
-    <li class="active">Nuevo</li>
+    <li class="active">Editar</li>
   </ol>
 </section>
 <br>
@@ -22,7 +22,7 @@
 <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS</h4>
 <h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">AFIMID, S.A DE C.V</h4>
 
-<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 5px 0px;"><b>NUEVO ESTADO DE CUENTA</b></h4>
+<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 5px 0px;"><b>EDITAR ESTADO DE CUENTA</b></h4>
 <br><br>
 <div class="container">
   <table>
@@ -41,7 +41,6 @@
     </thead>
   </table>
 </div>
-
 <div class="row">
   <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
     <?php if(count($errors) > 0): ?>
@@ -61,7 +60,7 @@
 
 
 
-  <?php echo Form::open(array('action' => array('ComprobanteController@agregarestado',$cliente->idcuenta), 'method'=>'POST','autocomplete'=>'off')); ?>
+  <?php echo Form::open(array('action' => array('ComprobanteController@update',$estadoc->idcomprobante), 'method'=>'PATCH','autocomplete'=>'off')); ?>
 
   <div style="padding: 0px 40px;">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 toppad" >
@@ -85,7 +84,7 @@
                     <td>Fecha</td>
                     <td></td>
                     <td>
-                      <?php echo Form::date('fechaactual', \Carbon\Carbon::now(), ['class' => 'form-control', 'required' => 'required','autofocus'=>'on']); ?>
+                      <?php echo Form::date('fechaactual', $estadoc->fechacomprobante, ['class' => 'form-control', 'required' => 'required','autofocus'=>'on']); ?>
 
                     </td>
                   </tr>
@@ -95,11 +94,11 @@
                       Saldo pendiente de cuota
                     </td>                      
                     <td>
-                        <?php echo Form::number('diaspendiente',$diaspendx, ['id'=>'diaspendiente','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'1']); ?>
+                        <?php echo Form::number('diaspendiente',$estadoc->diaspendientes, ['id'=>'diaspendiente','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'1']); ?>
 
                     </td>
                     <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
-                        <?php echo Form::number('totalpendiente',$totalpendx, ['id'=>'totalpendiente','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'0.01']); ?>
+                        <?php echo Form::number('totalpendiente',$estadoc->totalpendiente, ['id'=>'totalpendiente','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'0.01']); ?>
 
                     </td>
                   </tr>
@@ -109,11 +108,11 @@
                       Cuotas atrasadas y/o pendientes de <b><span id="cuotax">$ <?php echo e(number_format($cliente->cuotadiaria,2)); ?></span></b>
                     </td>                      
                     <td>
-                        <?php echo Form::number('cuotadeuda',$cuotadeux, ['id'=>'cuotadeuda','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'1']); ?>
+                        <?php echo Form::number('cuotadeuda',$estadoc->cuotadeuda, ['id'=>'cuotadeuda','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'1']); ?>
 
                     </td>
                     <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
-                        <?php echo Form::number('totalcuotadeuda',$totalcuotadeux, ['id'=>'totalcuotadeuda','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'0.01']); ?>
+                        <?php echo Form::number('totalcuotadeuda',$estadoc->totalcuotasdeuda, ['id'=>'totalcuotadeuda','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'0.01']); ?>
 
                     </td>
                   </tr>
@@ -127,7 +126,7 @@
 
                     </td>
                     <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
-                        <?php echo Form::number('ultimacuota',$totalultimacuox, ['class' => 'form-control' , 'required' => 'required','step'=>'0.01']); ?>
+                        <?php echo Form::number('ultimacuota',$estadoc->ultimacuota, ['class' => 'form-control' , 'required' => 'required','step'=>'0.01']); ?>
 
                     </td>
                   </tr>
@@ -137,11 +136,11 @@
                       Mora por incumplimiento de contrato de un capital 
                     </td>                      
                     <td>
-                        <?php echo Form::number('diasexpirados',$diasexpix, ['id'=>'diasexpirados','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'1']); ?>
+                        <?php echo Form::number('diasexpirados',$estadoc->diasexpirados, ['id'=>'diasexpirados','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'1']); ?>
 
                     </td>
                     <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
-                        <?php echo Form::number('mora',$morx, ['id'=>'mora','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'0.01']); ?>
+                        <?php echo Form::number('mora',$estadoc->mora, ['id'=>'mora','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'0.01']); ?>
 
                     </td>
                   </tr>
@@ -152,7 +151,7 @@
                     </td>                      
                     <td></td>
                     <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
-                        <?php echo Form::number('monto',$monto, ['class' => 'form-control' , 'required' => 'required','step'=>'0.01']); ?>
+                        <?php echo Form::number('monto',$estadoc->montoactual, ['class' => 'form-control' , 'required' => 'required','step'=>'0.01']); ?>
 
                     </td>
                   </tr>
@@ -160,26 +159,26 @@
                     <td>7</td>
                     <td>Gastos de Administración por gestion de cobros:</td>
                     <td></td>
-                    <td><?php echo Form::number('gastosadmon', null, ['id'=>'gastosadmon','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca los gastos administrativos. . .', 'step'=>'0.01']); ?></td>
+                    <td><?php echo Form::number('gastosadmon', $estadoc->gastosadmon, ['id'=>'gastosadmon','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca los gastos administrativos. . .', 'step'=>'0.01']); ?></td>
                   </tr>
                   <tr>
                     <td>8</td>
                     <td>Gastos Administrativos por Notificación:</td>
                     <td></td>
-                    <td><?php echo Form::number('gastosnoti', null, ['id'=>'gastosnoti','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca los gastos por notificación. . .', 'step'=>'0.01']); ?></td>
+                    <td><?php echo Form::number('gastosnoti', $estadoc->gastosnotariales, ['id'=>'gastosnoti','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca los gastos por notificación. . .', 'step'=>'0.01']); ?></td>
                   </tr>
                   <tr>
                     <td></td>
                     <td><b style="color:red">TOTAL A CANCELAR</b></td>
                     <td></td>
-                    <td><b><?php echo Form::number('total', $totalx, [ 'id'=>'total','class' => 'form-control', 'step'=>'0.01','required' => 'required']); ?></b></td>
+                    <td><b><?php echo Form::number('total', $estadoc->total, [ 'id'=>'total','class' => 'form-control', 'step'=>'0.01','required' => 'required']); ?></b></td>
                    
                   </tr>
                 </tbody>
               </table>
               <input name="_token" value="<?php echo e(csrf_token()); ?>" type="hidden"></input>
               <a href="<?php echo e(URL::action('ComprobanteController@show',$cliente->idcuenta)); ?>" class="btn btn-danger btn-lg col-md-offset-2"><i class="fa fa-times" aria-hidden="true"></i> Cancelar</a>
-              <button class="btn btn-primary btn-lg pull-right" type="submit"><i class="fa fa-floppy-o" aria-hidden="true"></i> Guardar</button>
+              <button class="btn btn-primary btn-lg pull-right" type="submit"> Actualizar</button>
             </div>
           </div>
         </div>

@@ -11,6 +11,7 @@ use siap\Prestamo;
 use siap\TipoCredito;
 use siap\Comprobante;
 use siap\DetalleLiquidacion;
+use siap\Fecha;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
@@ -36,6 +37,8 @@ class ComprobanteController extends Controller
     {
         $usuarioactual=\Auth::user();
 
+        $fecha_actual = Fecha::spanish();
+
         $estados=DB::table('comprobante')->where('idcuenta','=',$id)
         ->orderBy('created_at','asc')
         ->paginate(10);
@@ -49,9 +52,10 @@ class ComprobanteController extends Controller
             ->select(
                 'cuenta.idcuenta',
                 'cuenta.interes',
-                'negocio.nombre as nnegocio',
-                'cliente.nombre',
-                'cartera.nombre as nombreCartera', 
+                'negocio.nombre as nombreNegocio',
+                'cartera.nombre as nombreCartera',
+                'cliente.idcliente',
+                'cliente.nombre', 
                 'cliente.apellido',
                 'cliente.dui',
                 'cliente.nit',
@@ -61,7 +65,7 @@ class ComprobanteController extends Controller
                 'prestamo.estadodos')
             ->first();
             
-        return view('estadoCuenta.show',["estados"=>$estados,"usuarioactual"=>$usuarioactual,"cliente"=>$cliente]);
+        return view('estadoCuenta.show',["cliente"=>$cliente, "estados"=>$estados, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);
     }
 
     /*
@@ -74,7 +78,7 @@ class ComprobanteController extends Controller
     Parámetros de salida: estado de cuenta normal o vencido
      */
     public function mostrar(Request $request,$id)
-     {
+    {
         $usuarioactual=\Auth::user();
 
         $cliente = DB::table('cuenta')
@@ -95,6 +99,7 @@ class ComprobanteController extends Controller
                 'cliente.dui',
                 'cliente.nit',
                 'cliente.direccion',
+                'cliente.telefonocel',
                 'cuenta.estado',
                 'prestamo.cuotadiaria',
                 'prestamo.estadodos')
@@ -131,20 +136,15 @@ class ComprobanteController extends Controller
         $nuvfecha=date("Y-m-d",strtotime("$ultima + ".$cont." days "));
         $liquidacion->fechadiaria=$nuvfecha;
 
-        if ($estadoc->estado=="NORMAL" ) {
+        if ($estadoc->estado=="NORMAL") {
 
             return view('estadoCuenta.consulta',["cliente"=>$cliente,"estadoc"=>$estadoc, "diahoy"=>$diahoy, "meshoy"=>$meshoy, "aniohoy"=>$aniohoy, "liquidacion"=>$liquidacion, "usuarioactual"=>$usuarioactual]); 
         }
-
-         
-         $ultimacuota=1;
-         if($estadoc->estado=="VENCIDO" || $estadoc->estado=="CERRADO"  ){
-             $subtotal=$estadoc->ultimacuota+$estadoc->totalcuotasdeuda+$estadoc->totalpendiente+$estadoc->mora;
-             return view('estadoCuenta.vencido.consulta',["subtotal"=>$subtotal, "ultimacuota"=>$ultimacuota,"cliente"=>$cliente,"estadoc"=>$estadoc,"id"=>$id,"usuarioactual"=>$usuarioactual]);   
-          }else{
-             return view('estadoCuenta.consulta',["cliente"=>$cliente,"estadoc"=>$estadoc,"id"=>$id,"usuarioactual"=>$usuarioactual]);   
-         }
-     }
+        elseif ($estadoc->estado=="VENCIDO") {
+            
+             return view('estadoCuenta.vencido.consulta',["cliente"=>$cliente,"estadoc"=>$estadoc, "diahoy"=>$diahoy, "meshoy"=>$meshoy, "aniohoy"=>$aniohoy, "liquidacion"=>$liquidacion, "diafe"=>$diafe, "mesfe"=>$mesfe, "aniofe"=>$aniofe, "usuarioactual"=>$usuarioactual]);
+        }
+    }
  
 
     /*
@@ -270,6 +270,8 @@ class ComprobanteController extends Controller
     public function agregarestado(Request $request,$id){
         $usuarioactual=\Auth::user();
 
+        $fecha_actual = Fecha::spanish();
+
         $date = Carbon::now();  
         $date = $date->format('d-m-Y');
 
@@ -327,7 +329,7 @@ class ComprobanteController extends Controller
             ->paginate(10);
         
             Session::flash('create',"El estado de cuenta de tipo -- ". $estado->estado. " -- se ha guardado correctamente");
-            return view('estadoCuenta.show',["estados"=>$estados,"usuarioactual"=>$usuarioactual,"cliente"=>$cliente]);
+            return view('estadoCuenta.show',["cliente"=>$cliente, "estados"=>$estados, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);
         }
         elseif ($cliente->estadodos=="VENCIDO") {
             
@@ -368,143 +370,208 @@ class ComprobanteController extends Controller
             ->paginate(10);
         
             Session::flash('create',"El estado de cuenta de tipo -- ". $estado->estado. " -- se ha guardado correctamente");
-            return view('estadoCuenta.show',["estados"=>$estados,"usuarioactual"=>$usuarioactual,"cliente"=>$cliente]);
+            return view('estadoCuenta.show',["cliente"=>$cliente, "estados"=>$estados, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);
         }
 
     }
 
 
+    /*
+    Nombre: edit
+    Objetivo: Formulario para actualizar estado de cuenta
+    Autor: Oscar
+    Fecha creación: 02-02-2018, 00:00
+    Fecha modificacion: 13-04-2019, 08:57
+    Parámetros de entrada: idcomprobante
+    Parámetros de salida: estado de cuenta normal o vencido
+     */
     public function edit($id)
     {
         $usuarioactual=\Auth::user();
 
-        $cliente = DB::table('cuenta')
-        ->select('cuenta.idcuenta','cuenta.interes','negocio.nombre as nnegocio','cliente.nombre', 'cliente.apellido','cliente.dui','cliente.nit','cliente.direccion','cuenta.estado','prestamo.estadodos','prestamo.cuotadiaria')
-        ->join('negocio as negocio','cuenta.idnegocio','=','negocio.idnegocio')
-        ->join('cliente as cliente','negocio.idcliente','=','cliente.idcliente')
-        ->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
-        ->join('comprobante as comprobante','cuenta.idcuenta','=','comprobante.idcuenta')
-        ->where('comprobante.idcomprobante','=',$id)
-        ->first();
-
-        
-
         $estadoc = Comprobante::findOrFail($id);
-        $ultimacuota=1;
-        if($estadoc->estado=="VENCIDO" || $estadoc->estado=="CERRADO"){
-            $subtotal=$estadoc->ultimacuota+$estadoc->totalcuotasdeuda+$estadoc->totalpendiente+$estadoc->mora;
-            return view('estadoCuenta.vencido.edit',["subtotal"=>$subtotal, "ultimacuota"=>$ultimacuota,"cliente"=>$cliente,"estadoc"=>$estadoc,"usuarioactual"=>$usuarioactual]);   
-         }else{
-            return view('estadoCuenta.edit',["cliente"=>$cliente,"estadoc"=>$estadoc,"usuarioactual"=>$usuarioactual]);   
+
+        $cliente = DB::table('cuenta')
+            ->join('comprobante as comprobante','cuenta.idcuenta','=','comprobante.idcuenta')
+            ->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
+            ->join('negocio as negocio','cuenta.idnegocio','=','negocio.idnegocio')
+            ->join('cliente as cliente','negocio.idcliente','=','cliente.idcliente')
+            ->join('cartera as cartera','cliente.idcartera','=','cartera.idcartera')
+            ->where('comprobante.idcomprobante','=',$id)
+            ->select(
+                'cuenta.idcuenta',
+                'cuenta.interes',
+                'negocio.nombre as nombreNegocio',
+                'cliente.nombre',
+                'cartera.nombre as nombreCartera', 
+                'cliente.idcliente',
+                'cliente.apellido',
+                'cliente.dui',
+                'cliente.nit',
+                'cliente.direccion',
+                'cliente.telefonocel',
+                'cuenta.estado',
+                'prestamo.cuotadiaria',
+                'prestamo.estadodos')
+            ->first();
+
+        if ($estadoc->estado=="NORMAL") {
+            return view('estadoCuenta.edit',["cliente"=>$cliente,"estadoc"=>$estadoc,"usuarioactual"=>$usuarioactual]); 
+        }
+        elseif ($estadoc->estado=="VENCIDO") {
+             return view('estadoCuenta.vencido.edit',["cliente"=>$cliente,"estadoc"=>$estadoc,"usuarioactual"=>$usuarioactual]);
         }
     }
 
+    /*
+    Nombre: update
+    Objetivo: metodo para guardar estado de cuenta actualizado
+    Autor: Oscar
+    Fecha creación: 02-02-2018, 00:00
+    Fecha modificacion: 13-04-2019, 09:57
+    Parámetros de entrada: idcomprobante
+    Parámetros de salida: estado de cuenta normal o vencido
+     */
     public function update(Request $request, $id)
     {	
         $usuarioactual=\Auth::user();
-      
-        
-        $data = $request;
+
+        $fecha_actual = Fecha::spanish();
+
         $cliente = DB::table('cuenta')
-        ->select('cuenta.idcuenta','cuenta.interes','cliente.nombre','negocio.nombre as nnegocio', 'cliente.apellido','cliente.dui','cliente.nit','cliente.direccion','cuenta.estado','prestamo.estadodos','prestamo.cuotadiaria')
-        ->join('negocio as negocio','cuenta.idnegocio','=','negocio.idnegocio')
-        ->join('cliente as cliente','negocio.idcliente','=','cliente.idcliente')
-        ->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
-        ->join('comprobante as comprobante','cuenta.idcuenta','=','comprobante.idcuenta')
-        ->where('comprobante.idcomprobante','=',$id)
-        ->first();
-
-        $date = Carbon::now();	
-        $date = $date->format('d-m-Y');
+            ->join('comprobante as comprobante','cuenta.idcuenta','=','comprobante.idcuenta')
+            ->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
+            ->join('negocio as negocio','cuenta.idnegocio','=','negocio.idnegocio')
+            ->join('cliente as cliente','negocio.idcliente','=','cliente.idcliente')
+            ->join('cartera as cartera','cliente.idcartera','=','cartera.idcartera')
+            ->where('comprobante.idcomprobante','=',$id)
+            ->select(
+                'cuenta.idcuenta',
+                'cuenta.interes',
+                'negocio.nombre as nombreNegocio',
+                'cliente.nombre',
+                'cartera.nombre as nombreCartera', 
+                'cliente.idcliente',
+                'cliente.apellido',
+                'cliente.dui',
+                'cliente.nit',
+                'cliente.direccion',
+                'cliente.telefonocel',
+                'cuenta.estado',
+                'prestamo.cuotadiaria',
+                'prestamo.estadodos')
+            ->first();
         
-        
-
         $estado = Comprobante::findOrFail($id);
-        $estado->idcuenta=$estado->idcuenta;
-        $subtotal=$estado->total- $estado->gastosadmon- $estado->gastosnotariales;
-        $estado->gastosadmon =  $data['gastosadmon'];
-        $estado->gastosnotariales= $data['gastosnoti'];
-        
-        if(($cliente->estadodos=="VENCIDO" || $cliente->estadodos=="CERRADO") && $estado->estado=="VENCIDO"){
+
+        if($estado->estado=="NORMAL"){
+
+            $estado->gastosadmon =  $request->get('gastosadmon');
+            $estado->gastosnotariales = $request->get('gastosnoti');
+            $estado->mora = 0.00;
+            $estado->diasatrasados = $request->get('cuotasatrasadas');    // # cuotas atrasadas
+            $estado->totalcuotas = $request->get('totalcuotas');          // valor monetario de cuotas atrasadas
             
-            $estado->mora=$estado->mora;
-            $estado->diasatrasados= $estado->diasatrasados;
-            $estado->totalcuotas=0;
-            $estado->diaspendientes=$estado->diaspendientes;
-            $estado->totalpendiente=$estado->totalpendiente;
-            $estado->cuotadeuda=$estado->cuotadeuda;
-            $estado->totalcuotasdeuda=$estado->totalcuotasdeuda;
-            $estado->ultimacuota=$estado->ultimacuota;
-            $estado->montoactual=$estado->montoactual;
-            $total=$subtotal+$estado->gastosadmon+$estado->gastosnotariales; 
-            $total=round($total,2);
-            $estado->total = $total;
-            $estado->estado='VENCIDO';
-            $estado->estadodos='NO CANCELADO';
+            $estado->diaspendientes=0;      // aplica solamente para estados vencidos
+            $estado->totalpendiente=0;      // aplica solamente para estados vencidos
+            $estado->cuotadeuda=0;          // aplica solamente para estados vencidos
+            $estado->totalcuotasdeuda=0;    // aplica solamente para estados vencidos
+            $estado->ultimacuota=0;         // aplica solamente para estados vencidos
+            $estado->diasexpirados=0;       // aplica solamente para estados vencidos
+
+            $estado->montoactual = $request->get('monto');               // saldo capital
+            $estado->total = $request->get('total');                    // total
+            $estado->fechacomprobante = $request->get('fechaactual'); 
+         
+            $estado->estado='NORMAL';                                   // estado del comprobante
+
+            $estado->update();
+
+            $estados=DB::table('comprobante')->where('idcuenta','=',$estado->idcuenta)
+            ->orderBy('created_at','asc')
+            ->paginate(10);
+        
+            Session::flash('update',"El estado de cuenta de tipo -- ". $estado->estado. " -- se ha actualizado correctamente");
+
+            return view('estadoCuenta.show',["cliente"=>$cliente,"estados"=>$estados, "fecha_actual"=>$fecha_actual,"usuarioactual"=>$usuarioactual]);
         }
-        elseif($estado->estado=="NORMAL"){
-           
-            $estado->mora=0.00;
-            $estado->diasatrasados=$data['cuotasatrasadas'];
-            $estado->totalcuotas=$data['totalcuotas'];
-            $estado->montoactual=$data['monto'];
-            $estado->total=$estado->montoactual+$estado->totalcuotas+$estado->gastosadmon+$estado->gastosnotariales;         
-            $estado->estado='NORMAL';
-            $estado->estadodos='--';
+        elseif ($cliente->estadodos=="VENCIDO") {
+
+            $estado->fechacomprobante = $request->get('fechaactual'); 
+            
+            $estado->diaspendientes = $request->get('diaspendiente');      
+            $estado->totalpendiente = $request->get('totalpendiente');
+
+            $estado->cuotadeuda = $request->get('cuotadeuda');         
+            $estado->totalcuotasdeuda = $request->get('totalcuotadeuda');
+
+            $estado->ultimacuota = $request->get('ultimacuota'); 
+
+            $estado->diasexpirados = $request->get('diasexpirados');
+            $estado->mora = $request->get('mora');        
+
+            $estado->gastosadmon =  $request->get('gastosadmon');
+            $estado->gastosnotariales = $request->get('gastosnoti');
+
+            $estado->total = $request->get('total'); 
+
+            $estado->montoactual = $request->get('monto');                
+
+            $estado->diasatrasados = 0;                                     // aplica solo para estado normal
+            $estado->totalcuotas = 0;                                       // aplica solo para estado normal
+         
+            $estado->estado='VENCIDO';                                    
+
+            $estado->update();
+
+            $estados=DB::table('comprobante')->where('idcuenta','=',$estado->idcuenta)
+            ->orderBy('created_at','asc')
+            ->paginate(10);
+
+            Session::flash('update',"El estado de cuenta de tipo -- ". $estado->estado. " -- se ha actualizado correctamente");
+            return view('estadoCuenta.show',["cliente"=>$cliente,"estados"=>$estados, "fecha_actual"=>$fecha_actual,"usuarioactual"=>$usuarioactual]);
         }
-        $estado->fechacomprobante=$date; 
+
+
+    }
+
+    /*
+    Nombre: updateEstado
+    Objetivo: metodo para actualizar el estado del pago
+    Autor: Steven
+    Fecha creación: 02-02-2018, 00:00
+    Fecha modificacion: 13-04-2019, 10:55
+    Parámetros de entrada: idcomprobante
+    Parámetros de salida: estado de pago cancelado o no cancelado
+     */
+    public function updateEstado(Request $request){
+        $usuarioactual=\Auth::user();
+
+        $estado = Comprobante::where('idcomprobante',$request->get('idcomprobante'))->first();
+        $estado->estadodos = $request->get('estadodos');
         $estado->update();
 
-        $estados=DB::table('comprobante')->where('idcuenta','=',$id)
-        ->orderBy('created_at','asc')
-        ->paginate(10);
-        
-        Session::flash('create',"Estado de Cuenta " .$estado->estado. " Editado correctamente");
-        return redirect('agregarestado/'.$cliente->idcuenta);
-        //.$cliente->idcuenta.,["estados"=>$estados,"usuarioactual"=>$usuarioactual,"cliente"=>$cliente]);
+        Session::flash('update','Estado de pago -- '.$estado->estadodos.'  --  actualizado correctamente');
+        return back();
     }
 
-    public function cancelar($id){
-
-        $usuarioactual=\Auth::user();
-        $estado = Comprobante::findOrFail($id);
-     
-        $cliente = DB::table('cuenta')
-        ->select('cuenta.idcuenta','negocio.nombre as nnegocio','cliente.nombre','negocio.nombre as nnegocio', 'cliente.apellido')
-        ->join('negocio as negocio','cuenta.idnegocio','=','negocio.idnegocio')
-        ->join('cliente as cliente','negocio.idcliente','=','cliente.idcliente')
-        ->where('cuenta.idcuenta','=',$estado->idcuenta)
-        ->first();
-
-        
-
-      
-        $cuenta=Cuenta::where('idcuenta','=',$estado->idcuenta)->first();
-        $prestamo=Prestamo::where('idprestamo','=',$cuenta->idprestamo)->first(); 
-        $estado->estadodos="CANCELADO";
-        $prestamo->estadodos="CERRADO";
-        $cuenta->estado='INACTIVO';
-        $estado->update(); 
-        $prestamo->update();
-        $cuenta->update();
-
-        $estados=DB::table('comprobante')->where('idcuenta','=',$estado->idcuenta)
-        ->orderBy('created_at','asc')
-        ->paginate(10);
-
-        Session::flash('create',"Estado de Cuenta ha sido cancelado exitosamente");
-        return redirect('agregarestado/'.$cliente->idcuenta);
-    }
-
+    /*
+    Nombre: destroy
+    Objetivo: metodo para eliminar estado de cuenta
+    Autor: Oscar
+    Fecha creación: 02-02-2018, 00:00
+    Fecha modificacion: 13-04-2019, 10:59
+    Parámetros de entrada: idcomprobante
+    Parámetros de salida: estados de cuenta 
+     */
     public function destroy($id)
     {
         $usuarioactual=\Auth::user();
 
         $estado = Comprobante::findOrFail($id);
         $estado->delete();
-         Session::flash('delete',"Estado de Cuenta Fue ELIMINADO correctamente");
-         return back();
-
+         Session::flash('delete',''.$estado->estado.'');
+        return back();
     }
 
     /*

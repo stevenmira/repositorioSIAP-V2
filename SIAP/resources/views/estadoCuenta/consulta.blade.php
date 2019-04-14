@@ -11,8 +11,10 @@
 <section class="content-header">
   <ol class="breadcrumb">
     <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
+    <li><a href="{{URL::action('RecordClienteController@index')}}"> Récord Cliente</a></li>
+    <li><a href="{{URL::action('CuentaController@show',$cliente->idcuenta)}}"> Cuenta</a></li>
     <li><a href="{{URL::action('ComprobanteController@show',$cliente->idcuenta)}}"> Estados de Cuentas</a></li>
-    <li class="active">Nuevo</li>
+    <li class="active">Ver</li>
   </ol>
 </section>
 <br>
@@ -145,8 +147,14 @@
   <br>
   <div><span>&nbsp;&nbsp;&nbsp;&nbsp;1. por visita ténica cuando el contrato ya este vencido se cargaran a su cuenta $10.00 aun cuando no sea atendida,</span></div><br>
   <div><span>- su credito vence el <b>{{$liquidacion->fechadiaria->format('l j')}} de {{$liquidacion->fechadiaria->format('F')}} de {{$liquidacion->fechadiaria->format('Y')}}</b> de no estar solvente a la fecha de vencimiento. Se cargaran mora por el incumplimiento de 1% diario sobre saldo deudor a la fecha.</span></div>
-  <br><br><br><br><br><br>
+  <br><br><br>
   <div align="center"><b><span>Email: afimid@yahoo.com</span></b></div>
+</div>
+
+<div style="padding: 10px 100px;">
+  <a href="{{URL::action('ComprobanteController@show',$cliente->idcuenta)}}" class="btn btn-danger btn-lg"><i class="fa fa-chevron-left" aria-hidden="true"></i> Atrás</a>
+
+  <a class="btn btn-danger btn-lg pull-right" data-title="Imprimir" href="{{URL::action('ComprobanteController@estadoPDF',$estadoc->idcomprobante)}}" data-toggle="modal" target="_blank"><i class="fa fa-print" aria-hidden="true"> Imprimir</i></a>
 </div>
   
 

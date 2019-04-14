@@ -9,179 +9,169 @@
 </style>
 
 <section class="content-header">
-  <h1 style="color: #333333; font-family: 'Times New Roman', Times, serif;">
-  EDITAR ESTADO DE CUENTA VENCIDO
-  </h1>
   <ol class="breadcrumb">
-    <li><ahref="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
+    <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
+    <li><a href="{{URL::action('RecordClienteController@index')}}"> Récord Cliente</a></li>
+    <li><a href="{{URL::action('CuentaController@show',$cliente->idcuenta)}}"> Cuenta</a></li>
     <li><a href="{{URL::action('ComprobanteController@show',$cliente->idcuenta)}}"> Estados de Cuentas</a></li>
     <li class="active">Editar</li>
   </ol>
 </section>
 <br>
 
+<br>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS</h4>
+<h4 style="text-align: center; font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333;">AFIMID, S.A DE C.V</h4>
 
-
-  <div class="col-md-12"> 
-    <div class="panel panel-success">
-      <div class="panel-body">
-          
-
-          <div class="row">
-            <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-              @if(count($errors) > 0)
-              <div class="errors">
-                <ul>
-                  <p><b>Por favor, corrige lo siguiente:</b></p>
-                  <?php $cont = 1; ?>
-                @foreach($errors->all() as $error)
-                  <li>{{$cont}}. {{ $error }}</li>
-                  <?php $cont=$cont+1; ?>
-                @endforeach
-                </ul>
-              </div>
-            @endif
-            </div>
-          </div>
-      
-          <section class="posts col-md-9">
-          {!!Form::open(array('action' => array('ComprobanteController@update',$estadoc->idcomprobante), 'method'=>'PATCH','autocomplete'=>'off'))!!}
-          
-        {{Form::token()}} 
-          <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 toppad" >
-              <div class="panel panel-info">
-        
-                <div class="panel-heading">
-                  <h3 class="panel-title">INFORMACIÓN DEL CLIENTE</h3>
-                </div>
-                <div class="panel-body">
-                  <div class="row">
-                           
-                    <div class=" col-md-9 col-lg-9 "> 
-                      <table class="table table-user-information">
-                        <tbody>
-                          <tr>
-                            <td>NOMBRES Y APELLIDOS:</td>
-                            <td>{{ $cliente->nombre}} {{ $cliente->apellido }}</td>
-                          </tr>
-                          <tr>
-                            <td>NEGOCIO:</td>
-                            <td>{{ $cliente->nnegocio }}</td>
-                          </tr>        
-                          <tr>
-                            <td>DUI:</td>
-                            <td>{{ $cliente->dui }}</td>
-                          </tr>
-        
-                          <tr>
-                            <td>NIT:</td>
-                            <td>{{ $cliente->nit }}</td>
-                          </tr>        
-                          <tr>
-                            <td>DIRECCIÓN:</td>
-                            <td>{{ $cliente->direccion}}</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-                </div>
-                
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 toppad" >
-                <div class="panel panel-success"> 
-                <div class="panel-heading">
-                  <h3 class="panel-title">DETALLE DE LA DEUDA</h3>
-                </div>
-        
-                <div class="panel-body">
-                  <div class="row">
-                          
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 "> 
-                      <table class="table">
-                        <tbody>
-                          <tr>
-                            <td>SALDO PENDIENTE DE CUOTAS: <b>{{$estadoc->diaspendientes}}</b> DE <b>${{$estadoc->totalpendiente}}</b></td>
-                            <td> <b>${{$estadoc->totalpendiente}}</b></td>
-                          </tr>
-                          <tr>
-                            <td><b>{{$estadoc->cuotadeuda}}</b> CUOTAS DE <b>${{$cliente->cuotadiaria}}</b> DEL </td>
-                            <td> <b>${{$estadoc->totalcuotasdeuda}}</b></td>
-                          </tr>
-                          <tr>
-                            <td><b>{{$ultimacuota}}</b> CUOTA DE <b>${{$estadoc->ultimacuota}}</b> DEL </td>
-                            <td> <b>${{$estadoc->ultimacuota}}</b></td>
-                          </tr>
-                          <tr>
-                            <td class="col-xs-12 col-sm-12 col-md-8 col-lg-8">MORA POR INCUMPLIMIENTO DE CONTRATO DE UN CAPITAL DE <b>{{$estadoc->montoactual}}*{{$cliente->interes*100}}*{{$estadoc->diasatrasados}}</b> DIAS ATRASADOS:</td>
-                            <td>{{$estadoc->mora}}</td>
-                          </tr>
-                          <tr>
-                            <td><b style="color:blue">SubTotal</b></td>
-                            <td><span id="monto">{{$subtotal}}</span></td>
-                          </tr>
-                          <tr>
-                            <td>Gastos de Administración por gestion de cobros:</td>
-                            <td>{!! Form::number('gastosadmon', $estadoc->gastosadmon, ['id'=>'gastosadmon','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca los gastos administrativos. . .', 'autofocus'=>'on', 'maxlength'=>'6']) !!}</td>
-                          </tr>
-                          <tr>
-                            <td>Gastos Administrativos por Notificación:</td>
-                            <td>{!! Form::number('gastosnoti', $estadoc->gastosnotariales, ['id'=>'gastosnoti','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Gastos por Notificación. . .', 'autofocus'=>'on', 'maxlength'=>'6']) !!}</td>
-                          </tr>
-                          <tr>
-                            <td><b style="color:red">TOTAL A CANCELAR</b></td>
-                            <td><b>{!! Form::number('total',$estadoc->total, [ 'id'=>'total','class' => 'form-control' , 'disabled' => 'disabled', 'autofocus'=>'on', 'maxlength'=>'6']) !!}</b></td>
-                           
-                          </tr>
-                        </tbody>
-                      </table>
-                   </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                 <input name="_token" value="{{csrf_token()}}" type="hidden"></input>
-                 <a href="{{URL::action('ComprobanteController@show',$cliente->idcuenta)}}" class="btn btn-danger btn-lg col-md-offset-2">Cancelar</a>
-                  <button class="btn btn-primary btn-lg col-md-offset-2" type="submit">Guardar</button>
-              </div>
-            </div>
-          </div>
-            
-        </section>
-        <aside class="col-md-3 col-lg-3 col-sm-12 col-xs-12">
-        <div class="box-body">
-    @if($usuarioactual->idtipousuario!=1)
-    <a href="{{URL::action('ComprobanteController@show',$cliente->idcuenta)}}" style="background: #ccff90; color: black;" class="btn col-md-12 col-lg-12 btn-app" title="Ver estados de cuenta">
-        <i class="fa fa-folder"></i> Estado Cuenta
-      </a>
-      <a href="{{URL::action('RecordClienteController@recibo',$cliente->idcuenta)}}" style="background: #ccff90; color: black;" class="btn col-md-12 col-lg-12 btn-app" title="Generar recibo">
-        <i class="fa fa-file"></i> Recibos
-      </a>
-      <a href="{{URL::action('RecordClienteController@pagare',$cliente->idcuenta)}}" target="_blank" style="background: #ccff90; color: black;" class="btn col-md-12 col-lg-12 btn-app" title="Imprimir pagaré">
-        <i class="fa fa-print"></i> Pagaré
-      </a>
-    @endif
-    @if($usuarioactual->idtipousuario==1)
-      <a href="{{URL::action('RecordClienteController@pagare',$cliente->idcuenta)}}" target="_blank" style="background: #ccff90; color: black;" class="btn col-md-12 col-lg-12 btn-app" title="Imprimir pagaré">
-        <i class="fa fa-print"></i> Pagaré
-      </a>
-      <a href="{{ url('cuenta/desembolso', ['id' => $cliente->idcuenta]) }}" style="background: #ccff90; color: black;" class="btn col-md-12 col-lg-12 btn-app" title="Ver desembolso">
-        <i class="fa fa-print"></i> Desembolso
-      </a>
-      <a href="{{ url('cuenta/carteraPagos', ['id' => $cliente->idcuenta]) }}" style="background: #ccff90; color: black;" class="btn col-md-12 col-lg-12 btn-app" title="Ver cartera de pagos">
-        <i class="fa fa-money"></i> Cartera Pagos
-      </a>
-      <a href="{{URL::action('ComprobanteController@show',$cliente->idcuenta)}}" style="background: #ccff90; color: black;" class="btn col-md-12 col-lg-12 btn-app" title="Ver estados de cuenta">
-        <i class="fa fa-folder"></i> Estado Cuenta
-      </a>
-      <a href="{{URL::action('RecordClienteController@recibo',$cliente->idcuenta)}}" style="background: #ccff90; color: black;" class="btn col-md-12 col-lg-12 btn-app" title="Generar recibo">
-        <i class="fa fa-file"></i> Recibos
-      </a>
-      
-      @endif
+<h4 style="text-align: center;font-family:  'Trebuchet MS', Helvetica, sans-serif; color: #333333; padding: 40px 0px 5px 0px;"><b>EDITAR ESTADO DE CUENTA</b></h4>
+<br><br>
+<div class="container">
+  <table>
+    <thead>
+      <tr>
+        <td style="width: 10%; font-weight: bold;">CLIENTE:</td>
+        <td style="width: 25%;">{{$cliente->nombre}} {{$cliente->apellido}}</td>
+        <td style="width: 10%; font-weight: bold;">NEGOCIO:</td>
+        <td style="width: 25%;">{{$cliente->nombreNegocio}}</td>
+        <td style="width: 7%; font-weight: bold;">CARTERA:</td>
+        <td style="width: 18%; font-weight: bold;">"{{$cliente->nombreCartera}}"</td>
+        <td style="width: 5%;">
+          <a href="{{URL::action('ClienteController@show',$cliente->idcliente)}}">Ver Perfil</a>
+        </td>
+      </tr>
+    </thead>
+  </table>
+</div>
+<div class="row">
+  <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    @if(count($errors) > 0)
+    <div class="errors">
+      <ul>
+        <p><b>Por favor, corrige lo siguiente:</b></p>
+        <?php $cont = 1; ?>
+      @foreach($errors->all() as $error)
+        <li>{{$cont}}. {{ $error }}</li>
+        <?php $cont=$cont+1; ?>
+      @endforeach
+      </ul>
     </div>
-</aside>
+  @endif
+  </div>
+</div>
+
+
+
+  {!!Form::open(array('action' => array('ComprobanteController@update',$estadoc->idcomprobante), 'method'=>'PATCH','autocomplete'=>'off'))!!}
+  <div style="padding: 0px 40px;">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 toppad" >
+      <div class="panel panel-success"> 
+        <div class="panel-heading">
+          <h3 class="panel-title">DETALLE DE LA DEUDA</h3>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-12 col-sm-12  col-md-12 col-lg-12 "> 
+              <table class="table table-user-information">
+                <thead>
+                  <th>No.</th>
+                  <th>FECHAS</th>
+                  <th>DÍAS</th>
+                  <th>DETALLES</th>                
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Fecha</td>
+                    <td></td>
+                    <td>
+                      {!! Form::date('fechaactual', $estadoc->fechacomprobante, ['class' => 'form-control', 'required' => 'required','autofocus'=>'on']) !!}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
+                      Saldo pendiente de cuota
+                    </td>                      
+                    <td>
+                        {!! Form::number('diaspendiente',$estadoc->diaspendientes, ['id'=>'diaspendiente','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'1']) !!}
+                    </td>
+                    <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
+                        {!! Form::number('totalpendiente',$estadoc->totalpendiente, ['id'=>'totalpendiente','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'0.01']) !!}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
+                      Cuotas atrasadas y/o pendientes de <b><span id="cuotax">$ {{ number_format($cliente->cuotadiaria,2) }}</span></b>
+                    </td>                      
+                    <td>
+                        {!! Form::number('cuotadeuda',$estadoc->cuotadeuda, ['id'=>'cuotadeuda','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'1']) !!}
+                    </td>
+                    <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
+                        {!! Form::number('totalcuotadeuda',$estadoc->totalcuotasdeuda, ['id'=>'totalcuotadeuda','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'0.01']) !!}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
+                      Última cuota 
+                    </td>                      
+                    <td>
+                        {!! Form::number('ultimac',1, ['id'=>'ultimac','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'1']) !!}
+                    </td>
+                    <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
+                        {!! Form::number('ultimacuota',$estadoc->ultimacuota, ['class' => 'form-control' , 'required' => 'required','step'=>'0.01']) !!}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>5</td>
+                    <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
+                      Mora por incumplimiento de contrato de un capital 
+                    </td>                      
+                    <td>
+                        {!! Form::number('diasexpirados',$estadoc->diasexpirados, ['id'=>'diasexpirados','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'1']) !!}
+                    </td>
+                    <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
+                        {!! Form::number('mora',$estadoc->mora, ['id'=>'mora','onkeyup'=>'Multi();Sumar()','class' => 'form-control' , 'required' => 'required','step'=>'0.01']) !!}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>6</td>
+                    <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
+                      Saldo capital 
+                    </td>                      
+                    <td></td>
+                    <td class="col-xs-4 col-sm-4  col-md-4 col-lg-4">
+                        {!! Form::number('monto',$estadoc->montoactual, ['class' => 'form-control' , 'required' => 'required','step'=>'0.01']) !!}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>7</td>
+                    <td>Gastos de Administración por gestion de cobros:</td>
+                    <td></td>
+                    <td>{!! Form::number('gastosadmon', $estadoc->gastosadmon, ['id'=>'gastosadmon','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca los gastos administrativos. . .', 'step'=>'0.01']) !!}</td>
+                  </tr>
+                  <tr>
+                    <td>8</td>
+                    <td>Gastos Administrativos por Notificación:</td>
+                    <td></td>
+                    <td>{!! Form::number('gastosnoti', $estadoc->gastosnotariales, ['id'=>'gastosnoti','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca los gastos por notificación. . .', 'step'=>'0.01']) !!}</td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td><b style="color:red">TOTAL A CANCELAR</b></td>
+                    <td></td>
+                    <td><b>{!! Form::number('total', $estadoc->total, [ 'id'=>'total','class' => 'form-control', 'step'=>'0.01','required' => 'required']) !!}</b></td>
+                   
+                  </tr>
+                </tbody>
+              </table>
+              <input name="_token" value="{{csrf_token()}}" type="hidden"></input>
+              <a href="{{URL::action('ComprobanteController@show',$cliente->idcuenta)}}" class="btn btn-danger btn-lg col-md-offset-2"><i class="fa fa-times" aria-hidden="true"></i> Cancelar</a>
+              <button class="btn btn-primary btn-lg pull-right" type="submit"> Actualizar</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -190,42 +180,6 @@
 
 @push('scripts')
 
-
-<!-- InputMask -->
-<script src="{{asset('js/inputmask/jquery3.js')}}"></script>  
-<script src="{{asset('js/inputmask/input-mask.js')}}"></script>
-<script src="{{asset('js/inputmask/input-mask-date.js')}}"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-<script>
-  $(function () {
-    //Money Euro
-    $('[data-mask]').inputmask()
-
-  })
-</script>
-
-<!--Script para sumar el total del monto a pagar-->
-<script>
-function Sumar(){
- total=parseFloat(document.getElementById("monto").innerHTML);
- numero1 = parseFloat(document.getElementById("monto").innerHTML);
- numero2 = parseFloat(document.getElementById("gastosadmon").value);
- numero4 = parseFloat(document.getElementById("gastosnoti").value);
-
-
-if((isNaN(numero2)) && (isNaN(numero4))){
-  total=numero1;
-}else if(isNaN(numero2)){
-    total+=numero4;
-}else if(isNaN( numero4)){
-  total+=numero2;
-}
-else {
-   total=numero1 + numero2 + numero4;
-}
-document.getElementById("total").value = total.toFixed(2);
-}
-</script>
 
 
 
