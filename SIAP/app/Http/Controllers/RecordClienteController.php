@@ -135,7 +135,8 @@ class RecordClienteController extends Controller
         $aniopre = strtolower(\NumeroALetras::convertir($fepre[2]));
 
         setlocale(LC_TIME, "spanish");
-        $mesfech = ucfirst(strftime("%B"));
+        //$mesfech = \NumeroALetras::convertir(strftime($fepre[1]));
+        $mesfech = strftime('%B', mktime(0, 0, 0, $fepre[1]));
         $diafech = \NumeroALetras::convertir($fepre[0]);
 
         $hoy = date("d-MM-Y");

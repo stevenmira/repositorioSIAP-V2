@@ -18,7 +18,7 @@
     <li><a href="<?php echo e(url('home')); ?>"><i class="fa fa-dashboard"></i> Inicio</a></li>
     <li><a href="<?php echo e(URL::action('ClienteController@index')); ?>"> Cliente </a></li>
     <li><a href="<?php echo e(url('cliente/creditos', ['id' => $cliente->idcliente ])); ?>"> Créditos </a></li>
-    <li><a href="<?php echo e(url('cliente/credito/garantias', ['id' => $idprestamo])); ?>"> Garantías </a></li>
+    <li class="active"> Garantías </li>
   </ol>
 </section>
 
@@ -152,7 +152,7 @@
 
 
 <div class="row">
-  <a href="<?php echo e(URL::action('ClienteController@index')); ?>" class="btn btn-danger btn-lg col-md-offset-2"><i class="fa fa-chevron-left" aria-hidden="true"></i> Atrás</a>
+  <a href="<?php echo e(url('cliente/creditos', ['id' => $cliente->idcliente ])); ?>" class="btn btn-danger btn-lg col-md-offset-2"><i class="fa fa-chevron-left" aria-hidden="true"></i> Atrás</a>
 </div>
 
   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

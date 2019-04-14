@@ -328,10 +328,11 @@
 			<br>
 			Para todos los efectos de esta obligación mercantil, fijo como domicilio especial la ciudad de Santa Tecla, departamento de La Libertad, y en caso de acción judicial, renuncio al Derecho de apelar del Decreto de embargo, de la sentencia de remate y de otra providencia apelable, que se dictare en el juicio mercantil ejecutivo o en sus incidencias, siendo a mi cargo cualquier gasto que la empresa <b>ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS SOCIEDAD ANÓNIMA DE CAPITAL VARIABLE,</b> y que puede abreviarse <b>AFIMID, S.A. DE C.V.</b> de generales antes relacionadas hicieren en el cobro de este PAGARE, inclusive los llamados personales y aún cuando por regla general no hubiere condenación en costas y faculto a <b>ASESORES FINANCIEROS MICRO IMPULSADORES DE NEGOCIOS SOCIEDAD ANÓNIMA DE CAPITAL VARIABLE,</b> y que puede abreviarse <b>AFIMID, S.A. DE C.V.</b> Para que designe la persona depositaria de los bienes que se embarguen, a quienes relevo de la obligación de rendir fianza y cuentas. 
 			<BR>
+			<?php if($garantiaDeudor != null): ?>
 			<?php if(count($garantiaDeudor) > 0 || count($garantiaCodeudor) > 0): ?>
+				
 				Dejando en garantia: en caso de vencimiento de pagare sin protesto,o incumplimiento de las condiciones del crédito, los siguientes.
 			<?php endif; ?>
-			<?php if($garantiaDeudor != null): ?>
 				<?php foreach( $garantiaDeudor as $garantia): ?>
 					<TABLE style="width: 100%; border-collapse: collapse;">
 						<TR>
