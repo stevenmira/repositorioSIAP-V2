@@ -11,6 +11,8 @@
 <section class="content-header">
   <ol class="breadcrumb">
     <li><a href="{{ url('home')}}"><i class="fa fa-dashboard"></i> Inicio</a></li>
+    <li><a href="{{URL::action('RecordClienteController@index')}}"> Récord Cliente</a></li>
+    <li><a href="{{URL::action('CuentaController@show',$cliente->idcuenta)}}"> Cuenta</a></li>
     <li><a href="{{URL::action('ComprobanteController@show',$cliente->idcuenta)}}"> Estados de Cuentas</a></li>
     <li class="active">Nuevo</li>
   </ol>

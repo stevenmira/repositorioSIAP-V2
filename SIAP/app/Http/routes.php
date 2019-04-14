@@ -68,6 +68,10 @@ Route::post('reportes/control/creditos/review','ReportesController@controlCredit
 Route::get('reportes/estado/creditos','ReportesController@estadoCreditos');
 Route::post('reportes/estado/creditos/review','ReportesController@estadoCreditosReview');
 
+//Graficos de carteras
+Route::get('reportes/grafico/efectivo','ReportesController@grafico');
+Route::post('reportes/grafico/efectivo/review','ReportesController@graficoReview');
+
 
 Route::get('clientes/perfilClientePDF/{id}','ClienteController@perfilClientePDF');
 
@@ -108,11 +112,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('home', 'HomeController@index');
     Route::get('logout', ['as' => 'logout', 'uses' => 'Auth\AuthController@getLogout']);
     Route::resource('usuario','UsuarioController');
+
     Route::get('estadodecuenta/{id}', ['as' => 'idcuenta', 'uses' => 'ComprobanteController@nuevoestado']);
     Route::post('agregarestado/{id}',  'ComprobanteController@agregarestado');
     Route::resource('agregarestado',  'ComprobanteController');
-   Route::post('cancelar/{id}',  'ComprobanteController@cancelar');
    Route::get('estadodecuentas/{id}', 'ComprobanteController@mostrar');
+   Route::post('estadodecuentas/estado/update', 'ComprobanteController@updateEstado');
    
    //Calcular credito
    Route::resource('calcular-credito','calcularCreditoController');

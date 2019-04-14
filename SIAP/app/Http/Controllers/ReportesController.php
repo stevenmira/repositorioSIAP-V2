@@ -470,4 +470,75 @@ class ReportesController extends Controller
 
         return view('reportes.tacticos.estadoCreditos.estadoCreditosReview',["consulta"=>$consulta,"nombreCartera"=>$nombreCartera,"desde"=>$desde,"hasta"=>$hasta,"estado"=>$estado,"fecha_actual"=>$fecha_actual,"sumMonto"=>$sumMonto,"sumMontoCompleto"=>$sumMontoCompleto,"sumMontoRefinanciamiento"=>$sumMontoRefinanciamiento,"c1"=>$c1,"c2"=>$c2, "p1"=>$p1,"p2"=>$p2,"usuarioactual"=>$usuarioactual]);
     }
+
+    public function grafico(){
+        $usuarioactual=\Auth::user();
+
+        $fecha_actual = Carbon::now()->format('d-m-Y');
+        $carteras = DB::table('cartera')->orderby('cartera.nombre','asc')->get();
+
+        return view('reportes.tacticos.grafico.graficoForm',["fecha_actual"=>$fecha_actual,"carteras"=>$carteras, "usuarioactual"=>$usuarioactual]);
+    }
+
+    public function graficoReview(Request $request){
+        $usuarioactual=\Auth::user();
+        $fecha_actual = Carbon::now()->format('d-m-Y');
+        
+        $idcartera = $request->get('idcartera');
+        $desde = $request->get('desde');
+        $hasta = $request->get('hasta');
+
+        if ($desde > $hasta) {
+
+            $carteras = DB::table('cartera')->orderby('cartera.nombre','asc')->get();
+
+            Session::flash('msj',"El valor del campo -- FECHA INICIO -- debe ser menor o igual que el valor del campo -- FECHA FIN --");
+
+            return view('reportes.tacticos.grafico.graficoForm',["fecha_actual"=>$fecha_actual,"carteras"=>$carteras, "usuarioactual"=>$usuarioactual]);
+        }
+
+        if ($idcartera == 'TODAS') 
+        {
+            $nombreCartera = 'TODAS LAS CARTERAS';
+
+            // Sumatoria del totaldiario recibido. Se toma como base la fechaefectiva de pago
+            $consulta = DB::table('detalle_liquidacion')
+                ->join('cuenta as cuenta','cuenta.idcuenta','=','detalle_liquidacion.idcuenta')
+                ->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
+                ->join('negocio as negocio','negocio.idnegocio','=','cuenta.idnegocio')
+                ->join('cliente as cliente','cliente.idcliente','=','negocio.idcliente')
+                ->join('cartera as cartera','cartera.idcartera','=','cliente.idcartera')
+                ->where('detalle_liquidacion.fechaefectiva','>=',$desde)
+                ->where('detalle_liquidacion.fechaefectiva','<=',$hasta)
+                #->where('cartera.idcartera', '=', $idcartera)
+                ->select(
+                    'cartera.idcartera',
+                    'cartera.nombre',
+                    #'detalle_liquidacion.fechaefectiva',
+                    DB::raw('sum(detalle_liquidacion.totaldiario) as total')
+                )
+                ->groupBy(
+                    'cartera.idcartera',
+                    'cartera.nombre'
+                    #'detalle_liquidacion.fechaefectiva'
+                )
+                #->having('detalle_liquidacion.fechaefectiva','>=',$desde)
+                #->having('detalle_liquidacion.fechaefectiva','<=',$hasta)
+                ->get();
+
+            $totalEfectivo = 0;
+            foreach ($consulta as $con1) {
+                $totalEfectivo = $totalEfectivo + $con1->total;        
+            }
+
+            $desde = Carbon::parse($desde)->format('d-m-Y');
+            $hasta = Carbon::parse($hasta)->format('d-m-Y');
+
+            return view('reportes.tacticos.grafico.graficoReview',["consulta"=>$consulta,"totalEfectivo"=>$totalEfectivo, "fecha_actual"=>$fecha_actual, "nombreCartera"=>$nombreCartera, "desde"=>$desde, "hasta"=>$hasta, "usuarioactual"=>$usuarioactual]);
+
+        }
+
+
+
+    }
 }

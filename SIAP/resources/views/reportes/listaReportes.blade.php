@@ -56,6 +56,15 @@
       </div>
     @endif
 
+    @if($usuarioactual->idtipousuario==1)
+      <div class="col-md-3" align="center">
+        <a href="{{URL::action('ReportesController@grafico')}}">
+          <span class="fa fa-file fa-3x"></span><i class="fab fa-cuttlefish"></i>
+          <h3>Gráficos de Carteras</h3>
+        </a>
+      </div>
+    @endif
+
   </div>
 </div>
 <br><br>
