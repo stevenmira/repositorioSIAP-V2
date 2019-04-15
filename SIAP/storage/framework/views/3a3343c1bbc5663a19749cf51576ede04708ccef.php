@@ -25,7 +25,7 @@
   </div>
   
 
-  <h1 align="center">REPORTE  DE ESTADO DE CRÉDITOS</h1>
+  <h1 align="center">REPORTE  DE EFECTIVO RECIBIDO</h1>
   <br>
   <br>
   <br>
@@ -35,50 +35,6 @@
     <p class="col-md-2 col-lg-2 col-sm-2"><b>Fecha de inicio:</b>&nbsp;&nbsp;&nbsp; <?php echo e($desde); ?></p>
     <p class="col-md-2 col-lg-2 col-sm-2"><b>Fecha fin:</b>&nbsp;&nbsp;&nbsp; <?php echo e($hasta); ?></p>
     <p class="col-md-1 col-lg-1 col-sm-1"><a style="cursor: pointer;"> Imprimir&nbsp;&nbsp;&nbsp;<i class="fa fa-print"></i></a></p>
-  </div>
-
-    <!-- ChartJS -->
-  <script src="<?php echo e(asset('js/Chart.min.js')); ?>"></script>
-
-  <div>
-    <canvas id="bar-chart" width="800" height="450"></canvas>
-    <script type="text/javascript">
-
-      const user = <?php echo json_encode($consulta); ?>;
-            console.log(user);
-
-            for(var i in user){
-              var ruta="nombre"
-              var ca = i[ruta];
-              console.log(ca);
-            }
-
-      new Chart(document.getElementById("bar-chart"), {
-          type: 'bar',
-          data: {
-            labels: [
-            
-
-/*
-            "Africa", "Asia", "Europe", "Latin America", "North America"*/
-            ],
-            datasets: [
-              {
-                label: "Population (millions)",
-                backgroundColor: ["#3e95cd", "#8e5ea2","#3cba9f","#e8c3b9","#c45850"],
-                data: [2478,5267,734,784,433]
-              }
-            ]
-          },
-          options: {
-            legend: { display: false },
-            title: {
-              display: true,
-              text: 'Predicted world population (millions) in 2050'
-            }
-          }
-      });
-    </script>
   </div>
 
 <div class="row">
@@ -123,6 +79,10 @@
       <p class="col-md-12 col-lg-12 col-sm-12" style="color: red" align="center"><b>NO HAY REGISTRO DE CRÉDITOS</b></p>
     </div>
   <?php endif; ?>
+
+  <div>
+    <a href="<?php echo e(URL::action('ReportesController@grafico')); ?>" class="btn btn-primary btn-md col-md-offset-1"> REGRESAR</a>
+  </div>
 
 
  

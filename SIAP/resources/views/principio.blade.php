@@ -203,13 +203,29 @@
       </div>
       @endif
 
-
+      @if($usuarioactual->idtipousuario==1)
+      <div class="col-md-3" align="center">
+        <a href="{{URL::action('CategoriaController@index')}}">
+          <span class="fa fa-sort-alpha-asc fa-3x"></span>
+          <h3>Gestión de Categorías</h3>
+        </a>
+      </div>
+      @endif
       
       @if($usuarioactual->idtipousuario==1)
       <div class="col-md-3" align="center">
         <a href="{{URL::action('ReportesController@lista')}}">
           <span class="fa fa-file fa-3x"></span><i class="fab fa-cuttlefish"></i>
           <h3>Reportes</h3>
+        </a>
+      </div>
+      @endif
+
+      @if($usuarioactual->idtipousuario==1)
+      <div class="col-md-3" align="center">
+        <a href="{{URL::action('ImprimirController@index')}}">
+          <span class="fa fa-check fa-3x"></span><i class="fab fa-cuttlefish"></i>
+          <h3>Formatos Oficiales</h3>
         </a>
       </div>
       @endif

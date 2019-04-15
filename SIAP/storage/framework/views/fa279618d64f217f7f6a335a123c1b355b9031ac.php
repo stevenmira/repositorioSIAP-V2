@@ -208,6 +208,43 @@
         </div>
       </div>
     </div>
+
+    <?php if($codeudor != null): ?>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 toppad" >
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h3 class="panel-title">
+            CODEUDOR
+            <?php if($usuarioactual->idtipousuario==1): ?>
+            <a href="<?php echo e(URL::action('CodeudorController@show',$codeudor->idcodeudor)); ?>">
+              <span class="pull-right"> ver perfil <i class="fa fa-user"></i></span> 
+            </a>
+            <?php endif; ?>
+          </h3>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class=" col-md-12 col-lg-12 "> 
+              <table class="table table-user-information">
+                <tbody>
+                  <tr>
+                    <td>NOMBRE:</td>
+                    <td><?php echo e($codeudor->nombre); ?> <?php echo e($codeudor->apellido); ?></td>
+                    <td>DUI:</td>
+                    <td><?php echo e($codeudor->dui); ?></td>
+                    <td>TELEFONOS:</td>
+                    <td><?php echo e($codeudor->telefonocel); ?> - <?php echo e($codeudor->telefonofijo); ?></td>
+                  </tr>
+                </tbody>
+              </table>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php endif; ?>
+
+
   </div>
 
 </section>
@@ -254,16 +291,18 @@
 <div><?php echo $__env->make('cuenta.modalPrestamo', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?></div>
 <div><?php echo $__env->make('cuenta.modalDelete', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?></div>
 
-<div class="row">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
   <a href="<?php echo e(URL::action('RecordClienteController@index')); ?>" class="btn btn-danger btn-lg col-md-offset-2"><i class="fa fa-chevron-left" aria-hidden="true"></i> Atrás</a>
 </div>
 
 <?php if($usuarioactual->idtipousuario==1): ?>
-<div class="footer text-right">
-  <div class="container-fluid">
-      <a href="#" data-target="#modal-deleteD-<?php echo e($cuenta->idcuenta); ?>" data-toggle="modal" style="color: red;"  title="Elimina el Crédito Actual">
-      <i class="fa fa-times" aria-hidden="true"></i> <b>Eliminar Crédito</b>
-     </a>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+  <div class="footer text-right">
+    <div class="container-fluid">
+        <a href="#" data-target="#modal-deleteD-<?php echo e($cuenta->idcuenta); ?>" data-toggle="modal" style="color: red;"  title="Elimina el Crédito Actual">
+        <i class="fa fa-times" aria-hidden="true"></i> <b>Eliminar Crédito</b>
+       </a>
+    </div>
   </div>
 </div>
 <?php endif; ?>

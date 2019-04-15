@@ -165,7 +165,7 @@
     		<div class="row">
         		<div class="form-group  col-md-offset-3"  >
             		<button type="submit" class="btn btn-danger" data-toggle="tooltip" data-placement="right"><i class="fa fa-print" aria-hidden="true"></i> Generar Recibo</a></button>
-            		<a class=" btn btn-danger" type="reset"  href="{{URL::action('RecordClienteController@index')}}">Cancelar</a>
+            		<a class=" btn btn-danger" type="reset"  href="{{URL::action('CuentaController@show',$cuenta->idcuenta)}}">Cancelar</a>
         		</div>
     		</div>
     	</div>

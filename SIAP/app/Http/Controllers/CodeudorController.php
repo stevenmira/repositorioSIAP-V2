@@ -152,4 +152,26 @@ class CodeudorController extends Controller
         $codeudor = Codeudor::findOrFail($idcodeudor);
         return Redirect::to('codeudores/list/'.$codeudor->idcliente);
     }
+
+    public function destroy($idcuodedor){
+
+        $usuarioactual=\Auth::user();
+        $codeudor = Codeudor::where('idcodeudor',$idcuodedor)->first();
+
+        $prestamo = DB::table('prestamo')->where('idcodeudor','=',$idcuodedor)->first();
+
+        if (is_null($prestamo)) {
+
+            $codeudor->delete();
+            Session::flash('delete', ' '.$codeudor->nombre.' '.$codeudor->apellido.' ');
+            return back();
+
+        }else{
+            $cuenta = DB::table('cuenta')->where('idprestamo','=',$prestamo->idprestamo)->first();
+
+            Session::flash('advertencia', ''.$cuenta->idcuenta.'');
+            return back();
+        }
+    }
+
 }

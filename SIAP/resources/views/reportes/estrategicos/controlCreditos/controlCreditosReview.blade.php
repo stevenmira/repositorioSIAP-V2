@@ -112,7 +112,9 @@
   @endif
 
 
- 
+ <div>
+    <a href="{{URL::action('ReportesController@controlCreditos')}}" class="btn btn-primary btn-md col-md-offset-1"> REGRESAR</a>
+  </div>
 
 </section>
 @endsection

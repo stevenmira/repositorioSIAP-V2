@@ -24,6 +24,15 @@ class RefinanciamientoController extends Controller
 
     }
 
+    /*
+    Nombre: create
+    Objetivo: Formulario de refinanciamiento
+    Autor: Lexan
+    Fecha creación: 18-03-2019, 10:10
+    Fecha modificacion: 18-03-2019, 10:10
+    Parámetros de entrada: fechas, cuotas, montos, saldos anteriores
+    Parámetros de salida: nuevo credito
+     */
     public function create()
     {
         $usuarioactual = \Auth::user();
@@ -35,6 +44,15 @@ class RefinanciamientoController extends Controller
 
     }
 
+    /*
+    Nombre: store
+    Objetivo: metodo para guardar formulario de refinanciamiento
+    Autor: Lexan
+    Fecha creación: 18-03-2019, 10:10
+    Fecha modificacion: 18-03-2019, 10:10
+    Parámetros de entrada: fechas, cuotas, montos, saldos anteriores
+    Parámetros de salida: nuevo credito
+     */
     public function store(Request $request)
     {
         $usuarioactual = \Auth::user();
@@ -299,6 +317,15 @@ class RefinanciamientoController extends Controller
         return $consulta;
     }
 
+    /*
+    Nombre: autoCompleteSaldos
+    Objetivo: Metodo para mostrar los saldos que quedan de la cuenta anterior al refinanciamiento
+    Autor: Steven
+    Fecha creación: 20-03-2019, 10:10
+    Fecha modificacion: 20-03-2019, 10:10
+    Parámetros de entrada: idnegocio
+    Parámetros de salida: saldos de cuenta anterior (cuotaatrasada, saldocapital, mora)
+     */
     public function autoCompleteSaldos(Request $request,$idnegocio)
     {
        if($request->ajax()){

@@ -320,15 +320,11 @@ class RecordClienteController extends Controller
         $cliente = Cliente::where('idcliente',$negocio->idcliente)->first();
         $reciboAct = Recibo::where('estado','ACTIVO')->first();
 
-        try {
-            $saldoact = DetalleLiquidacion::where('idcuenta','=',$cuenta->idcuenta)
-            ->orderby('iddetalleliquidacion','asc')
-            ->where('estado','=','PENDIENTE')->orwhere('estado','=','ATRASO')->first();
-            if ($saldoact->monto==NULL) {
-                $salmon=0;
-            }else{
-                $salmon=$saldoact->monto;}
-        } catch (\Exception $e) {
+        //SE BUSCA EL SALDO CAPITAL EN QUE QUEDO LA CUENTA
+        $saldoLiqui = DetalleLiquidacion::where('idcuenta',$id)->where('abonocapital','pivote')->first();
+        if (!is_null($saldoLiqui)) {
+            $salmon = $saldoLiqui->monto;
+        }else{
             $salmon = 0;
         }
 

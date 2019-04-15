@@ -104,7 +104,7 @@
 
   <br>
   <div class="row">
-    <a href="" class="btn btn-primary btn-md col-md-offset-1"> REGRESAR</a>
+    <a href="<?php echo e(URL::action('ReportesController@lista')); ?>" class="btn btn-primary btn-md col-md-offset-1"> REGRESAR</a>
     
     <input name="_token" value="<?php echo e(csrf_token()); ?>" type="hidden"></input>
     <button type="submit" class="btn btn-danger btn-md col-md-offset-3">GENERAR REPORTE</button>

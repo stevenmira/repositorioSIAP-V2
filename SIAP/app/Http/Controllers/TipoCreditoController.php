@@ -18,6 +18,16 @@ use siap\Fecha;
 
 class TipoCreditoController extends Controller
 {
+
+    /*
+    Nombre: create
+    Objetivo: Formulario de financiamiento
+    Autor: Lexan
+    Fecha creación: 18-03-2019, 10:10
+    Fecha modificacion: 18-03-2019, 10:10
+    Parámetros de entrada: fechas, cuotas, montos, saldos anteriores
+    Parámetros de salida: nuevo credito
+     */
     public function create()
     {
         $usuarioactual = \Auth::user();
@@ -28,6 +38,15 @@ class TipoCreditoController extends Controller
         return view('tipoCredito.completo.create', ["clientes" => $clientes, "interesList" => $interesList, "fecha_actual" => $fecha_actual, "usuarioactual" => $usuarioactual]);
     }
 
+    /*
+    Nombre: store
+    Objetivo: metodo para guardar formulario de financiamiento
+    Autor: Lexan
+    Fecha creación: 18-03-2019, 10:10
+    Fecha modificacion: 18-03-2019, 10:10
+    Parámetros de entrada: fechas, cuotas, montos, saldos anteriores
+    Parámetros de salida: nuevo credito
+     */
     public function store(Request $request)
     {
         $usuarioactual = \Auth::user();

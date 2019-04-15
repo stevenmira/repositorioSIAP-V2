@@ -6,21 +6,21 @@
 				aria-label="Close">
                      <span aria-hidden="true">×</span>
                 </button>
-                <h4 class="modal-title">REPORTE DE CARTERA DE PAGOS</h4>
+                <h4 class="modal-title">REPORTE DE CONTROL DE CRÉDITOS</h4>
 			</div>
 			<div class="modal-body" style="color: #000; background: #ccff90; font-family:'Trebuchet MS', Helvetica, sans-serif;">
 
 				<p><i class="fa fa-check"> </i>&nbsp;&nbsp;&nbsp;	
-					Este reporte mostrara los creditos abiertos en un periodo de tiempo
-				</p>
-
-				<p><i class="fa fa-check"> </i>&nbsp;&nbsp;&nbsp;	
-					Recuerde que la fecha final debe ser mayor a la inicial 
+					Este reporte muestra los creditos abiertos en un periodo de tiempo con sus totales
 				</p>
 
 				<blockquote>
-	            <h3>¿Qué veo en la pantalla?</h3>
-	            <p>Aqui encontrará dos calendarios desplegables donde deberá especificar un rango de fecha
+	            	<h3>¿Qué veo en la pantalla?</h3>
+	        	</blockquote>
+	        	<p>
+	        		Aquí encontrará la(s) cartera(s) que desea incluir en el reporte
+	            </p>
+	            <p>Dos calendarios desplegables donde deberá especificar un rango de fecha
 	                con el que se elaborará el reporte.
 	                Recuerde que la fecha final debe ser mayor a la inicial
 	            </p>

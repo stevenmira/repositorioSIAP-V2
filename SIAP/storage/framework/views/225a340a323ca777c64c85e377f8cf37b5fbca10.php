@@ -27,9 +27,13 @@
 
   <h1 align="center">REPORTE  DE CARTERA DE PAGOS</h1>
   <br>
-
-
-<br>
+  <br>
+  <br>
+  <div class="row">
+    <p class="col-md-3 col-lg-3 col-sm-3"><b>Cartera:</b>&nbsp;&nbsp;&nbsp; <?php echo e($cartera->nombre); ?></p>
+    <p class="col-md-2 col-lg-2 col-sm-2"><b>Fecha de inicio:</b>&nbsp;&nbsp;&nbsp; <?php echo e($fecha); ?></p>
+    <p class="col-md-1 col-lg-1 col-sm-1"><a style="cursor: pointer;"> Imprimir&nbsp;&nbsp;&nbsp;<i class="fa fa-print"></i></a></p>
+  </div>
 <div class="row">
   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
     <div class="table-responsive">
@@ -276,7 +280,9 @@
 </div>
 
 
-
+  <div>
+    <a href="<?php echo e(URL::action('ReportesController@carteraPagos')); ?>" class="btn btn-primary btn-md col-md-offset-1"> REGRESAR</a>
+  </div>
 
 
  

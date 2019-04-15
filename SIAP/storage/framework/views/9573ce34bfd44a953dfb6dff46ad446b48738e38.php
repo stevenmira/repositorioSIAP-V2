@@ -111,7 +111,9 @@
   <?php endif; ?>
 
 
- 
+ <div>
+    <a href="<?php echo e(URL::action('ReportesController@controlCreditos')); ?>" class="btn btn-primary btn-md col-md-offset-1"> REGRESAR</a>
+  </div>
 
 </section>
 <?php $__env->stopSection(); ?>

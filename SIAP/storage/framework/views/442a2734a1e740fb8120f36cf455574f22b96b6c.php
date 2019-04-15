@@ -17,6 +17,16 @@
 				<p><i class="fa fa-check"> </i>&nbsp;&nbsp;&nbsp;	
 					La cartera y la fecha determinan si hay pérdidas o ganancias en la cartera 
 				</p>
+
+				<blockquote>
+	            	<h3>¿Qué veo en la pantalla?</h3>
+	        	</blockquote>
+	        	<p>
+	        		Aquí encontrará la cartera que desea incluir en el reporte
+	            </p>
+	            <p>
+	            	La fecha en la cual desea consultar los totales de la cartera de pago
+	            </p>
 				
 			</div>
 			<div class="modal-footer" style="background: #007E33;">

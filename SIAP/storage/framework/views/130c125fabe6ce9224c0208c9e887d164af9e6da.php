@@ -66,17 +66,3 @@
                 <li><a href="<?php echo e(URL::action('TasaInteresController@index')); ?>"><i class="fa fa-circle-o"></i> Tasas de interés</a></li>
               </ul>
             </li>
-
-             <li>
-              <a href="#">
-                <i class="fa fa-plus-square"></i> 
-                <span>Ayuda</span>
-                <small class="label pull-right bg-red">PDF</small>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <i class="fa fa-info-circle"></i> <span>Acerca De...</span>
-                <small class="label pull-right bg-yellow">IT</small>
-              </a>
-            </li>

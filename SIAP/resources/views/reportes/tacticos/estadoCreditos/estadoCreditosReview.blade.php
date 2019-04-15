@@ -84,7 +84,7 @@
                 <td style="text-align: right;"><span class="pull-left">&nbsp;$</span>{{ number_format($sumMonto,2) }}</td>
                 <td></td>
                 <td style="text-align: right;"></td>
-                <td style="text-align: right;"><span class="pull-left">&nbsp;$</span></td>
+                <td style="text-align: right;"><span class="pull-left">&nbsp;</span></td>
             </tr>
         </table>
     </div>
@@ -99,8 +99,9 @@
     </div>
   @endif
 
-
- 
+  <div>
+    <a href="{{URL::action('ReportesController@estadoCreditos')}}" class="btn btn-primary btn-md col-md-offset-1"> REGRESAR</a>
+  </div>
 
 </section>
 @endsection

@@ -41,6 +41,16 @@
     </div>
   <?php endif; ?>
 
+  <?php if(Session::has('advertencia')): ?>
+    <div class="alert  fade in" style="background:  #ff9e80;">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+      <p> No es posible eliminar al codeudor, al parecer tiene asociado un crédito. Acción fallida
+        <?php $idcuenta = (integer)Session::get('advertencia');?>
+        <a href="<?php echo e(URL::action('CuentaController@show',$idcuenta)); ?>"> ver crédito</a>
+      </p>
+    </div>
+  <?php endif; ?>
+
 
   <?php if(Session::has('error')): ?>
     <div class="alert  fade in" style="background:  #ff9e80;">

@@ -38,6 +38,7 @@ class ReportesController extends Controller
     	$usuarioactual=\Auth::user();
 
     	$idcartera = $request->get('idcartera');
+        $cartera = Cartera::where('idcartera',$idcartera)->first();
     	$fecha = $request->get('fecha');
 
     	// Sumatoria del totaldiario recibido. Se toma como base la fechaefectiva de pago
@@ -206,7 +207,7 @@ class ReportesController extends Controller
 
         $fecha_actual = Carbon::now()->format('d-m-Y');
 
-		return view('reportes.estrategicos.carteraPagosReview',["consulta1"=>$consulta1,"consulta11"=>$consulta11,"consulta2"=>$consulta2,"consulta3"=>$consulta3,"consulta4"=>$consulta4,"total1"=>$total1,"total2"=>$total2,"fecha"=>$fecha, "fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);
+		return view('reportes.estrategicos.carteraPagosReview',["consulta1"=>$consulta1,"consulta11"=>$consulta11,"consulta2"=>$consulta2,"consulta3"=>$consulta3,"consulta4"=>$consulta4,"total1"=>$total1,"total2"=>$total2,"fecha"=>$fecha, "fecha_actual"=>$fecha_actual, "cartera"=>$cartera, "usuarioactual"=>$usuarioactual]);
 
     }
 
@@ -484,20 +485,23 @@ class ReportesController extends Controller
         $usuarioactual=\Auth::user();
         $fecha_actual = Carbon::now()->format('d-m-Y');
         
-        $idcartera = $request->get('idcartera');
+        $tipo = $request->get('tipo');
         $desde = $request->get('desde');
         $hasta = $request->get('hasta');
 
-        if ($desde > $hasta) {
+        if ($tipo == "null") {
+            Session::flash('msj',"seleccione el tipo de reporte que desea generar");
+            return back();
+        }
 
-            $carteras = DB::table('cartera')->orderby('cartera.nombre','asc')->get();
+        if ($desde > $hasta) {
 
             Session::flash('msj',"El valor del campo -- FECHA INICIO -- debe ser menor o igual que el valor del campo -- FECHA FIN --");
 
-            return view('reportes.tacticos.grafico.graficoForm',["fecha_actual"=>$fecha_actual,"carteras"=>$carteras, "usuarioactual"=>$usuarioactual]);
+            return view('reportes.tacticos.grafico.graficoForm',["fecha_actual"=>$fecha_actual, "usuarioactual"=>$usuarioactual]);
         }
 
-        if ($idcartera == 'TODAS') 
+        if ($tipo == 'EFECTIVO')
         {
             $nombreCartera = 'TODAS LAS CARTERAS';
 
@@ -510,20 +514,15 @@ class ReportesController extends Controller
                 ->join('cartera as cartera','cartera.idcartera','=','cliente.idcartera')
                 ->where('detalle_liquidacion.fechaefectiva','>=',$desde)
                 ->where('detalle_liquidacion.fechaefectiva','<=',$hasta)
-                #->where('cartera.idcartera', '=', $idcartera)
                 ->select(
                     'cartera.idcartera',
                     'cartera.nombre',
-                    #'detalle_liquidacion.fechaefectiva',
                     DB::raw('sum(detalle_liquidacion.totaldiario) as total')
                 )
                 ->groupBy(
                     'cartera.idcartera',
                     'cartera.nombre'
-                    #'detalle_liquidacion.fechaefectiva'
                 )
-                #->having('detalle_liquidacion.fechaefectiva','>=',$desde)
-                #->having('detalle_liquidacion.fechaefectiva','<=',$hasta)
                 ->get();
 
             $totalEfectivo = 0;
@@ -536,6 +535,9 @@ class ReportesController extends Controller
 
             return view('reportes.tacticos.grafico.graficoReview',["consulta"=>$consulta,"totalEfectivo"=>$totalEfectivo, "fecha_actual"=>$fecha_actual, "nombreCartera"=>$nombreCartera, "desde"=>$desde, "hasta"=>$hasta, "usuarioactual"=>$usuarioactual]);
 
+        }
+        elseif ($tipo == 'OTORGAMIENTO') {
+            return back();
         }
 
 

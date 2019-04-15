@@ -37,33 +37,16 @@
     </div>
   @endif
 
-  <div class="row">
-    <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-      @if(count($errors) > 0)
-      <div class="errors">
-        <ul>
-          <p><b>Por favor, corrige lo siguiente:</b></p>
-          <?php $cont = 1; ?>
-        @foreach($errors->all() as $error)
-          <li>{{$cont}}. {{ $error }}</li>
-          <?php $cont=$cont+1; ?>
-        @endforeach
-        </ul>
-      </div>
-    @endif
-    </div>
-  </div>
   <br>
 
   <div class="row">
     <div class="form-group col-md-3">
         <div class="form-group">
-        <label>CARTERA</label>
-            <select name="idcartera"  class="form-control selectpicker" id="idcliente" data-Live-search="true">
-            <option value="TODAS" selected>TODAS LAS CARTERAS</option>
-            @foreach($carteras as $cartera)
-            <option value="{{ $cartera->idcartera }}">{{$cartera->nombre}}</option>
-            @endforeach
+        <label>TIPO DE REPORTE</label>
+            <select name="tipo"  class="form-control selectpicker" id="idcliente" data-Live-search="true">
+            <option value="null" selected>-- seleccione una opción --</option>
+            <option value="EFECTIVO">EFECTIVO RECIBIDO</option>
+            <option value="OTORGAMIENTO">OTORGAMIENTO DE CRÉDITOS</option>
           </select>
         </div>
     </div>
@@ -91,7 +74,7 @@
 
   <br>
   <div class="row">
-    <a href="" class="btn btn-primary btn-md col-md-offset-1"> REGRESAR</a>
+    <a href="{{URL::action('ReportesController@lista')}}" class="btn btn-primary btn-md col-md-offset-1"> REGRESAR</a>
     
     <input name="_token" value="{{csrf_token()}}" type="hidden"></input>
     <button type="submit" class="btn btn-danger btn-md col-md-offset-3">GENERAR REPORTE</button>

@@ -45,15 +45,14 @@ class CuentaController extends Controller
         $prestamo = Prestamo::findOrFail($cuenta->idprestamo);
         $tipo_credito = TipoCredito::findOrFail($cuenta->idtipocredito);
         $tipo_desembolso = TipoDesembolso::findOrFail($prestamo->idtipodesembolso);
+        $codeudor = Codeudor::where('idcodeudor',$prestamo->idcodeudor)->first();
 
         // Metodo para calcular edad
         $edad = Fecha::calcularEdad($cliente->fechanacimiento);
 
-        //Parceo de fecha
-        #$cliente->fechanacimiento = \Carbon\Carbon::parse($cliente->fechanacimiento)->format('d-m-Y');}
         $cliente->fechanacimiento = \Carbon\Carbon::parse($cliente->fechanacimiento)->format('d-m-Y');
 
-    	return view('cuenta.show',["cuenta"=>$cuenta, "negocio"=>$negocio, "cliente"=>$cliente, "prestamo"=>$prestamo, "tipo_credito"=>$tipo_credito, "cartera"=>$cartera, "edad"=>$edad, "tipo_desembolso"=>$tipo_desembolso, "usuarioactual"=>$usuarioactual]);
+    	return view('cuenta.show',["cuenta"=>$cuenta, "negocio"=>$negocio, "cliente"=>$cliente, "prestamo"=>$prestamo, "tipo_credito"=>$tipo_credito, "cartera"=>$cartera, "edad"=>$edad, "tipo_desembolso"=>$tipo_desembolso, "codeudor"=>$codeudor, "usuarioactual"=>$usuarioactual]);
     }
 
 

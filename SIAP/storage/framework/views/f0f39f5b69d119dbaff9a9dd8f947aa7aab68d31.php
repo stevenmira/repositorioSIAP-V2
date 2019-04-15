@@ -83,7 +83,7 @@
                 <td style="text-align: right;"><span class="pull-left">&nbsp;$</span><?php echo e(number_format($sumMonto,2)); ?></td>
                 <td></td>
                 <td style="text-align: right;"></td>
-                <td style="text-align: right;"><span class="pull-left">&nbsp;$</span></td>
+                <td style="text-align: right;"><span class="pull-left">&nbsp;</span></td>
             </tr>
         </table>
     </div>
@@ -98,8 +98,9 @@
     </div>
   <?php endif; ?>
 
-
- 
+  <div>
+    <a href="<?php echo e(URL::action('ReportesController@estadoCreditos')); ?>" class="btn btn-primary btn-md col-md-offset-1"> REGRESAR</a>
+  </div>
 
 </section>
 <?php $__env->stopSection(); ?>
