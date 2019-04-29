@@ -75,7 +75,7 @@
               <table class="table table-user-information">
                 <thead>
                   <th>No.</th>
-                  <th>FECHAS</th>
+                  <th>DESCRIPCIÓN</th>
                   <th>DÍAS</th>
                   <th>DETALLES</th>                
                 </thead>
@@ -158,7 +158,7 @@
                   </tr>
                   <tr>
                     <td>7</td>
-                    <td>Gastos de Administración por gestion de cobros:</td>
+                    <td>Gastos por gestion de cobros / notariales:</td>
                     <td></td>
                     <td><?php echo Form::number('gastosadmon', null, ['id'=>'gastosadmon','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Introduzca los gastos administrativos. . .', 'step'=>'0.01']); ?></td>
                   </tr>

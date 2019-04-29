@@ -35,5 +35,9 @@ class EstadoSeed extends Seeder
         DB::table('estado')->insert([
             'nombre' => 'CANCELADO CON REF.',
         ]);
+
+        DB::table('estado')->insert([
+            'nombre' => 'SALDO CAPITAL REF.',
+        ]);
     }
 }

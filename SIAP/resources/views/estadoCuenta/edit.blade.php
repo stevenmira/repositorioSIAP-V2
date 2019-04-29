@@ -85,7 +85,7 @@
                
                   </tr>
                   <tr>
-                    <td>Gastos Administrativos por Gestión de Cobros:</td>
+                    <td>Gastos por gestión de cobros / notariales:</td>
                     <td>{!! Form::number('gastosadmon', $estadoc->gastosadmon, ['id'=>'gastosadmon','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Gastos por Cobros. . .', 'autofocus'=>'on', 'step'=>'0.01']) !!}</td>
                   </tr>
                   <tr>

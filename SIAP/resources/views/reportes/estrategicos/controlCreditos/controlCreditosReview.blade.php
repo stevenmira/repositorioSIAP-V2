@@ -33,11 +33,24 @@
 
   <div class="row">
     <p class="col-md-3 col-lg-3 col-sm-3  "><b>Cartera:</b>&nbsp;&nbsp;&nbsp; {{$nombreCartera}}</p>
-    <p class="col-md-3 col-lg-3 col-sm-3"><b>Fecha de inicio:</b>&nbsp;&nbsp;&nbsp; {{$desde}}</p>
+    <p class="col-md-3 col-lg-3 col-sm-3"><b>Fecha de Inicio:</b>&nbsp;&nbsp;&nbsp; {{$desde}}</p>
     <p class="col-md-2 col-lg-2 col-sm-2"><b>Fecha Fin:</b>&nbsp;&nbsp;&nbsp; {{$hasta}}</p>
     <p class="col-md-3 col-lg-3 col-sm-3"><a style="cursor: pointer;" data-target="#modal-delete-2" data-toggle="modal"> Gráfico de distribución del desembolso <i class="fa fa-question"></i></a></p>
     @include('reportes.estrategicos.controlCreditos.modalGrafico')
-    <p class="col-md-1 col-lg-1 col-sm-1"><a style="cursor: pointer;"> Imprimir&nbsp;&nbsp;&nbsp;<i class="fa fa-print"></i></a></p>
+
+    {{Form::Open(['action'=>'ReportesController@controlCreditosPDF', 'target'=>'_blank'])}}
+    <p class="col-md-1 col-lg-1 col-sm-1">
+      <input type="text" hidden="on" name="idcartera" value="{{$idcartera}}">
+      <input type="date" hidden="on" name="desde" value="{{$desde}}">
+      <input type="date" hidden="on" name="hasta" value="{{$hasta}}">
+      <button type="submit" style="cursor: pointer; background: none; padding: 0; border: 0;"> 
+        <i class="fa fa-print">
+          Imprimir
+        </i>
+      </button>
+    </p>
+    {!!Form::close()!!}
+
   </div>
 
 <div class="row">

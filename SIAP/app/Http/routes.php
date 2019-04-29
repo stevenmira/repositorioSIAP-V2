@@ -63,6 +63,7 @@ Route::post('reportes/cartera/pagos/review','ReportesController@carteraPagosRevi
 //Control de Creditos
 Route::get('reportes/control/creditos','ReportesController@controlCreditos');
 Route::post('reportes/control/creditos/review','ReportesController@controlCreditosReview');
+Route::post('reportes/control/creditos/pdf','ReportesController@controlCreditosPDF');
 
 //Estado de Creditos
 Route::get('reportes/estado/creditos','ReportesController@estadoCreditos');

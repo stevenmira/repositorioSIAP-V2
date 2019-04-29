@@ -42,16 +42,17 @@
             <thead>
               <tr style="background: #ccff90">
                 <th colspan="12">
-                  <h4 style="text-align: center;"><b>EFECTIVO RECIBIDO DIARIO</b></h4>               
+                  <h4 style="text-align: center;"><b>EFECTIVO RECIBIDO DIARIO EN LA FECHA</b></h4> 
+                  <h4 style="text-align: center;"><b>{{$fecha}}</b></h4>               
                 </th>
               </tr>
-              <tr style="background: #ccff90"ffccbc>
+              <tr style="background: #ccff90">
                 <th style="width: 5%;">Nº</th>
                 <th style="width: 25%;">CLIENTE</th>
                 <th style="width: 25%;">NEGOCIO</th>
-                <th style="width: 15%;">FECHA</th>
-                <th style="width: 15%;">HORA</th>
-                <th style="width: 15%;">TOTAL RECIBIDO</th>
+                <th style="width: 15%;">INTERES</th>
+                <th style="width: 15%;">CUOTA CAPITAL</th>
+                <th style="width: 15%;">TOTAL DIARIO</th>
               </tr>
             </thead>
 
@@ -65,9 +66,9 @@
                 <td style="text-align: center;">{{ $n }}</td>
                 <td style="text-align: left;">{{$con->nombre}} {{$con->apellido}}</td>
                 <td style="text-align: left;">{{$con->nombreNegocio}}</td>
-                <td style="text-align: center;">{{$fecha}}</td>
-                <td style="text-align: right;"><span class="pull-left">&nbsp;$</span></td>
-                <td style="text-align: right;"><span class="pull-left">&nbsp;$</span>{{$con->total}}</td>
+                <td style="text-align: right;"><span class="pull-left">&nbsp;$</span>{{number_format($con->total0,2)}}</td>
+                <td style="text-align: right;"><span class="pull-left">&nbsp;$</span>{{number_format($con->total1,2)}}</td>
+                <td style="text-align: right;"><span class="pull-left">&nbsp;$</span>{{number_format($con->total2,2)}}</td>
               </tr>
               @endforeach
             </tbody>
@@ -75,9 +76,9 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
-                <td></td>
-                <td style="text-align: right; font-weight: bold;"><span class="pull-left">&nbsp;$</span> {{  $total1 }} </td>
+                <td style="text-align: right; font-weight: bold;"><span class="pull-left">&nbsp;$</span> {{  number_format($t0,2) }} </td>
+                <td style="text-align: right; font-weight: bold;"><span class="pull-left">&nbsp;$</span> {{  number_format($t1,2) }} </td>
+                <td style="text-align: right; font-weight: bold;"><span class="pull-left">&nbsp;$</span> {{  number_format($t2,2) }} </td>
             </tr>
         </table>
     </div>
@@ -92,7 +93,8 @@
             <thead>
               <tr style="background: #ccff90">
                 <th colspan="12">
-                  <h4 style="text-align: center;"><b>CUOTAS ATRASADAS</b></h4>               
+                  <h4 style="text-align: center;"><b>CUOTAS ATRASADAS HASTA LA FECHA</b></h4>
+                  <h4 style="text-align: center;"><b>{{$fecha}}</b></h4>               
                 </th>
               </tr>
               <tr style="background: #ccff90"ffccbc>
@@ -133,6 +135,53 @@
     </div>
   </div>
 </div>
+
+<br>
+
+<div class="row">
+  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="table-responsive">
+        <table style="">
+            <thead>
+              <tr style="background: #ccff90">
+                <th colspan="12">
+                  <h4 style="text-align: center;"><b>SALDO CAPITAL HASTA LA FECHA</b></h4>
+                  <h4 style="text-align: center;"><b>{{$fecha_actual}}</b></h4>
+
+                </th>
+              </tr>
+              <tr style="background: #ccff90"ffccbc>
+                <th style="width: 5%;">Nº</th>
+                <th style="width: 25%;">CLIENTE</th>
+                <th style="width: 25%;">NEGOCIO</th>
+                <th style="width: 15%;">SALDO CAPITAL</th>
+              </tr>
+            </thead>
+
+            <?php
+              $n=0;
+            ?>
+            <tbody>
+              @foreach ($consulta4 as $con)
+              <tr>
+                <?php $n=$n+1?>
+                <td style="text-align: center;">{{ $n }}</td>
+                <td style="text-align: left;">{{$con->nombre}} {{$con->apellido}}</td>
+                <td style="text-align: left;">{{$con->nombreNegocio}}</td>
+                <td style="text-align: right;"><span class="pull-left">&nbsp;$</span>{{number_format($con->monto,2)}}</td>
+              </tr>
+              @endforeach
+            </tbody>
+            <tr style="background: #ffccbc; font-size: 15px;">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style="text-align: right; font-weight: bold;"><span class="pull-left">&nbsp;$</span> {{ number_format($total4,2) }} </td>
+            </tr>
+        </table>
+    </div>
+  </div>
+</div>  
 
 <br>
 <div class="row">
@@ -185,7 +234,6 @@
 </div>
 
 <br>
-
 <div class="row">
   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
     <div class="table-responsive">
@@ -193,64 +241,17 @@
             <thead>
               <tr style="background: #ccff90">
                 <th colspan="12">
-                  <h4 style="text-align: center;"><b>SALDOS HASTA LA FECHA</b></h4>               
+                  <h4 style="text-align: center;"><b>DETALLE DEL EFECTIVO RECIBIDO DIARIO</b></h4> 
+                  <h4 style="text-align: center;"><b>{{$fecha}}</b></h4>               
                 </th>
               </tr>
-              <tr style="background: #ccff90"ffccbc>
+              <tr style="background: #ccff90">
                 <th style="width: 5%;">Nº</th>
                 <th style="width: 25%;">CLIENTE</th>
                 <th style="width: 25%;">NEGOCIO</th>
-                <th style="width: 15%;">SALDO CAPITAL</th>
-                <th style="width: 15%;">INTERES DIARIO</th>
-                <th style="width: 15%;">CAPITAL DIARIO</th>
-              </tr>
-            </thead>
-
-            <?php
-              $n=0;
-            ?>
-            <tbody>
-              @foreach ($consulta4 as $con)
-              <tr>
-                <?php $n=$n+1?>
-                <td style="text-align: center;">{{ $n }}</td>
-                <td style="text-align: left;">{{$con->nombre}} {{$con->apellido}}</td>
-                <td style="text-align: left;">{{$con->nombreNegocio}}</td>
-                <td style="text-align: center;">{{$con->saldo}}</td>
-              </tr>
-              @endforeach
-            </tbody>
-            <tr style="background: #ffccbc; font-size: 15px;">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td style="text-align: right; font-weight: bold;"><span class="pull-left">&nbsp;$</span> ??? </td>
-            </tr>
-        </table>
-    </div>
-  </div>
-</div>
-
-<br>
-
-<div class="row">
-  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered table-condensed text-centered" style="border: 1px solid #333;">
-            <thead>
-              <tr style="border: 1px solid #333;text-align: center; width: 100%">
-                <th style="border: 1px solid #333;text-align: center; width: 2%;">Nº</th>
-                <th style="border: 1px solid #333;text-align: center; width: 20%;">CLIENTE/NOMBRE</th>
-                <th style="border: 1px solid #333;text-align: center; width: 18%;">NEGOCIO/NOMBRE</th>
-                <th style="border: 1px solid #333;text-align: center; width: 8%;">SALDO CAPITAL</th>
-                <th style="border: 1px solid #333;text-align: center; width: 8%;">INTERES DIARIO</th>
-                <th style="border: 1px solid #333;text-align: center; width: 8%;">CAPITAL DIARIO</th>
-                <th style="border: 1px solid #333;text-align: center; width: 8%;">TOTAL RECIBIDO DIARIO</th>
-                <th style="border: 1px solid #333;text-align: center; width: 8%;">#CUOTAS ATRASADAS</th>
-                <th style="border: 1px solid #333;text-align: center; width: 10%;">PRECIO DE CUOTA</th>
-                <th style="border: 1px solid #333;text-align: center; width: 10%;">TOTAL CUOTAS ATRASADAS</b></th>
+                <th style="width: 15%;">INTERES</th>
+                <th style="width: 15%;">CUOTA CAPITAL</th>
+                <th style="width: 15%;">TOTAL DIARIO</th>
               </tr>
             </thead>
 
@@ -261,25 +262,27 @@
               @foreach ($consulta11 as $con)
               <tr>
                 <?php $n=$n+1?>
-                <td style="border: 1px solid #333; text-align: center;">{{ $n }}</td>
-                <td style="border: 1px solid #333;">{{$con->nombre}} {{$con->apellido}}</td>
-                <td style="border: 1px solid #333;">{{$con->nombreNegocio}}</td>
-                <td style="border: 1px solid #333; text-align: right;"><span class="pull-left">&nbsp;$</span> {{$con->monto}} </td>
-                <td style="border: 1px solid #333; text-align: right;"><span class="pull-left">&nbsp;$</span>{{$con->interes}}</td>
-                <td style="border: 1px solid #333; text-align: right;"><span class="pull-left">&nbsp;$</span>{{$con->cuotacapital}}</td>
-                <td style="border: 1px solid #333; text-align: right;"><span class="pull-left">&nbsp;$</span>{{ $con->total }}</td>
-                <td style="border: 1px solid #333; text-align: right;"> YYY </td>
-                <td style="border: 1px solid #333; text-align: right;"><span class="pull-left">&nbsp;$</span>{{$con->cuotadiaria}}</td>
-                <td style="border: 1px solid #333; text-align: right;"><span class="pull-left">&nbsp;$</span> ZZZ </td>
+                <td style="text-align: center;">{{ $n }}</td>
+                <td style="text-align: left;">{{$con->nombre}} {{$con->apellido}}</td>
+                <td style="text-align: left;">{{$con->nombreNegocio}}</td>
+                <td style="text-align: right;"><span class="pull-left">&nbsp;$</span>{{number_format($con->interes,2)}}</td>
+                <td style="text-align: right;"><span class="pull-left">&nbsp;$</span>{{number_format($con->cuotacapital,2)}}</td>
+                <td style="text-align: right;"><span class="pull-left">&nbsp;$</span>{{number_format($con->total,2)}}</td>
               </tr>
-                
               @endforeach
             </tbody>
+            <tr style="background: #ffccbc; font-size: 15px;">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td style="text-align: right; font-weight: bold;"><span class="pull-left">&nbsp;$</span> {{  number_format($td0,2) }} </td>
+                <td style="text-align: right; font-weight: bold;"><span class="pull-left">&nbsp;$</span> {{  number_format($td1,2) }} </td>
+                <td style="text-align: right; font-weight: bold;"><span class="pull-left">&nbsp;$</span> {{  number_format($td2,2) }} </td>
+            </tr>
         </table>
     </div>
   </div>
 </div>
-
 
   <div>
     <a href="{{URL::action('ReportesController@carteraPagos')}}" class="btn btn-primary btn-md col-md-offset-1"> REGRESAR</a>

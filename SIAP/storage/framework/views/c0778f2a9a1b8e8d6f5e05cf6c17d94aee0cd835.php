@@ -78,31 +78,23 @@
                 <TR><TD>Telefono Celular:</TD><TD><?php echo e($cliente->telefonocel); ?></TD>
                 </TR>
     </table>
-        <div class="row user-menu-container square" style="width: 500px;" align="leth">
-      <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 user-details">
-          <div class="row  white">
-              <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 coralbg2 no-pad">
-                  <div class="user-pad">
-    
-  </div>
-  <br>
-  <br>
-  <div>
-  </div>
   <div>
     <table align="center" style="width: 80%;" cellpadding="0" cellspacing="0">
       <tr>
         <td style="width: 15%;"><h3>Comentarios:</h3></td>
     </tr>
-    <tr>
-    </tr>
   </table>
-          <div class="col-md-offset-2" id="tab_default_4">
-          <?php foreach($observaciones as $observacion): ?>
-          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" align="center">
-              <p class="text-muted"><i class='fas fa-check'></i> *  <?php echo e($observacion->comentario); ?></p>
-                   </div>
+  </div>
+  <div>
+  <table align="left" style="width: 40%;" cellpadding="0" cellspacing="0">
+      <tr>
+        <td><?php foreach($observaciones as $observacion): ?>
+          <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" align="center">
+              <p class="text-muted"><i class='fas fa-check'></i> *  <?php echo e($observacion->comentario); ?></p></td>
            </div>
+      </tr>
+  </table>
+  </div>
 
           <?php endforeach; ?>  
 </body>

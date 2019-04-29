@@ -68,7 +68,7 @@ role="dialog" tabindex="-1" id="modal-help">
 			        </div>
 				</div>
 				<p style="font-family:  Times New Roman, sans-serif; color: black;  text-align: left;">
-					** Para registrar una nueva tasa de interés haz clic <a href="#" style="color: white;">AQUÍ</a>´.
+					** Para registrar una nueva tasa de interés haz clic <a href="<?php echo e(URL::action('TasaInteresController@index')); ?>" style="color: white;">AQUÍ</a>´.
 				</p>
 				<p style="font-family:  Times New Roman, sans-serif; color: black;  text-align: left;">
 					** La cartera de pagos puedes empezarla a partir de la fecha de selección ó al siguiente día.

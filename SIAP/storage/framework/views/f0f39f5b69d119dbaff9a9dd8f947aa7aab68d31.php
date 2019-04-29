@@ -71,7 +71,7 @@
                 <td style="text-align: right;"><span class="pull-left">&nbsp;$</span><?php echo e(number_format($con->monto,2)); ?></td>
                 <td style="text-align: left;"><?php echo e($con->nombreCartera); ?></td>
                 <td style="text-align: left;"><?php echo e($con->estado); ?></td>
-                <td style="text-align: left;"><a href="">Ver Credito</a></td>
+                <td style="text-align: left;"><a target="_blank" href="<?php echo e(URL::action('CuentaController@show',$con->idcuenta)); ?>">Ver Credito</a></td>
               </tr>
               <?php endforeach; ?>
             </tbody>

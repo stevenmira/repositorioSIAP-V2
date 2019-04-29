@@ -72,7 +72,7 @@
                 <td style="text-align: right;"><span class="pull-left">&nbsp;$</span>{{ number_format($con->monto,2) }}</td>
                 <td style="text-align: left;">{{$con->nombreCartera}}</td>
                 <td style="text-align: left;">{{$con->estado}}</td>
-                <td style="text-align: left;"><a href="">Ver Credito</a></td>
+                <td style="text-align: left;"><a target="_blank" href="{{URL::action('CuentaController@show',$con->idcuenta)}}">Ver Credito</a></td>
               </tr>
               @endforeach
             </tbody>

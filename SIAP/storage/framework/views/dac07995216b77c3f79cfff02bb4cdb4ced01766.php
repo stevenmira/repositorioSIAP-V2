@@ -104,11 +104,11 @@
                
                   </tr>
                   <tr>
-                    <td>Gastos Administrativos por Gestión de Cobros:</td>
+                    <td>Gastos por gestión de cobros / notariales:</td>
                     <td><?php echo Form::number('gastosadmon', null, ['id'=>'gastosadmon','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Gastos por Cobros. . .', 'autofocus'=>'on', 'step'=>'0.01']); ?></td>
                   </tr>
                   <tr>
-                    <td>Gastos Administrativos por Notificación:</td>
+                    <td>Gastos administrativos por notificación:</td>
                     <td><?php echo Form::number('gastosnoti', null, ['id'=>'gastosnoti','onkeyup'=>'Sumar()','class' => 'form-control' , 'required' => 'required', 'placeholder'=>'Gastos por Notificación. . .', 'autofocus'=>'on', 'step'=>'0.01']); ?></td>
                   </tr>
                   <tr>

@@ -206,7 +206,7 @@ class LiquidacionController extends Controller
                 
                 
                 /****************************   ESTADO DE LA CUENTA ****************************/
-                if ($prestamo->estadodos == 'ACTIVO') 
+                if ($prestamo->estadodos == 'ACTIVO' || $prestamo->estadodos == 'VENCIDO') 
                 {
 
                     /****************************   PAGO_CUOTA    ****************************/
@@ -293,7 +293,7 @@ class LiquidacionController extends Controller
                 }
                 else{
 
-                    Session::flash('inactivo', 'El préstamo se encuentra en estado CERRADO, no es posible realizar pagos, para cambiar esto debes modificar al estado ACTIVO el préstamo');
+                    Session::flash('inactivo', 'No es posible realizar pagos. El préstamo debe estar en el estado -- ACTIVO -- o -- VENCIDO --');
                     return Redirect::to('cuenta/carteraPagos/'.$cuenta->idcuenta);
 
                 }
@@ -446,6 +446,31 @@ class LiquidacionController extends Controller
         $liquidacion->update();
 
         Session::flash('limpiar', 'El pago a sido anulado');
+
+        //Se actualizan los pagos antes de retornar el resultado
+        $sms = DetalleLiquidacion::calculoModificadoN($liquidacion->idcuenta);
+        // Se retorna el componente que fallo
+        if ($sms == 'exito') {
+            //Session::flash('msj0', 'Los pago(s) se han actualizado correctamente');
+        }
+        elseif ($sms != 'exito') {
+            Session::flash('cmp1', ''.$sms);
+        }
+
+        // Actualizacion de estados de  cuotas no validas antes de retornar el resultado
+        $sms = DetalleLiquidacion::actualizarEstados($liquidacion->idcuenta, 1);
+        if ($sms == 'exito') {
+            //Session::flash('msj0', 'Cuota(s) -- no valido -- se han actualizado correctamente');
+        }
+        elseif ($sms == 'prestamo_cerrado') {
+            Session::flash('msj1', 'No se pudo actualizar, el prestamo se encuentra en estado  -- cerrado --');
+        }elseif($sms == 'cuenta_inactiva'){
+            Session::flash('msj2', 'No se pudo actualizar, la cuenta se encuentra en estado  -- inactivo --');
+        }else{
+            // Se retorna el componente que fallo
+            Session::flash('cmp2', 'actualizarEstados');
+        }
+                    
         return Redirect::to('cuenta/carteraPagos/'.$cuenta->idcuenta);
     }
 
@@ -472,7 +497,20 @@ class LiquidacionController extends Controller
         $liquidacion = DetalleLiquidacion::findOrFail($request->get('iddetalleliquidacion'));
         $old = $liquidacion->estado;
         $liquidacion->estado = $request->get('nombre');
-        $liquidacion->update();
+
+        if ($liquidacion->estado == 'SALDO CAPITAL REF.') {
+            
+            //Obtenemos la fecha de hoy
+            $liquidacion->fechaefectiva = Carbon::now()->format('Y-m-d');
+            $liquidacion->totaldiario = $liquidacion->monto;
+            $liquidacion->interes = 0;
+            $liquidacion->cuotacapital = $liquidacion->monto;
+            //$liquidacion->abonocapital = 'SI';
+            $liquidacion->update();
+        }
+        else{
+            $liquidacion->update();
+        }
 
         Session::flash('msj0', 'Se modificó la cuota del estado -- '.$old.' -- al estado -- '.$liquidacion->estado.' --  correctamente');
         return Redirect::to('cuenta/carteraPagos/'.$liquidacion->idcuenta);

@@ -47,9 +47,9 @@
 		<table align="center" style="border-collapse: collapse; width: 99%;" >
 			<thead>
 				<tr>
-					<th style="border: 1px solid #333; width: 30px; height: 20px;" align="center" valign="bottom" rowspan="2"><span style="font-size: 9px;">N</span></th>
-					<th style="border: 1px solid #333; width: 200px;" align="center" valign="bottom" rowspan="2"><span style="font-size: 9px;">FECHAS</span></th>
-					<th style="border: 1px solid #333" align="center" valign="bottom" rowspan="2"><span style="font-size: 10px;">DIAS</span></th>
+					<th style="border: 1px solid #333; width: 30px; height: 20px;" align="center" rowspan="2"><span style="font-size: 9px;">N</span></th>
+					<th style="border: 1px solid #333; width: 200px;" align="center"rowspan="2"><span style="font-size: 9px;">DESCRIPCIÓN</span></th>
+					<th style="border: 1px solid #333" align="center" rowspan="2"><span style="font-size: 10px;">DIAS</span></th>
 					<th style="border: 1px solid #333" align="center" valign="bottom" colspan="2"><span style="font-size: 10px;">DETALLES</span></th>
 					<th style="border: 1px solid #333" align="center" rowspan="2" colspan="2"><span style="font-size: 10px;">MORA POR<br>RETRASO/<br>O<br>INCUM-<br>PLIMIENTO</span></th>
 					<th style="border: 1px solid #333" align="center" rowspan="2" colspan="2"><span style="font-size: 10px;">COBROS DE<br>ADMINISTRACION<br></span></th>
@@ -120,7 +120,7 @@
 				</tr>
 				<tr>
 					<td style="border: 1px solid #333; height: 30px;" align="center"><span style="font-size: 10px;">5</span></td>
-					<td style="border: 1px solid #333" align="center"><span style="font-size: 11px;">Gasto de Administracion por gestion de<br>cobro</span></td>
+					<td style="border: 1px solid #333" align="center"><span style="font-size: 11px;">Gasto por gestion de<br>cobro / notariales</span></td>
 					<td style="border: 1px solid #333" align="center"><span style="font-size: 10px;"></span></td>
 					
 					<td style="border: 1px solid #333; border-right: 0px;" align="center"><span style="font-size: 10px;"></span></td>

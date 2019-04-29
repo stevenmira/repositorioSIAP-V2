@@ -46,9 +46,9 @@
 		<table align="center" style="border-collapse: collapse; width: 99%;" >
 			<thead>
 				<tr>
-					<th style="border: 1px solid #333; width: 30px; height: 20px;" align="center" valign="bottom" rowspan="2"><span style="font-size: 9px;">N</span></th>
-					<th style="border: 1px solid #333; width: 200px;" align="center" valign="bottom" rowspan="2"><span style="font-size: 10px;">FECHAS</span></th>
-					<th style="border: 1px solid #333" align="center" valign="bottom" rowspan="2"><span style="font-size: 10px;">DIAS</span></th>
+					<th style="border: 1px solid #333; width: 30px; height: 20px;" align="center" rowspan="2"><span style="font-size: 9px;">N</span></th>
+					<th style="border: 1px solid #333; width: 200px;" align="center" rowspan="2"><span style="font-size: 10px;">DESCRIPCIÓN</span></th>
+					<th style="border: 1px solid #333" align="center" rowspan="2"><span style="font-size: 10px;">DIAS</span></th>
 					<th style="border: 1px solid #333" align="center" valign="bottom" colspan="2"><span style="font-size: 10px;">DETALLES</span></th>
 					<th style="border: 1px solid #333" align="center" rowspan="2" colspan="2"><span style="font-size: 10px;">SALDO CAPITAL SIN<br>INTERESES</span></th>
 					<th style="border: 1px solid #333" align="center" rowspan="2" colspan="2"><span style="font-size: 10px;">COBRO POR GESTION<br>COBRO</span></th>
@@ -92,7 +92,7 @@
 				</tr>
 				<tr>
 					<td style="border: 1px solid #333; height: 30px" align="center"><span style="font-size: 12px;">3</span></td>
-					<td style="border: 1px solid #333" align="center"><span style="font-size: 12px;">Gastos por Gestión Cobro</span></td>
+					<td style="border: 1px solid #333" align="center"><span style="font-size: 12px;">Gastos por gestión cobro / notariales</span></td>
 					<td style="border: 1px solid #333" align="center"><span style="font-size: 12px;"></span></td>
 					<td style="border: 1px solid #333; border-right: 0px;" align="center"><span style="font-size: 12px;"></span></td>
 					<td style="border: 1px solid #333; border-left: 0px;" align="center"><span style="font-size: 12px;"></span></td>

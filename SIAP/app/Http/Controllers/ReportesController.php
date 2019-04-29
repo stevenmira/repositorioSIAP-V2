@@ -41,7 +41,7 @@ class ReportesController extends Controller
         $cartera = Cartera::where('idcartera',$idcartera)->first();
     	$fecha = $request->get('fecha');
 
-    	// Sumatoria del totaldiario recibido. Se toma como base la fechaefectiva de pago
+    	// TABLA: EFECTIVO RECIBIDO DIARIO
         $consulta1 = DB::table('detalle_liquidacion')
          	->join('cuenta as cuenta','cuenta.idcuenta','=','detalle_liquidacion.idcuenta')
          	->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
@@ -55,8 +55,11 @@ class ReportesController extends Controller
          		'cliente.apellido',
          		'negocio.nombre as nombreNegocio',
          		'detalle_liquidacion.fechaefectiva',
-         		DB::raw('sum(detalle_liquidacion.totaldiario) as total')
+                DB::raw('sum(detalle_liquidacion.interes) as total0'),
+                DB::raw('sum(detalle_liquidacion.cuotacapital) as total1'),
+         		DB::raw('sum(detalle_liquidacion.totaldiario) as total2')
          	)
+            ->orderby('cliente.nombre','asc')
          	->groupBy(
          		'cartera.idcartera',
          		'cliente.nombre',
@@ -67,13 +70,17 @@ class ReportesController extends Controller
          	->having('detalle_liquidacion.fechaefectiva','=',$fecha)
          	->get();
 
-         	$total1 = 0;
+         	$t0 = 0;
+            $t1 = 0;
+            $t2 = 0;
 	        foreach ($consulta1 as $con1) {
-	        	$total1 = $total1 + $con1->total;        
+                $t0 = $t0 + $con1->total0;   
+	        	$t1 = $t1 + $con1->total1;
+                $t2 = $t2 + $con1->total2;           
 	        }
 
 
-        // Se consultan los creditos completos
+        // TABLA: DETALLE
         $consulta11 = DB::table('detalle_liquidacion')
          	->join('cuenta as cuenta','cuenta.idcuenta','=','detalle_liquidacion.idcuenta')
          	->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
@@ -95,6 +102,7 @@ class ReportesController extends Controller
          		'prestamo.cuotadiaria',
          		DB::raw('sum(detalle_liquidacion.totaldiario) as total')
          	)
+            ->orderby('cliente.nombre','asc')
          	->groupBy(
          		'cartera.idcartera',
          		'cliente.nombre',
@@ -112,7 +120,16 @@ class ReportesController extends Controller
          	->having('detalle_liquidacion.fechaefectiva','=',$fecha)
          	->get();
 
-		// Se consultan las cuotas atrasadas
+            $td0 = 0;
+            $td1 = 0;
+            $td2 = 0;
+            foreach ($consulta11 as $con1) {
+                $td0 = $td0 + $con1->interes;   
+                $td1 = $td1 + $con1->cuotacapital;
+                $td2 = $td2 + $con1->totaldiario;           
+            }
+
+		// TABLA: CUOTAS ATRASADAS
         $consulta2 = DB::table('detalle_liquidacion')
          	->join('cuenta as cuenta','cuenta.idcuenta','=','detalle_liquidacion.idcuenta')
          	->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
@@ -131,6 +148,7 @@ class ReportesController extends Controller
          		DB::raw('count(detalle_liquidacion.estado) as cuotas'),
          		DB::raw('count(detalle_liquidacion.estado) * prestamo.cuotadiaria as total')
          	)
+            ->orderby('cliente.nombre','asc')
          	->groupBy(
          		'cartera.idcartera',
          		'cliente.nombre',
@@ -165,6 +183,7 @@ class ReportesController extends Controller
          		'detalle_liquidacion.cuotacapital',
          		DB::raw('detalle_liquidacion.monto - detalle_liquidacion.cuotacapital as saldo')
          	)
+            ->orderby('cliente.nombre','asc')
          	->groupBy(
          		'cartera.idcartera',
          		'cliente.nombre',
@@ -176,8 +195,7 @@ class ReportesController extends Controller
          	)
          	->get();
 
-        // Saldos hasta la $fecha_actual
-         	$date = Carbon::now();
+        // TABLA: SALDO CAPITAL
         $consulta4 = DB::table('detalle_liquidacion')
          	->join('cuenta as cuenta','cuenta.idcuenta','=','detalle_liquidacion.idcuenta')
          	->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
@@ -185,29 +203,34 @@ class ReportesController extends Controller
          	->join('cliente as cliente','cliente.idcliente','=','negocio.idcliente')
          	->join('cartera as cartera','cartera.idcartera','=','cliente.idcartera')
          	->where('cartera.idcartera', '=', $idcartera)
-         	#->where('detalle_liquidacion.fechadiaria','=',$date)
-         	->where('detalle_liquidacion.abonocapital','!=','pivote')
-         	#->where('')
+         	->where('detalle_liquidacion.abonocapital','=','pivote')
          	->select(
-         		'cartera.idcartera',
+                'cartera.idcartera',
          		'cliente.nombre',
          		'cliente.apellido',
          		'negocio.nombre as nombreNegocio',
-         		DB::raw('min(detalle_liquidacion.monto) as saldo')
+                'detalle_liquidacion.monto'
          	)
+            ->orderby('cliente.nombre','asc')
          	->groupBy(
-         		'cartera.idcartera',
+                'cartera.idcartera',
          		'cliente.nombre',
          		'cliente.apellido',
-         		'negocio.nombre'
+         		'negocio.nombre',
+                'detalle_liquidacion.monto'
          	)
          	->get();
+
+            $total4 = 0;
+                foreach ($consulta4 as $con4) {
+                    $total4 = $total4 + $con4->monto;        
+                }
 
         $fecha = Carbon::parse($fecha)->format('d-m-Y');
 
         $fecha_actual = Carbon::now()->format('d-m-Y');
 
-		return view('reportes.estrategicos.carteraPagosReview',["consulta1"=>$consulta1,"consulta11"=>$consulta11,"consulta2"=>$consulta2,"consulta3"=>$consulta3,"consulta4"=>$consulta4,"total1"=>$total1,"total2"=>$total2,"fecha"=>$fecha, "fecha_actual"=>$fecha_actual, "cartera"=>$cartera, "usuarioactual"=>$usuarioactual]);
+		return view('reportes.estrategicos.carteraPagosReview',["consulta1"=>$consulta1,"consulta11"=>$consulta11,"consulta2"=>$consulta2,"consulta3"=>$consulta3,"consulta4"=>$consulta4,"t0"=>$t0,"t1"=>$t1,"t2"=>$t2,"td0"=>$td0,"td1"=>$td1,"td2"=>$td2,"total2"=>$total2, "total4"=>$total4, "fecha"=>$fecha, "fecha_actual"=>$fecha_actual, "cartera"=>$cartera, "usuarioactual"=>$usuarioactual]);
 
     }
 
@@ -343,7 +366,31 @@ class ReportesController extends Controller
         $desde = Carbon::parse($desde)->format('d-m-Y');
     	$hasta = Carbon::parse($hasta)->format('d-m-Y');
 
-        return view('reportes.estrategicos.controlCreditos.controlCreditosReview',["consulta"=>$consulta,"nombreCartera"=>$nombreCartera,"desde"=>$desde,"hasta"=>$hasta,"fecha_actual"=>$fecha_actual,"sumMonto"=>$sumMonto,"sumComision"=>$sumComision,"sumMontooriginal"=>$sumMontooriginal,"sumMontoCompleto"=>$sumMontoCompleto,"sumMontoRefinanciamiento"=>$sumMontoRefinanciamiento,"c1"=>$c1,"c2"=>$c2, "p1"=>$p1,"p2"=>$p2,"usuarioactual"=>$usuarioactual]);
+        return view('reportes.estrategicos.controlCreditos.controlCreditosReview',["consulta"=>$consulta,"nombreCartera"=>$nombreCartera,"desde"=>$desde,"hasta"=>$hasta,"idcartera"=>$idcartera,"fecha_actual"=>$fecha_actual,"sumMonto"=>$sumMonto,"sumComision"=>$sumComision,"sumMontooriginal"=>$sumMontooriginal,"sumMontoCompleto"=>$sumMontoCompleto,"sumMontoRefinanciamiento"=>$sumMontoRefinanciamiento,"c1"=>$c1,"c2"=>$c2, "p1"=>$p1,"p2"=>$p2,"usuarioactual"=>$usuarioactual]);
+    }
+
+    public function controlCreditosPDF(Request $request){
+        $usuarioactual = \Auth::user();
+        $name = "controlCreditosPDF";
+        $vistaurl= "reportes/estrategicos/controlCreditos/controlCreditosPDF";
+
+        // request
+        $idcartera = $request->get('idcartera');
+        $desde = $request->get('desde');
+        $hasta = $request->get('hasta');
+
+
+        return $this->controlCreditosPDFCrear($vistaurl, $name, $idcartera, $desde, $hasta, $usuarioactual);
+
+    }
+
+    public function controlCreditosPDFCrear($vistaurl, $name, $idcartera, $desde, $hasta,$usuarioactual){
+        
+        $view=\View::make($vistaurl,compact('vistaurl', 'name', 'idcartera', 'desde', 'hasta','usuarioactual'))->render();
+        $pdf =\App::make('dompdf.wrapper');
+
+        $pdf->loadHTML($view);
+        return $pdf->stream($name);
     }
 
     public function estadoCreditos(){
@@ -386,6 +433,7 @@ class ReportesController extends Controller
                 ->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
                 ->join('tipo_desembolso as tipo_desembolso','prestamo.idtipodesembolso','=','tipo_desembolso.idtipodesembolso')
                 ->select(
+                    'cuenta.idcuenta',
                     'cliente.nombre',
                     'cliente.apellido',
                     'negocio.nombre as nombreNegocio',
@@ -417,6 +465,7 @@ class ReportesController extends Controller
                 ->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
                 ->join('tipo_desembolso as tipo_desembolso','prestamo.idtipodesembolso','=','tipo_desembolso.idtipodesembolso')
                 ->select(
+                    'cuenta.idcuenta',
                     'cliente.nombre',
                     'cliente.apellido',
                     'negocio.nombre as nombreNegocio',
@@ -517,7 +566,9 @@ class ReportesController extends Controller
                 ->select(
                     'cartera.idcartera',
                     'cartera.nombre',
-                    DB::raw('sum(detalle_liquidacion.totaldiario) as total')
+                    DB::raw('sum(detalle_liquidacion.interes) as total0'),
+                    DB::raw('sum(detalle_liquidacion.cuotacapital) as total1'),
+                    DB::raw('sum(detalle_liquidacion.totaldiario) as total2')
                 )
                 ->groupBy(
                     'cartera.idcartera',
@@ -525,15 +576,19 @@ class ReportesController extends Controller
                 )
                 ->get();
 
-            $totalEfectivo = 0;
+            $suminteres = 0;
+            $sumcuotadiaria = 0;
+            $sumtotaldiario = 0;
             foreach ($consulta as $con1) {
-                $totalEfectivo = $totalEfectivo + $con1->total;        
+                $suminteres = $suminteres + $con1->total0;
+                $sumcuotadiaria = $sumcuotadiaria + $con1->total1;
+                $sumtotaldiario = $sumtotaldiario + $con1->total2;        
             }
 
             $desde = Carbon::parse($desde)->format('d-m-Y');
             $hasta = Carbon::parse($hasta)->format('d-m-Y');
 
-            return view('reportes.tacticos.grafico.graficoReview',["consulta"=>$consulta,"totalEfectivo"=>$totalEfectivo, "fecha_actual"=>$fecha_actual, "nombreCartera"=>$nombreCartera, "desde"=>$desde, "hasta"=>$hasta, "usuarioactual"=>$usuarioactual]);
+            return view('reportes.tacticos.grafico.graficoReview',["consulta"=>$consulta, "suminteres"=>$suminteres, "sumcuotadiaria"=>$sumcuotadiaria, "sumtotaldiario"=>$sumtotaldiario, "fecha_actual"=>$fecha_actual, "nombreCartera"=>$nombreCartera, "desde"=>$desde, "hasta"=>$hasta, "usuarioactual"=>$usuarioactual]);
 
         }
         elseif ($tipo == 'OTORGAMIENTO') {
