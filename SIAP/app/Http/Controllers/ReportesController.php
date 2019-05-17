@@ -360,11 +360,6 @@ class ReportesController extends Controller
             $p1 = 0;
             $p2 = 0;
         }
-        
-
-
-        $desde = Carbon::parse($desde)->format('d-m-Y');
-    	$hasta = Carbon::parse($hasta)->format('d-m-Y');
 
         return view('reportes.estrategicos.controlCreditos.controlCreditosReview',["consulta"=>$consulta,"nombreCartera"=>$nombreCartera,"desde"=>$desde,"hasta"=>$hasta,"idcartera"=>$idcartera,"fecha_actual"=>$fecha_actual,"sumMonto"=>$sumMonto,"sumComision"=>$sumComision,"sumMontooriginal"=>$sumMontooriginal,"sumMontoCompleto"=>$sumMontoCompleto,"sumMontoRefinanciamiento"=>$sumMontoRefinanciamiento,"c1"=>$c1,"c2"=>$c2, "p1"=>$p1,"p2"=>$p2,"usuarioactual"=>$usuarioactual]);
     }
@@ -379,14 +374,90 @@ class ReportesController extends Controller
         $desde = $request->get('desde');
         $hasta = $request->get('hasta');
 
+        if ($idcartera == 'TODAS') 
+        {
+            $nombreCartera = 'TODAS LAS CARTERAS';
 
-        return $this->controlCreditosPDFCrear($vistaurl, $name, $idcartera, $desde, $hasta, $usuarioactual);
+            $consulta = DB::table('cartera as cartera')
+                ->join('ejecutivo as ejecutivo','cartera.idejecutivo','=','ejecutivo.idejecutivo')
+                ->join('cliente as cliente','cartera.idcartera','=','cliente.idcartera')
+                ->join('negocio as negocio','cliente.idcliente','=','negocio.idcliente')
+                ->join('cuenta as cuenta','negocio.idnegocio','=','cuenta.idnegocio')
+                ->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
+                ->join('tipo_desembolso as tipo_desembolso','prestamo.idtipodesembolso','=','tipo_desembolso.idtipodesembolso')
+                ->select(
+                    'cliente.nombre',
+                    'cliente.apellido',
+                    'cliente.dui',
+                    'prestamo.fecha',
+                    'prestamo.monto',
+                    DB::raw('cuenta.interes * 100 as interes'),
+                    DB::raw('prestamo.monto - prestamo.montooriginal as comision'),
+                    'prestamo.montooriginal',
+                    'cartera.nombre as nombreCartera',
+                    'ejecutivo.nombre as nombreEjecutivo',
+                    'tipo_desembolso.nombre as nombreDesembolso',
+                    'prestamo.numerocheque',
+                    'prestamo.estado'
+                )
+                ->where('prestamo.fecha','>=', $desde)
+                ->where('prestamo.fecha','<=', $hasta)
+                ->orderby('prestamo.fecha','asc')
+                ->get();
+        }
+        else
+        {
+            $carteraX = Cartera::where('idcartera',$idcartera)->first();
+            $nombreCartera = $carteraX->nombre;
+
+            $consulta = DB::table('cartera as cartera')
+                ->join('ejecutivo as ejecutivo','cartera.idejecutivo','=','ejecutivo.idejecutivo')
+                ->join('cliente as cliente','cartera.idcartera','=','cliente.idcartera')
+                ->join('negocio as negocio','cliente.idcliente','=','negocio.idcliente')
+                ->join('cuenta as cuenta','negocio.idnegocio','=','cuenta.idnegocio')
+                ->join('prestamo as prestamo','cuenta.idprestamo','=','prestamo.idprestamo')
+                ->join('tipo_desembolso as tipo_desembolso','prestamo.idtipodesembolso','=','tipo_desembolso.idtipodesembolso')
+                ->select(
+                    'cliente.nombre',
+                    'cliente.apellido',
+                    'cliente.dui',
+                    'prestamo.fecha',
+                    'prestamo.monto',
+                    DB::raw('cuenta.interes * 100 as interes'),
+                    DB::raw('prestamo.monto - prestamo.montooriginal as comision'),
+                    'prestamo.montooriginal',
+                    'cartera.nombre as nombreCartera',
+                    'ejecutivo.nombre as nombreEjecutivo',
+                    'tipo_desembolso.nombre as nombreDesembolso',
+                    'prestamo.numerocheque',
+                    'prestamo.estado'
+                )
+                ->where('cartera.idcartera','=', $idcartera)
+                ->where('prestamo.fecha','>=', $desde)
+                ->where('prestamo.fecha','<=', $hasta)
+                ->orderby('prestamo.fecha','asc')
+                ->get();
+        }
+
+        // Se procede a realizar la sumatoria
+
+        $sumMonto = 0;
+        $sumComision = 0;
+        $sumMontooriginal = 0;
+        foreach ($consulta as $con) {
+            $sumMonto = $sumMonto + $con->monto;
+            $sumComision = $sumComision + $con->comision;
+            $sumMontooriginal = $sumMontooriginal + $con->montooriginal;
+        }
+
+
+        return $this->controlCreditosPDFCrear($vistaurl, $name, $idcartera, $desde, $hasta, $consulta, $sumMonto, $sumComision, $sumMontooriginal,$usuarioactual);
 
     }
 
-    public function controlCreditosPDFCrear($vistaurl, $name, $idcartera, $desde, $hasta,$usuarioactual){
+    public function controlCreditosPDFCrear($vistaurl, $name, $idcartera, $desde, $hasta, $consulta, $sumMonto,$sumComision,$sumMontooriginal,$usuarioactual){
         
-        $view=\View::make($vistaurl,compact('vistaurl', 'name', 'idcartera', 'desde', 'hasta','usuarioactual'))->render();
+        $view=\View::make($vistaurl,compact('vistaurl', 'name', 'idcartera', 'desde', 'hasta','consulta','sumMonto','sumComision','sumMontooriginal','usuarioactual'))->render();
         $pdf =\App::make('dompdf.wrapper');
 
         $pdf->loadHTML($view);

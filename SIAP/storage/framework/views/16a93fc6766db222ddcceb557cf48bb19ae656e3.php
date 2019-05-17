@@ -3,28 +3,21 @@
 <head>
 	<title>CONTROL DE CREDITOS</title>
 	<style type="text/css">
-		@page{
-			margin-top: 10.0mm;
-            margin-bottom: 10.0mm;
-		}
+		
 		body{
 			line-height: 22px;
 		}
 
 		.padd{
-		    padding: 0px 25px 0px 25px;
+		    padding: 0px 40px 0px 0px;
 		  }
 
-		  .padd2{
-		    padding: 0px 10px 0px 10px;
-		    font-size: 15px;
-		  }
 
-		  .spn{
-		  	display: block; 
-		  	float: right; 
-		  	padding: 0px 110px 0px 0px;
-		  }
+		.spn{
+			display: block; 
+			float: right; 
+			padding: 0px 110px 0px 0px;
+		}
 	</style>
 </head>
 <body>
@@ -66,7 +59,12 @@
 	<br>
 	<p style="font-size: 18px;" align="center">REPORTE DE CONTROL DE CRÉDITOS</p>
 
-	<div class="padd">
+	<?php 
+    	$desdeX = date("d/m/Y", strtotime($desde));
+    	$hastaX = date("d/m/Y", strtotime($hasta));
+  	?>
+
+	<div>
 		<table style="width: 100%; border-collapse: collapse;">
 			<tr>
 				<td>
@@ -77,21 +75,73 @@
 				</td>
 				<td>
 					<p style="">
-						Fecha de inicio:&nbsp;&nbsp; <?php echo e($desde); ?>
+						Fecha de inicio:&nbsp;&nbsp; <?php echo e($desdeX); ?>
 
 					</p>
 				</td>
 				<td>
 					<p style="">
-						Fecha Fin:&nbsp;&nbsp; <?php echo e($hasta); ?>
+						Fecha Fin:&nbsp;&nbsp; <?php echo e($hastaX); ?>
 
 					</p>
 				</td>
 			</tr>
 	  	</table>
-		<p class="col-md-3 col-lg-3 col-sm-3  "><b>Cartera:</b>&nbsp;&nbsp;&nbsp; asdas</p>
-    	<p class="col-md-3 col-lg-3 col-sm-3"><b>Fecha de Inicio:</b>&nbsp;&nbsp;&nbsp; <?php echo e($desde); ?></p>
-    	<p class="col-md-2 col-lg-2 col-sm-2"><b>Fecha Fin:</b>&nbsp;&nbsp;&nbsp; <?php echo e($hasta); ?></p>
+
+	<div class="padd">
+		 <table  style="width: 100%; border-collapse: collapse; border: 1px solid #333;">
+		    <thead>
+			    <tr style="font-size: 12px; font-weight: normal;">
+					<th style="border: 1px solid #333; text-align: center; width: 5%">N</th>
+					<th style="border: 1px solid #333; text-align: center; width: 18%">CLIENTE</th>
+					<th style="border: 1px solid #333; text-align: center; width: 12%">DUI</th>
+					<th style="border: 1px solid #333; text-align: center; width: 10%">FECHA</th>
+					<th style="border: 1px solid #333; text-align: center; width: 10%">MONTO</th>
+					<th style="border: 1px solid #333; text-align: center; width: 10%">INTERES</th>
+					<th style="border: 1px solid #333; text-align: center; width: 10%">COMISION</th>
+					<th style="border: 1px solid #333; text-align: center; width: 10%">EFECTIVO NETO</th>
+					<th style="border: 1px solid #333; text-align: center; width: 10%">CARTERA</th>
+					<th style="border: 1px solid #333; text-align: center; width: 5%">DESEMBOLSO</th>
+			    </tr>
+		    </thead>
+		    <?php
+              $n=0;
+            ?>
+		    <tbody>
+              <?php foreach($consulta as $con): ?>
+              <tr style="font-size: 12px; font-weight: normal;border: 1px solid #333;">
+                <?php $n=$n+1?>
+                <td style="border: 1px solid #333; text-align: center;"><?php echo e($n); ?></td>
+                <td style="border: 1px solid #333; text-align: left;"><?php echo e($con->nombre); ?> <?php echo e($con->apellido); ?></td>
+                <td style="border: 1px solid #333; text-align: center;"><?php echo e($con->dui); ?></td>
+                <td style="border: 1px solid #333; text-align: center;"><?php echo e($con->fecha); ?></td>
+                <td style="border: 1px solid #333; text-align: right;"><span class="pull-left">&nbsp;$</span><?php echo e(number_format($con->monto,2)); ?></td>
+                <td style="border: 1px solid #333; text-align: center;"><?php echo e(number_format($con->interes,2)); ?>%</td>
+                <td style="border: 1px solid #333; text-align: right;"><span class="pull-left">&nbsp;$</span><?php echo e(number_format($con->comision,2)); ?></td>
+                <td style="border: 1px solid #333; text-align: right;"><span class="pull-left">&nbsp;$</span><?php echo e(number_format($con->montooriginal,2)); ?></td>
+                <td style="border: 1px solid #333; text-align: center;"><?php echo e($con->nombreCartera); ?></td>
+
+                <?php if($con->nombreDesembolso == 'EFECTIVO'): ?>
+                <td style="border: 1px solid #333; text-align: center;"><?php echo e($con->nombreDesembolso); ?></td>
+                <?php else: ?>
+                <td style="border: 1px solid #333; text-align: center;"><?php echo e($con->numerocheque); ?></td>
+                <?php endif; ?>
+              </tr>
+              <?php endforeach; ?>
+              <tr style="background:rgba(244, 67, 54, 0.1); font-size: 12px;">
+                <td></td>
+                <td style="text-align: left;">TOTALES</td>
+                <td></td>
+                <td></td>
+                <td style="text-align: right;"><span class="pull-left">&nbsp;$</span><?php echo e(number_format($sumMonto,2)); ?></td>
+                <td></td>
+                <td style="text-align: right;"><span class="pull-left">&nbsp;$</span><?php echo e(number_format($sumComision,2)); ?></td>
+                <td style="text-align: right;"><span class="pull-left">&nbsp;$</span><?php echo e(number_format($sumMontooriginal,2)); ?></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+		</table>
 	</div>
 
 </body>
